@@ -137,8 +137,9 @@ public class MuleConfigGenerator {
         new APIKitConfigScope(api.getConfig(), mule).generate();
         Element exceptionStrategy = new ExceptionStrategyScope(mule, api.getId()).generate();
         String configRef = api.getConfig() != null? api.getConfig().getName() : null;
+        String listenerConfigRef = api.getListenerConfig() != null? api.getListenerConfig().getName() : null;
         new FlowScope(mule, exceptionStrategy.getAttribute("name").getValue(),
-                      api, configRef).generate();
+                      api, configRef, listenerConfigRef).generate();
     }
 
 }

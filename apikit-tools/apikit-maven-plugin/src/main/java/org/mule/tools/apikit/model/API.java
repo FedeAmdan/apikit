@@ -17,6 +17,7 @@ public class API {
 
     private String baseUri;
     private APIKitConfig config;
+    private HttpListenerConfig listenerConfig;
     private File xmlFile;
     private File yamlFile;
     private String id;
@@ -59,6 +60,14 @@ public class API {
         return baseUri;
     }
 
+    public String getPath() {
+        return "api"; //TODO DO NOT HARDCODE THIS - FEDE
+    }
+
+    public HttpListenerConfig getListenerConfig() {
+        return listenerConfig;
+    }
+
     public APIKitConfig getConfig() {
         return config;
     }
@@ -90,5 +99,15 @@ public class API {
 
     public String getId() {
         return id;
+    }
+
+    public String getHost()
+    {
+        return "localhost";//TODO DO NOT HARDCODE THIS - FEDE
+    }
+
+    public String getPort()
+    {
+        return String.valueOf(DEFAULT_PORT);//TODO DO NOT HARDCODE THIS - FEDE
     }
 }

@@ -31,6 +31,7 @@ public class FlowScopeTest {
         when(api.getId()).thenReturn("file");
         when(api.getBaseUri()).thenReturn("http://localhost:7777/api");
         when(api.getConfig()).thenReturn(config);
+        when(api.getPath()).thenReturn("api");
         
         new FlowScope(mule, "ExceptionStrategyNameHere", api, null).generate();
 
@@ -48,7 +49,7 @@ public class FlowScopeTest {
                 "        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd\">" +
                 "<apikit:config raml=\"path/to/file.yaml\" consoleEnabled=\"true\" consolePath=\"console\" />" +
                 "<flow name=\"file-main\">" +
-                "<http:inbound-endpoint address=\"http://localhost:7777/api\"/>" +
+                "<http:listener config-ref=\"HTTP_Listener_Configuration\" path=\"api\"/>" +
                 "<apikit:router />" +
                 "<exception-strategy ref=\"ExceptionStrategyNameHere\"/>" +
                 "</flow>" +
