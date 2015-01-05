@@ -9,6 +9,7 @@ package org.mule.tools.apikit;
 import org.junit.Test;
 import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.APIFactory;
+import org.mule.tools.apikit.model.HttpListenerConfig;
 
 import java.io.File;
 import static org.mule.tools.apikit.Helper.testEqualsHelper;
@@ -29,8 +30,10 @@ public class APITest {
         return file;
     }
 
-    public static API createAPIBinding(File a, File b) {
-        return new APIFactory().createAPIBinding(a,b,"/api");
+    public static API createAPIBinding(File a, File b)
+   {
+       HttpListenerConfig config = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME, "localhost", "7777");
+       return new APIFactory().createAPIBinding(a,b,"/api",config);
     }
 
     @Test

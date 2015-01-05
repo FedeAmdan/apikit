@@ -11,6 +11,7 @@ import org.mule.tools.apikit.misc.APIKitTools;
 import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.APIFactory;
 import org.mule.tools.apikit.model.APIKitConfig;
+import org.mule.tools.apikit.model.HttpListenerConfig;
 
 import java.io.File;
 import java.util.HashMap;
@@ -60,20 +61,20 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
 
             for (File yamlPath : yamlPaths) {
                 if (yamlPath.getName().equals(config.getRaml())) {
-                    Element inboundEndpoint = element.getParentElement().getChildren().get(0);
+                    Element listener = element.getParentElement().getChildren().get(0);
 
                     // TODO Unhack, it is assuming that the router will always be in a flow
                     // where the first element is going to be an http inbound-endpoint
-                    if (!"inbound-endpoint".equals(inboundEndpoint.getName())) {
-                        throw new IllegalStateException("The first element of the main flow must be an " +
-                                                        "inbound-endpoint");
+                    if (!"listener".equals(listener.getName())) {
+                        throw new IllegalStateException("The first element of the main flow must be a " +
+                                                        "listener");
                     }
 
-                    String path = inboundEndpoint.getAttributeValue("path");
+                    String path = listener.getAttributeValue("path");
 
                     // Case the user is specifying baseURI using address attribute
                     if (path == null) {
-                        String address = inboundEndpoint.getAttributeValue("address");
+                        String address = listener.getAttributeValue("address");
 
                         if (address == null) {
                             throw new IllegalStateException("Neither 'path' nor 'address' attribute was used. " +
@@ -84,8 +85,8 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
                     } else  if (!path.startsWith("/")) {
                         path = "/" + path;
                     }
-
-                    includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, path, config));
+                    HttpListenerConfig httpListenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME, "localhost", "7777"); //TODO DELETE THIS HACK
+                    includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, path, config, httpListenerConfig));
                 }
             }
         }

@@ -22,15 +22,16 @@ public class API {
     private File yamlFile;
     private String id;
 
-    public API(File yamlFile, File xmlFile, String baseUri) {
+    public API(File yamlFile, File xmlFile, String baseUri, HttpListenerConfig listenerConfig) {
         this.baseUri = baseUri;
         this.yamlFile = yamlFile;
         this.xmlFile = xmlFile;
+        this.listenerConfig = listenerConfig;
         id = FilenameUtils.removeExtension(yamlFile.getName()).trim();
     }
 
-    public API(File yamlFile, File xmlFile, String baseUri, APIKitConfig config) {
-        this(yamlFile, xmlFile, baseUri);
+    public API(File yamlFile, File xmlFile, String baseUri, APIKitConfig config, HttpListenerConfig listenerConfig) {
+        this(yamlFile, xmlFile, baseUri,listenerConfig);
         this.config = config;
     }
 
@@ -78,6 +79,10 @@ public class API {
 
     public void setDefaultConfig() {
         config = new APIKitConfig.Builder(yamlFile.getName()).setName(id + "-" + APIKitConfig.DEFAULT_CONFIG_NAME).build();
+    }
+
+    public void setDefaultHttpListenerConfig() {
+        listenerConfig = new HttpListenerConfig.Builder(HttpListenerConfig.DEFAULT_CONFIG_NAME, this.getHost(), this.getPort()).build();
     }
 
     @Override

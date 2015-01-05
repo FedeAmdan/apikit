@@ -16,6 +16,7 @@ import org.apache.maven.plugin.logging.Log;
 import org.mule.tools.apikit.misc.APIKitTools;
 import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.APIFactory;
+import org.mule.tools.apikit.model.HttpListenerConfig;
 import org.mule.tools.apikit.output.GenerationModel;
 import org.mule.tools.apikit.model.ResourceActionMimeTypeTriplet;
 
@@ -109,7 +110,8 @@ public class RAMLFilesParser
         {
             for (Action action : resource.getActions().values())
             {
-                API api = apiFactory.createAPIBinding(filename, null, baseUri, null);
+                HttpListenerConfig httpListenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME,"localhost", "7777");
+                API api = apiFactory.createAPIBinding(filename, null, baseUri, null, httpListenerConfig);
                 String path = APIKitTools.getPathFromUri(baseUri);
 
                 Map<String, MimeType> mimeTypes = action.getBody();
