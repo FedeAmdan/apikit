@@ -110,8 +110,7 @@ public class RAMLFilesParser
         {
             for (Action action : resource.getActions().values())
             {
-                HttpListenerConfig httpListenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME,"localhost", "7777");
-                API api = apiFactory.createAPIBinding(filename, null, baseUri, null, httpListenerConfig);
+                API api = apiFactory.createAPIBinding(filename, null, baseUri, null);
                 String path = APIKitTools.getPathFromUri(baseUri);
 
                 Map<String, MimeType> mimeTypes = action.getBody();

@@ -32,8 +32,7 @@ public class APITest {
 
     public static API createAPIBinding(File a, File b)
    {
-       HttpListenerConfig config = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME, "localhost", "7777");
-       return new APIFactory().createAPIBinding(a,b,"/api",config);
+       return new APIFactory().createAPIBinding(a,b,"/api");
     }
 
     @Test

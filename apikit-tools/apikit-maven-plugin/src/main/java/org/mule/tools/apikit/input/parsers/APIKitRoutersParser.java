@@ -85,8 +85,7 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
                     } else  if (!path.startsWith("/")) {
                         path = "/" + path;
                     }
-                    HttpListenerConfig httpListenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME, "localhost", "7777"); //TODO DELETE THIS HACK
-                    includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, path, config, httpListenerConfig));
+                    includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, path, config));
                 }
             }
         }

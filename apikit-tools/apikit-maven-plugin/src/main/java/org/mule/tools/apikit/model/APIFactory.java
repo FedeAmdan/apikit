@@ -16,12 +16,12 @@ public class APIFactory
 {
     private Map<File, API> apis = new HashMap<File, API>();
 
-    public API createAPIBinding(File yamlFile, File xmlFile, String path, HttpListenerConfig httpListenerConfig)
+    public API createAPIBinding(File yamlFile, File xmlFile, String path)
     {
-        return createAPIBinding(yamlFile, xmlFile, path, null, httpListenerConfig);
+        return createAPIBinding(yamlFile, xmlFile, path, null);
     }
 
-    public API createAPIBinding(File yamlFile, File xmlFile, String path, APIKitConfig config, HttpListenerConfig httpListenerConfig)
+    public API createAPIBinding(File yamlFile, File xmlFile, String path, APIKitConfig config)
     {
         Validate.notNull(yamlFile);
         if(apis.containsKey(yamlFile))
@@ -37,7 +37,7 @@ public class APIFactory
             return api;
         }
 
-        API api = new API(yamlFile, xmlFile, path, httpListenerConfig);
+        API api = new API(yamlFile, xmlFile, path);
         apis.put(yamlFile, api);
         return api;
     }

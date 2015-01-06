@@ -16,22 +16,26 @@ public class API {
     public static final String DEFAULT_BASE_URI = "http://localhost:" + DEFAULT_PORT + "/api";
 
     private String baseUri;
+    private String host;
+    private String port;
+    private String path;
     private APIKitConfig config;
     private HttpListenerConfig listenerConfig;
     private File xmlFile;
     private File yamlFile;
     private String id;
 
-    public API(File yamlFile, File xmlFile, String baseUri, HttpListenerConfig listenerConfig) {
+    public API(File yamlFile, File xmlFile, String baseUri) {
         this.baseUri = baseUri;
         this.yamlFile = yamlFile;
         this.xmlFile = xmlFile;
-        this.listenerConfig = listenerConfig;
+        divideBaseUri(baseUri);
+        this.listenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME, host, port);
         id = FilenameUtils.removeExtension(yamlFile.getName()).trim();
     }
 
-    public API(File yamlFile, File xmlFile, String baseUri, APIKitConfig config, HttpListenerConfig listenerConfig) {
-        this(yamlFile, xmlFile, baseUri,listenerConfig);
+    public API(File yamlFile, File xmlFile, String baseUri, APIKitConfig config) {
+        this(yamlFile, xmlFile, baseUri);
         this.config = config;
     }
 
@@ -62,7 +66,7 @@ public class API {
     }
 
     public String getPath() {
-        return "api"; //TODO DO NOT HARDCODE THIS - FEDE
+        return path;
     }
 
     public HttpListenerConfig getListenerConfig() {
@@ -75,6 +79,10 @@ public class API {
 
     public void setConfig(APIKitConfig config) {
         this.config = config;
+    }
+
+    public void setHttpListenerConfig(HttpListenerConfig listenerConfig) {
+        this.listenerConfig = listenerConfig;
     }
 
     public void setDefaultConfig() {
@@ -108,11 +116,19 @@ public class API {
 
     public String getHost()
     {
-        return "localhost";//TODO DO NOT HARDCODE THIS - FEDE
+        return host;
     }
 
     public String getPort()
     {
-        return String.valueOf(DEFAULT_PORT);//TODO DO NOT HARDCODE THIS - FEDE
+        return port;
     }
+
+    private void divideBaseUri(String baseUri)
+    {
+        host = "localhost";//TODO DO NOT HARDCODE THIS - FEDE
+        port = String.valueOf(DEFAULT_PORT);;//TODO DO NOT HARDCODE THIS - FEDE
+        path = "api";//TODO DO NOT HARDCODE THIS - FEDE
+    }
+
 }

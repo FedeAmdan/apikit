@@ -16,6 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mule.tools.apikit.Helper;
+import org.mule.tools.apikit.model.HttpListenerConfig;
 import org.mule.tools.apikit.output.scopes.APIKitFlowScope;
 import org.mule.tools.apikit.model.API;
 import org.raml.model.Action;
@@ -61,11 +62,15 @@ public class MuleConfigGeneratorTest {
         File yaml = mock(File.class);
         when(yaml.getName()).thenReturn("hello.yaml");
         File file = folder.newFile("hello.xml");
-
+        HttpListenerConfig listenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME,"localhost","8080");
         when(api.getId()).thenReturn("hello");
         when(api.getYamlFile()).thenReturn(yaml);
         when(api.getXmlFile(any(File.class))).thenReturn(file);
         when(api.getBaseUri()).thenReturn("http://localhost/api");
+        when(api.getPath()).thenReturn("api");
+        when(api.getHost()).thenReturn("localhost");
+        when(api.getPort()).thenReturn("8080");
+        when(api.getListenerConfig()).thenReturn(listenerConfig);
 
         entries.addAll(Arrays.asList(new GenerationModel(api, resource, action),
                 new GenerationModel(api, resource, postAction)));
@@ -110,9 +115,14 @@ public class MuleConfigGeneratorTest {
     @Test
     public void blankDocument() throws Exception {
 
+        HttpListenerConfig listenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME,"localhost","8080");
         API api = mock(API.class);
         String url = "http://localhost:9876/api";
         when(api.getBaseUri()).thenReturn(url);
+        when(api.getPath()).thenReturn("api");
+        when(api.getHost()).thenReturn("localhost");
+        when(api.getPort()).thenReturn("8080");
+        when(api.getListenerConfig()).thenReturn(listenerConfig);
 
         File yaml = mock(File.class);
         when(yaml.getName()).thenReturn("hello.yaml");
@@ -137,7 +147,8 @@ public class MuleConfigGeneratorTest {
 
         assertEquals("flow", mainFlow.getName());
         assertEquals("hello-main", mainFlow.getAttribute("name").getValue());
-        assertEquals(url, mainFlow.getChildren().get(0).getAttribute("address").getValue());
+        assertEquals("HTTP_Listener_Configuration", mainFlow.getChildren().get(0).getAttribute("config-ref").getValue());
+        assertEquals("api", mainFlow.getChildren().get(0).getAttribute("path").getValue());
 
         // TODO Validate config
         //Element restProcessor = mainFlow.getChildren().get(1);
