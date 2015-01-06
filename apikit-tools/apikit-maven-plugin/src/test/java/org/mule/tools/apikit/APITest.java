@@ -32,7 +32,7 @@ public class APITest {
 
     public static API createAPIBinding(File a, File b)
    {
-       return new APIFactory().createAPIBinding(a,b,"/api");
+       return new APIFactory().createAPIBinding(a,b,"http://localhost/api");
     }
 
     @Test

@@ -6,7 +6,11 @@
  */
 package org.mule.tools.apikit.model;
 
+import org.mule.tools.apikit.misc.APIKitTools;
+
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -34,7 +38,7 @@ public class API {
         id = FilenameUtils.removeExtension(yamlFile.getName()).trim();
     }
 
-    public API(File yamlFile, File xmlFile, String baseUri, APIKitConfig config) {
+    public API(File yamlFile, File xmlFile, String baseUri, APIKitConfig config){
         this(yamlFile, xmlFile, baseUri);
         this.config = config;
     }
@@ -126,9 +130,18 @@ public class API {
 
     private void divideBaseUri(String baseUri)
     {
-        host = "localhost";//TODO DO NOT HARDCODE THIS - FEDE
-        port = String.valueOf(DEFAULT_PORT);;//TODO DO NOT HARDCODE THIS - FEDE
-        path = "api";//TODO DO NOT HARDCODE THIS - FEDE
+        URL url;
+        try
+        {
+            url = new URL(baseUri);
+        }
+        catch (MalformedURLException ex)
+        {
+            throw new RuntimeException("MalformedURLException", ex);
+        }
+        host = url.getHost();
+        port = String.valueOf(url.getPort() == -1? DEFAULT_PORT : url.getPort());
+        path = APIKitTools.getPathFromUri(baseUri);
     }
 
 }

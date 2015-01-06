@@ -14,6 +14,7 @@ import org.mule.tools.apikit.model.APIKitConfig;
 import org.mule.tools.apikit.model.HttpListenerConfig;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,8 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
     }
 
     @Override
-    public Map<String, API> parse(Document document) {
+    public Map<String, API> parse(Document document)
+    {
         Map<String, API> includedApis = new HashMap<String, API>();
 
         XPathExpression<Element> xp = XPathFactory.instance().compile("//*/*[local-name()='router']",

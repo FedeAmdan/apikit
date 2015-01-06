@@ -7,6 +7,7 @@
 package org.mule.tools.apikit.model;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
