@@ -1,5 +1,7 @@
 package org.mule.tools.apikit.model;
 
+import org.mule.tools.apikit.misc.APIKitTools;
+
 import org.apache.commons.lang.StringUtils;
 
 public class HttpListenerConfig
@@ -7,6 +9,8 @@ public class HttpListenerConfig
     public static final String ELEMENT_NAME = "listener-config";
     public static final String NAME_ATTRIBUTE = "name";
     public static final String DEFAULT_CONFIG_NAME = "HTTP_Listener_Configuration";
+    public static final String DEFAULT_HOST = "localhost";
+    public static final String DEFAULT_PORT = String.valueOf(API.DEFAULT_PORT);
 
 
     private String name;

@@ -22,7 +22,14 @@ public class APIFactory
         return createAPIBinding(yamlFile, xmlFile, path, null);
     }
 
+
     public API createAPIBinding(File yamlFile, File xmlFile, String path, APIKitConfig config)
+    {
+        HttpListenerConfig httpListenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME,HttpListenerConfig.DEFAULT_HOST, HttpListenerConfig.DEFAULT_PORT);
+        return createAPIBinding(yamlFile,xmlFile,path,config,httpListenerConfig);
+    }
+
+    public API createAPIBinding(File yamlFile, File xmlFile, String path, APIKitConfig config, HttpListenerConfig listenerConfig)
     {
         Validate.notNull(yamlFile);
         if(apis.containsKey(yamlFile))
@@ -34,6 +41,7 @@ public class APIFactory
             }
 
             api.setConfig(config);
+            api.setHttpListenerConfig(listenerConfig);
 
             return api;
         }
