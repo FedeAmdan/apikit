@@ -132,12 +132,13 @@ public class MuleConfigGeneratorTest {
 
         Element rootElement = document.getRootElement();
         assertEquals("mule", rootElement.getName());
-        Element globalExceptionStrategy = rootElement.getChildren().get(0);
-
+        Element xmlListenerConfig = rootElement.getChildren().get(0);
+        assertEquals("listener-config",xmlListenerConfig.getName());
+        Element globalExceptionStrategy = rootElement.getChildren().get(1);
         assertEquals("mapping-exception-strategy", globalExceptionStrategy.getName());
         assertEquals("hello-apiKitGlobalExceptionMapping", globalExceptionStrategy.getAttribute("name").getValue());
 
-        Element mainFlow = rootElement.getChildren().get(1);
+        Element mainFlow = rootElement.getChildren().get(2);
 
         assertEquals("flow", mainFlow.getName());
         assertEquals("hello-main", mainFlow.getAttribute("name").getValue());

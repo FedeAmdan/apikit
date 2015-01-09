@@ -1,9 +1,14 @@
+/*
+ * Copyright (c) MuleSoft, Inc.  All rights reserved.  http://www.mulesoft.com
+ * The software in this package is published under the terms of the CPAL v1.0
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
 package org.mule.tools.apikit.output.scopes;
 
 import static org.mule.tools.apikit.output.MuleConfigGenerator.HTTP_NAMESPACE;
 
 import org.mule.tools.apikit.model.API;
-import org.mule.tools.apikit.model.APIKitConfig;
 import org.mule.tools.apikit.model.HttpListenerConfig;
 
 import org.apache.commons.lang.StringUtils;
@@ -24,7 +29,6 @@ public class HttpListenerConfigScope implements Scope
         {
             httpListenerConfig = new Element(HttpListenerConfig.ELEMENT_NAME, HTTP_NAMESPACE.getNamespace());
 
-            //httpListener = new Element("listener", HTTP_NAMESPACE.getNamespace());
             if(!StringUtils.isEmpty(httpListenerConfig.getName())) {
                 httpListenerConfig.setAttribute("name", HttpListenerConfig.DEFAULT_CONFIG_NAME);
             }
