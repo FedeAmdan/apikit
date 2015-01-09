@@ -24,7 +24,7 @@ import org.jdom2.filter.Filters;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
 
-public class  APIKitFlowsParser implements MuleConfigFileParser {
+public class APIKitFlowsParser implements MuleConfigFileParser {
 
     private static final Logger LOGGER = Logger.getLogger(APIKitFlowsParser.class);
     private final Map<String, API> includedApis;
@@ -58,7 +58,7 @@ public class  APIKitFlowsParser implements MuleConfigFileParser {
                 }
 
                 if (api.getPath() == null) {
-                    throw new IllegalStateException("Address URI is invalid");
+                    throw new IllegalStateException("Api path is invalid");
                 }
 
                 entries.add(new ResourceActionMimeTypeTriplet(api, api.getPath() + resource, flow.getAction(), flow.getMimeType()));
