@@ -82,9 +82,9 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
                     }
                     String path = getPathFromListener(listener);
 
-                    String address = httpListenerConfig.getUrl() + path;
+                    //String address = httpListenerConfig.getUrl() + path;
 
-                    includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, address, config,httpListenerConfig));
+                    includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, config, httpListenerConfig, path));
                 }
             }
         }

@@ -29,10 +29,10 @@ public class FlowScopeTest {
         APIKitConfig config = new APIKitConfig.Builder("path/to/file.yaml").build();
         new APIKitConfigScope(config, mule).generate();
         API api = mock(API.class);
-        HttpListenerConfig listenerConfig = new HttpListenerConfig.Builder("HTTP_Listener_Configuration","localhost","7777","/api").build();
+        HttpListenerConfig listenerConfig = new HttpListenerConfig.Builder("HTTP_Listener_Configuration","localhost","7777","").build();
 
         when(api.getId()).thenReturn("file");
-        when(api.getBaseUri()).thenReturn("http://localhost:7777/api");
+        when(api.getPath()).thenReturn("/api");
         when(api.getConfig()).thenReturn(config);
         when(api.getHttpListenerConfig()).thenReturn(listenerConfig);
      //   when(api.getPath()).thenReturn("api");
@@ -52,9 +52,9 @@ public class FlowScopeTest {
                 "        http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd\n" +
                 "        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd\">" +
                 "<apikit:config raml=\"path/to/file.yaml\" consoleEnabled=\"true\" consolePath=\"console\" />" +
-                "<http:listener-config name=\"HTTP_Listener_Configuration\" host=\"localhost\" port=\"7777\" basePath=\"/api\"/>" +
+                "<http:listener-config name=\"HTTP_Listener_Configuration\" host=\"localhost\" port=\"7777\"/>" +
                 "<flow name=\"file-main\">" +
-                "<http:listener config-ref=\"HTTP_Listener_Configuration\" path=\"/\"/>" +
+                "<http:listener config-ref=\"HTTP_Listener_Configuration\" path=\"/api\"/>" +
                 "<apikit:router />" +
                 "<exception-strategy ref=\"ExceptionStrategyNameHere\"/>" +
                 "</flow>" +

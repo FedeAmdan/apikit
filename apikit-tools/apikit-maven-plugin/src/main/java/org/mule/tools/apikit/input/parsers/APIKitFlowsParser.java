@@ -57,12 +57,14 @@ public class  APIKitFlowsParser implements MuleConfigFileParser {
                 if (!resource.startsWith("/")) {
                     resource = "/" + resource;
                 }
-                String path = APIKitTools.getPathFromUri(api.getBaseUri());
-                if (path == null) {
-                    throw new IllegalStateException("Inbound-endpoint Address URI is invalid");
+
+                //String path = APIKitTools.getPathFromUri(api.getBaseUri());// TODO FEDE
+
+                if (api.getPath() == null) {
+                    throw new IllegalStateException("Address URI is invalid");
                 }
 
-                entries.add(new ResourceActionMimeTypeTriplet(api, path + resource, flow.getAction(), flow.getMimeType()));
+                entries.add(new ResourceActionMimeTypeTriplet(api, api.getPath() + resource, flow.getAction(), flow.getMimeType()));
             } else {
                 throw new IllegalStateException("No APIKit entries found in Mule config");
             }

@@ -61,7 +61,7 @@ public class APIDiffTest {
 
     @Test
     public void testComputeDifference() throws Exception {
-        API fromYAMLFile = apiFactory.createAPIBinding(new File("sample.yaml"), null, "https://localhost/api");
+        API fromYAMLFile = apiFactory.createAPIBinding(new File("sample.yaml"), null, null, new HttpListenerConfig.Builder(HttpListenerConfig.DEFAULT_CONFIG_NAME, "localhost", "8080","").build(), "/api");
 
         HashMap<ResourceActionMimeTypeTriplet, GenerationModel> a = new HashMap<ResourceActionMimeTypeTriplet, GenerationModel>();
         ResourceActionMimeTypeTriplet fab = new ResourceActionMimeTypeTriplet(fromYAMLFile, "a", "b");
@@ -80,7 +80,8 @@ public class APIDiffTest {
 
     @Test
     public void testComputeDifferenceMismatching() throws Exception {
-        API fromYAMLFile = apiFactory.createAPIBinding(new File("sample.yaml"), null, "https://localhost/api");
+        //API fromYAMLFile = apiFactory.createAPIBinding(new File("sample.yaml"), null, "https://localhost/api");
+        API fromYAMLFile = apiFactory.createAPIBinding(new File("sample.yaml"), null, null, new HttpListenerConfig.Builder(HttpListenerConfig.DEFAULT_CONFIG_NAME, "localhost", "8080","").build(), "/api");
 
         HashMap<ResourceActionMimeTypeTriplet, GenerationModel> a = new HashMap<ResourceActionMimeTypeTriplet, GenerationModel>();
         ResourceActionMimeTypeTriplet fab = new ResourceActionMimeTypeTriplet(fromYAMLFile, "b", "b");
@@ -100,7 +101,8 @@ public class APIDiffTest {
 
     @Test
     public void testComputeDifferenceAsymetric() throws Exception {
-        API fromYAMLFile = apiFactory.createAPIBinding(new File("sample.yaml"), null, "https://localhost/api");
+        //API fromYAMLFile = apiFactory.createAPIBinding(new File("sample.yaml"), null, "https://localhost/api");
+        API fromYAMLFile = apiFactory.createAPIBinding(new File("sample.yaml"), null, null, new HttpListenerConfig.Builder(HttpListenerConfig.DEFAULT_CONFIG_NAME, "localhost", "8080","").build(), "/api");
 
         HashMap<ResourceActionMimeTypeTriplet, GenerationModel> a = new HashMap<ResourceActionMimeTypeTriplet, GenerationModel>();
         ResourceActionMimeTypeTriplet fab = new ResourceActionMimeTypeTriplet(fromYAMLFile, "b", "b");

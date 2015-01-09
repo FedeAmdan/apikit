@@ -27,7 +27,7 @@ public class FlowScope implements Scope {
 
         Element httpListener = new Element("listener", HTTP_NAMESPACE.getNamespace());
         httpListener.setAttribute("config-ref", httpListenerConfigRef);
-        httpListener.setAttribute("path", "/");
+        httpListener.setAttribute("path", api.getPath());
         main.addContent(httpListener);
 
         Element restProcessor = new Element("router", APIKitTools.API_KIT_NAMESPACE.getNamespace());

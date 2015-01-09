@@ -65,6 +65,14 @@ public class HttpListenerConfig
             return this;
         }
 
+        public Builder()
+        {
+            this.name = DEFAULT_CONFIG_NAME;
+            this.host = DEFAULT_HOST;
+            this.port = DEFAULT_PORT;
+            this.basePath = DEFAULT_BASE_PATH;
+        }
+
         public HttpListenerConfig build() {
             return new HttpListenerConfig(this.name, this.host, this.port, this.basePath);
         }

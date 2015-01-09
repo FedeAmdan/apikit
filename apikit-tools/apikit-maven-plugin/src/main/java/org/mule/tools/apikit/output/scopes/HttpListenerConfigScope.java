@@ -30,7 +30,11 @@ public class HttpListenerConfigScope implements Scope
             }
             httpListenerConfig.setAttribute("host", api.getHttpListenerConfig().getHost());
             httpListenerConfig.setAttribute("port", api.getHttpListenerConfig().getPort());
-            httpListenerConfig.setAttribute("basePath", api.getHttpListenerConfig().getBasePath());
+            String basePath = api.getHttpListenerConfig().getBasePath();
+            if (basePath != null && basePath != "")
+            {
+                httpListenerConfig.setAttribute("basePath", api.getHttpListenerConfig().getBasePath());
+            }
             mule.addContent(httpListenerConfig);
         }
         else
