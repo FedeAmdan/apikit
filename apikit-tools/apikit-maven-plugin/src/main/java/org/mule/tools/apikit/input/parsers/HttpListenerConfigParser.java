@@ -43,11 +43,6 @@ public class HttpListenerConfigParser implements MuleConfigFileParser
             {
                 port = HttpListenerConfig.DEFAULT_PORT;
             }
-            //else if (port.startsWith("${") && port.endsWith("}"))
-            //{
-            //    port = System.getProperty(port.substring(2,port.length()-1));
-            //}
-
             String basePath = element.getAttributeValue("basePath");
             if (basePath == null)
             {

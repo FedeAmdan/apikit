@@ -114,7 +114,6 @@ public class MuleConfigGeneratorTest {
 
         HttpListenerConfig listenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME,"localhost","8080","");
         API api = mock(API.class);
-        //String url = "http://localhost:9876/api";
         when(api.getPath()).thenReturn("/api");
         when(api.getHttpListenerConfig()).thenReturn(listenerConfig);
 

@@ -9,12 +9,10 @@ package org.mule.tools.apikit.input;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.util.*;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
-import org.mule.tools.apikit.misc.APIKitTools;
 import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.APIFactory;
 import org.mule.tools.apikit.model.HttpListenerConfig;
@@ -112,7 +110,6 @@ public class RAMLFilesParser
             for (Action action : resource.getActions().values())
             {
                 API api = apiFactory.createAPIBinding(filename, null, null, new HttpListenerConfig.Builder(HttpListenerConfig.DEFAULT_CONFIG_NAME, host, port, basePath).build(), path);
-                //String path = APIKitTools.getPathFromUri(baseUri);
 
                 Map<String, MimeType> mimeTypes = action.getBody();
                 boolean addGenericAction = false;

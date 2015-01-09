@@ -35,7 +35,6 @@ public class FlowScopeTest {
         when(api.getPath()).thenReturn("/api");
         when(api.getConfig()).thenReturn(config);
         when(api.getHttpListenerConfig()).thenReturn(listenerConfig);
-     //   when(api.getPath()).thenReturn("api");
         new HttpListenerConfigScope(api,mule).generate();
         new FlowScope(mule, "ExceptionStrategyNameHere", api, null, "HTTP_Listener_Configuration").generate();
 

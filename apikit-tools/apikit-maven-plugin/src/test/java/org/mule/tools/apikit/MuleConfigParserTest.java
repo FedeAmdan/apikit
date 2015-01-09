@@ -26,7 +26,6 @@ import static org.mockito.Mockito.mock;
 public class MuleConfigParserTest {
     @Test
     public void testCreation() {
-        System.setProperty("serverPort","8081");
         final InputStream resourceAsStream =
                 MuleConfigParser.class.getClassLoader().getResourceAsStream(
                         "testGetEntries/leagues-flow-config.xml");
@@ -48,13 +47,10 @@ public class MuleConfigParserTest {
         assertNotNull(apis);
         assertEquals(1, apis.size());
         assertEquals("leagues.yaml", apis.iterator().next().getYamlFile().getName());
-
-        System.clearProperty("serverPort");
     }
 
     @Test
     public void testCreationWithConfigRef() {
-        System.setProperty("serverPort","8081");
         final InputStream resourceAsStream =
                 MuleConfigParser.class.getClassLoader().getResourceAsStream(
                         "testGetEntries/leagues-flow-with-config-config.xml");
@@ -84,6 +80,5 @@ public class MuleConfigParserTest {
         assertEquals("leagues.yaml", leaguesConfig.getRaml());
         assertTrue(leaguesConfig.isConsoleEnabled());
         assertEquals(APIKitConfig.DEFAULT_CONSOLE_PATH, leaguesConfig.getConsolePath());
-        System.clearProperty("serverPort");
     }
 }

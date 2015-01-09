@@ -16,8 +16,6 @@ import org.jdom2.Element;
 
 public class HttpListenerConfigScope implements Scope
 {
-    //    private final Element httpListener;
-
     private final Element mule;
     private final Element httpListenerConfig;
 

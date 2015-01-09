@@ -62,10 +62,6 @@ public class API {
         return yamlFile;
     }
 
-    //public String getBaseUri() {
-    //    return baseUri;
-    //}
-
     public String getPath()
     {
         return path;
