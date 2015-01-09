@@ -20,14 +20,14 @@ public class FlowScope implements Scope {
 
     private final Element main;
 
-    public FlowScope(Element mule, String exceptionStrategyRef, API api, String configRef, String listenerConfigRef) {
+    public FlowScope(Element mule, String exceptionStrategyRef, API api, String configRef, String httpListenerConfigRef) {
         main = new Element("flow", XMLNS_NAMESPACE.getNamespace());
 
         main.setAttribute("name", api.getId() + "-" + "main");
 
         Element httpListener = new Element("listener", HTTP_NAMESPACE.getNamespace());
-        httpListener.setAttribute("config-ref", listenerConfigRef);
-        httpListener.setAttribute("path", api.getPath());
+        httpListener.setAttribute("config-ref", httpListenerConfigRef);
+        httpListener.setAttribute("path", "/");
         main.addContent(httpListener);
 
         Element restProcessor = new Element("router", APIKitTools.API_KIT_NAMESPACE.getNamespace());

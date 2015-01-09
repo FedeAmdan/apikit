@@ -25,7 +25,7 @@ import org.jdom2.filter.Filters;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
 
-public class APIKitFlowsParser implements MuleConfigFileParser {
+public class  APIKitFlowsParser implements MuleConfigFileParser {
 
     private static final Logger LOGGER = Logger.getLogger(APIKitFlowsParser.class);
     private final Map<String, API> includedApis;

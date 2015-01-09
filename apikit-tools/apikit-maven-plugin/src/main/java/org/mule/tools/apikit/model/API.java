@@ -20,11 +20,8 @@ public class API {
     public static final String DEFAULT_BASE_URI = "http://localhost:" + DEFAULT_PORT + "/api";
 
     private String baseUri;
-    private String host;
-    private String port;
-    private String path;
     private APIKitConfig config;
-    private HttpListenerConfig listenerConfig;
+    private HttpListenerConfig httpListenerConfig;
     private File xmlFile;
     private File yamlFile;
     private String id;
@@ -33,8 +30,7 @@ public class API {
         this.baseUri = baseUri;
         this.yamlFile = yamlFile;
         this.xmlFile = xmlFile;
-        divideBaseUri(baseUri);
-        this.listenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME, host, port);
+        httpListenerConfig = new HttpListenerConfig(baseUri);
         id = FilenameUtils.removeExtension(yamlFile.getName()).trim();
     }
 
@@ -69,12 +65,18 @@ public class API {
         return baseUri;
     }
 
-    public String getPath() {
-        return path;
-    }
+    //public String getPath()
+    //{
+    //    return path;
+    //}
+    //
+    //public void setPath(String path)
+    //{
+    //    this.path = path;
+    //}
 
-    public HttpListenerConfig getListenerConfig() {
-        return listenerConfig;
+    public HttpListenerConfig getHttpListenerConfig() {
+        return httpListenerConfig;
     }
 
     public APIKitConfig getConfig() {
@@ -85,8 +87,8 @@ public class API {
         this.config = config;
     }
 
-    public void setHttpListenerConfig(HttpListenerConfig listenerConfig) {
-        this.listenerConfig = listenerConfig;
+    public void setHttpListenerConfig(HttpListenerConfig httpListenerConfig) {
+        this.httpListenerConfig = httpListenerConfig;
     }
 
     public void setDefaultConfig() {
@@ -94,7 +96,7 @@ public class API {
     }
 
     public void setDefaultHttpListenerConfig() {
-        listenerConfig = new HttpListenerConfig.Builder(HttpListenerConfig.DEFAULT_CONFIG_NAME, this.getHost(), this.getPort()).build();
+        httpListenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME, HttpListenerConfig.DEFAULT_HOST, HttpListenerConfig.DEFAULT_PORT, HttpListenerConfig.DEFAULT_BASE_PATH);
     }
 
     @Override
@@ -116,32 +118,6 @@ public class API {
 
     public String getId() {
         return id;
-    }
-
-    public String getHost()
-    {
-        return host;
-    }
-
-    public String getPort()
-    {
-        return port;
-    }
-
-    private void divideBaseUri(String baseUri)
-    {
-        URL url;
-        try
-        {
-            url = new URL(baseUri);
-        }
-        catch (MalformedURLException ex)
-        {
-            throw new RuntimeException("MalformedURLException", ex);
-        }
-        host = url.getHost();
-        port = String.valueOf(url.getPort() == -1? DEFAULT_PORT : url.getPort());
-        path = APIKitTools.getPathFromUri(baseUri);
     }
 
 }

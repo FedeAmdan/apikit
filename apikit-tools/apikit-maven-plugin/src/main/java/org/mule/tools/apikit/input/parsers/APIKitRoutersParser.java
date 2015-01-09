@@ -14,7 +14,6 @@ import org.mule.tools.apikit.model.APIKitConfig;
 import org.mule.tools.apikit.model.HttpListenerConfig;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,15 +29,18 @@ import org.jdom2.xpath.XPathFactory;
 public class APIKitRoutersParser implements MuleConfigFileParser {
 
     private final Map<String, APIKitConfig> apikitConfigs;
+    private final Map<String, HttpListenerConfig> httpListenerConfigs;
     private final Set<File> yamlPaths;
     private final File file;
     private final APIFactory apiFactory;
 
     public APIKitRoutersParser(final Map<String, APIKitConfig> apikitConfigs,
+                               final Map<String, HttpListenerConfig> httpListenerConfigs,
                                final Set<File> yamlPaths,
                                final File file,
                                final APIFactory apiFactory) {
         this.apikitConfigs = apikitConfigs;
+        this.httpListenerConfigs = httpListenerConfigs;
         this.yamlPaths = yamlPaths;
         this.file = file;
         this.apiFactory = apiFactory;
@@ -61,77 +63,41 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
                 throw new IllegalStateException("An Apikit configuration is mandatory.");
             }
 
-            //Attribute configRef = element.getAttribute("config-ref");
-            //String configId = configRef != null ? configRef.getValue() : APIKitFlow.UNNAMED_CONFIG_NAME;
-            //
-            //APIKitConfig config = apikitConfigs.get(configId);
-            //if(config == null) {
-            //    throw new IllegalStateException("An Apikit configuration is mandatory.");
-            //}
-
-
             for (File yamlPath : yamlPaths) {
                 if (yamlPath.getName().equals(config.getRaml())) {
                     Element listener = element.getParentElement().getChildren().get(0);
-                    Element listenerConfig = element.getParentElement().getParentElement().getChildren().get(0);
+
+                    Attribute httpListenerConfigRef = listener.getAttribute("config-ref");
+                    String httpListenerConfigId = httpListenerConfigRef != null ? httpListenerConfigRef.getValue() : HttpListenerConfig.DEFAULT_CONFIG_NAME;
+
+                    HttpListenerConfig httpListenerConfig = httpListenerConfigs.get(httpListenerConfigId);
+                    if(httpListenerConfig == null) {
+                        throw new IllegalStateException("An HTTP Listener configuration is mandatory.");
+                    }
 
                     // TODO Unhack, it is assuming that the router will always be in a flow
                     // where the first element is going to be an http listener
                     if (!"listener".equals(listener.getName())) {
-                        throw new IllegalStateException("The first element of the main flow must be a " +
-                                                        "listener");
+                        throw new IllegalStateException("The first element of the main flow must be a listener");
                     }
+                    String path = getPathFromListener(listener);
 
-                    String path = listener.getAttributeValue("path");
+                    String address = httpListenerConfig.getUrl() + path;
 
-                    // Case the user is specifying baseURI using address attribute
-                    if (path == null) {
-                        path = "";
-                        //String address = listener.getAttributeValue("address");
-                        //
-                        //if (address == null) {
-                        //    throw new IllegalStateException("Neither 'path' nor 'address' attribute was used. " +
-                        //                                    "Cannot retrieve base URI.");
-                        //}
-
-                        //path = address;
-                    } else  if (!path.startsWith("/")) {
-                        path = "/" + path;
-                    }
-
-                    String host = listenerConfig.getAttributeValue("host");
-                    if (host == null)
-                    {
-                        throw new IllegalStateException("Cannot retrieve host.");
-                    }
-                    String port = listenerConfig.getAttributeValue("port");
-                    if (port == null)
-                    {
-                        port = HttpListenerConfig.DEFAULT_PORT;
-                    }
-                    else if (port.startsWith("${") && port.endsWith("}"))
-                    {
-                        port = System.getProperty(port.substring(2,port.length()-1));
-                    }
-
-                    String basePath = listenerConfig.getAttributeValue("basePath");
-                    if (basePath == null)
-                    {
-                        basePath = "";
-                    }
-                    else  if (!basePath.startsWith("/")) {
-                        basePath = "/" + basePath;
-                    }
-
-                    String address = "http://" + host + ":" + port + basePath + path;
-
-
-
-                includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, address, config));
+                    includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, address, config,httpListenerConfig));
                 }
             }
         }
-
         return includedApis;
+    }
+
+    private String getPathFromListener(Element listener){
+        String path = listener.getAttributeValue("path");
+        if (path == null) {
+            path = "";
+        } else  if (!path.startsWith("/")) {
+            path = "/" + path;
+        }
+        return path;
     }
 }

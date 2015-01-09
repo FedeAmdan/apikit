@@ -111,7 +111,7 @@ public class RAMLFilesParser
         {
             for (Action action : resource.getActions().values())
             {
-                API api = apiFactory.createAPIBinding(filename, null, baseUri, null);
+                API api = apiFactory.createAPIBinding(filename, null, baseUri, null, null);
                 String path = APIKitTools.getPathFromUri(baseUri);
 
                 Map<String, MimeType> mimeTypes = action.getBody();

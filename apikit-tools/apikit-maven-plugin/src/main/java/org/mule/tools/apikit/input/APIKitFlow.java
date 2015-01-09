@@ -14,7 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.mule.tools.apikit.model.APIKitConfig;
 import org.raml.model.ActionType;
 
-public class APIKitFlow {
+public class   APIKitFlow {
 
     public static final String UNNAMED_CONFIG_NAME = "noNameConfig";
     private final String action;

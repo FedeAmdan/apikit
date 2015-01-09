@@ -29,16 +29,14 @@ public class FlowScopeTest {
         APIKitConfig config = new APIKitConfig.Builder("path/to/file.yaml").build();
         new APIKitConfigScope(config, mule).generate();
         API api = mock(API.class);
-        HttpListenerConfig listenerConfig = new HttpListenerConfig.Builder("HTTP_Listener_Configuration","localhost","8081").build();
+        HttpListenerConfig listenerConfig = new HttpListenerConfig.Builder("HTTP_Listener_Configuration","localhost","7777","/api").build();
 
         when(api.getId()).thenReturn("file");
         when(api.getBaseUri()).thenReturn("http://localhost:7777/api");
         when(api.getConfig()).thenReturn(config);
-        when(api.getListenerConfig()).thenReturn(listenerConfig);
-        when(api.getPath()).thenReturn("api");
-        when(api.getHost()).thenReturn("localhost");
-        when(api.getPort()).thenReturn("7777");
-        new HttpListenerScope(api,listenerConfig,mule).generate();
+        when(api.getHttpListenerConfig()).thenReturn(listenerConfig);
+     //   when(api.getPath()).thenReturn("api");
+        new HttpListenerConfigScope(api,mule).generate();
         new FlowScope(mule, "ExceptionStrategyNameHere", api, null, "HTTP_Listener_Configuration").generate();
 
         String s = Helper.nonSpaceOutput(mule);
@@ -54,9 +52,9 @@ public class FlowScopeTest {
                 "        http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd\n" +
                 "        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd\">" +
                 "<apikit:config raml=\"path/to/file.yaml\" consoleEnabled=\"true\" consolePath=\"console\" />" +
-                "<http:listener-config name=\"HTTP_Listener_Configuration\" host=\"localhost\" port=\"7777\"/>" +
+                "<http:listener-config name=\"HTTP_Listener_Configuration\" host=\"localhost\" port=\"7777\" basePath=\"/api\"/>" +
                 "<flow name=\"file-main\">" +
-                "<http:listener config-ref=\"HTTP_Listener_Configuration\" path=\"api\"/>" +
+                "<http:listener config-ref=\"HTTP_Listener_Configuration\" path=\"/\"/>" +
                 "<apikit:router />" +
                 "<exception-strategy ref=\"ExceptionStrategyNameHere\"/>" +
                 "</flow>" +
