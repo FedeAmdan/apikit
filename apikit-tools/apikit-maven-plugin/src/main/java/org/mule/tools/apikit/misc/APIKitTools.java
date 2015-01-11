@@ -41,4 +41,46 @@ public class APIKitTools {
         return path;
 
     }
+
+    public static String getHostFromUri(String baseUri)
+    {
+        int start = baseUri.indexOf("//") + 2;
+        if (start == -1)
+        {
+            start = 0;
+        }
+
+        int twoDots = baseUri.indexOf(":", start);
+        if (twoDots == -1)
+        {
+            twoDots = baseUri.length();
+        }
+        int slash = baseUri.indexOf("/", start);
+        if (slash == -1)
+        {
+            slash = baseUri.length();
+        }
+        int hostEnd = twoDots < slash ? twoDots : slash;
+        return baseUri.substring(start,hostEnd);
+    }
+
+    public static String getPortFromUri(String baseUri)
+    {
+        int hostStart = baseUri.indexOf("//") + 2;
+        if (hostStart == -1)
+        {
+            hostStart = 0;
+        }
+        int twoDots = baseUri.indexOf(":", hostStart);
+        if (twoDots == -1)
+        {
+            return "";
+        }
+        int slash = baseUri.indexOf("/", twoDots);
+        if (slash == -1)
+        {
+            slash = baseUri.length();
+        }
+        return baseUri.substring(hostStart, slash);
+    }
 }

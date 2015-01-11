@@ -13,6 +13,7 @@ import java.util.*;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
+import org.mule.tools.apikit.misc.APIKitTools;
 import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.APIFactory;
 import org.mule.tools.apikit.model.HttpListenerConfig;
@@ -64,7 +65,22 @@ public class RAMLFilesParser
                 try
                 {
                     Raml raml = builderNodeHandler.build(content, ramlFile.getName());
-                    collectResources(ramlFile, raml.getResources(), HttpListenerConfig.DEFAULT_HOST, HttpListenerConfig.DEFAULT_PORT, HttpListenerConfig.DEFAULT_BASE_PATH, "/api");
+                    String host = APIKitTools.getHostFromUri(raml.getBaseUri());
+                    if (host == "")
+                    {
+                        host = HttpListenerConfig.DEFAULT_HOST;
+                    }
+                    String port = APIKitTools.getPortFromUri(raml.getBaseUri());
+                    if (port == "")
+                    {
+                        port = HttpListenerConfig.DEFAULT_PORT;
+                    }
+                    String basePath = APIKitTools.getPathFromUri(raml.getBaseUri());
+                    if (basePath == "")
+                    {
+                        port = HttpListenerConfig.DEFAULT_BASE_PATH;
+                    }
+                    collectResources(ramlFile, raml.getResources(), host, port, basePath, "/api");
                     processedFiles.add(ramlFile);
                 }
                 catch (Exception e)
