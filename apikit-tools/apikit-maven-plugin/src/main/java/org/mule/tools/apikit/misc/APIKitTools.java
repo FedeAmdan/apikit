@@ -83,4 +83,23 @@ public class APIKitTools {
         }
         return baseUri.substring(hostStart, slash);
     }
+
+    public static String getCompletePathFromBasePathAndPath(String basePath, String listenerPath)
+    {
+
+        String path = basePath + listenerPath;
+        if (path.contains("/*"))
+        {
+            path = path.replace("/*","");
+        }
+        if (path.endsWith("/"))
+        {
+            path = path.substring(0,path.length() -1);
+        }
+        if (path.contains("//"))
+        {
+            path = path.replace("//","/");
+        }
+        return path;
+    }
 }

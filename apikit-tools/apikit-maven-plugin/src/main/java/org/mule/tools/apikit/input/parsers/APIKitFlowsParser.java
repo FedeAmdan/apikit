@@ -9,6 +9,7 @@ package org.mule.tools.apikit.input.parsers;
 import static org.mule.tools.apikit.output.MuleConfigGenerator.XMLNS_NAMESPACE;
 
 import org.mule.tools.apikit.input.APIKitFlow;
+import org.mule.tools.apikit.misc.APIKitTools;
 import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.ResourceActionMimeTypeTriplet;
 
@@ -56,19 +57,11 @@ public class APIKitFlowsParser implements MuleConfigFileParser {
                 if (!resource.startsWith("/")) {
                     resource = "/" + resource;
                 }
-//
-//                if (api.getPath() == null) {
-//                    throw new IllegalStateException("Api path is invalid");
-//                }
-                String path = api.getHttpListenerConfig().getBasePath() + api.getPath();
-                if (path.endsWith("/"))
-                {
-                    path = path.substring(0,path.length() -1);
+
+                if (api.getPath() == null) {
+                    throw new IllegalStateException("Api path is invalid");
                 }
-                if (path.contains("//"))
-                {
-                    path = path.replace("//","/");
-                }
+                String path = APIKitTools.getCompletePathFromBasePathAndPath(api.getHttpListenerConfig().getBasePath(), api.getPath());
                 entries.add(new ResourceActionMimeTypeTriplet(api, path + resource, flow.getAction(), flow.getMimeType()));
             } else {
                 throw new IllegalStateException("No APIKit entries found in Mule config");

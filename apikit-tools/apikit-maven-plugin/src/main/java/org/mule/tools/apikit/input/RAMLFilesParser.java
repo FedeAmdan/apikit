@@ -75,12 +75,16 @@ public class RAMLFilesParser
                     {
                         port = HttpListenerConfig.DEFAULT_PORT;
                     }
-                    String basePath = APIKitTools.getPathFromUri(raml.getBaseUri());
-                    if (basePath == "")
+                    String path = APIKitTools.getPathFromUri(raml.getBaseUri());
+                    if (path == "")
                     {
-                        port = HttpListenerConfig.DEFAULT_BASE_PATH;
+                        path = API.DEFAULT_PATH;
                     }
-                    collectResources(ramlFile, raml.getResources(), host, port, basePath, "/");
+                    if (!path.endsWith("*"))
+                    {
+                        path = path.endsWith("/")? path + "*" : path + "/*";
+                    }
+                    collectResources(ramlFile, raml.getResources(), host, port, HttpListenerConfig.DEFAULT_BASE_PATH, path);
                     processedFiles.add(ramlFile);
                 }
                 catch (Exception e)
@@ -135,7 +139,7 @@ public class RAMLFilesParser
                     {
                         if (mimeType.getSchema() != null || mimeType.getFormParameters() != null)
                         {
-                            addResource(api, resource, action, basePath, path, mimeType.getType());
+                            addResource(api, resource, action, mimeType.getType());
                         }
                         else { addGenericAction = true; }
                     }
@@ -143,7 +147,7 @@ public class RAMLFilesParser
                 else { addGenericAction = true; }
 
                 if (addGenericAction) {
-                    addResource(api, resource, action, basePath, path, null);
+                    addResource(api, resource, action, null);
                 }
             }
 
@@ -151,17 +155,8 @@ public class RAMLFilesParser
         }
     }
 
-    void addResource(API api, Resource resource, Action action,String basePath, String path, String mimeType) {
-        String completePath = basePath + path;
-        if (completePath.endsWith("/"))
-        {
-            completePath = completePath.substring(0,completePath.length() -1);
-        }
-
-        if (completePath.contains("//"))
-        {
-            completePath = completePath.replace("//","/");
-        }
+    void addResource(API api, Resource resource, Action action, String mimeType) {
+        String completePath = APIKitTools.getCompletePathFromBasePathAndPath(api.getHttpListenerConfig().getBasePath(), api.getPath());
         ResourceActionMimeTypeTriplet resourceActionTriplet = new ResourceActionMimeTypeTriplet(api, completePath + resource.getUri(),
                 action.getType().toString(), mimeType);
         entries.put(resourceActionTriplet, new GenerationModel(api, resource, action, mimeType));

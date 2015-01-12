@@ -18,7 +18,7 @@ public class HttpListenerConfig
     public static final String DEFAULT_CONFIG_NAME = "HTTP_Listener_Configuration";
     public static final String DEFAULT_HOST = "localhost";
     public static final String DEFAULT_PORT = "8081";
-    public static final String DEFAULT_BASE_PATH = "/api";
+    public static final String DEFAULT_BASE_PATH = "/";
 
 
     private String name;

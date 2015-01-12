@@ -18,7 +18,7 @@ public class API {
 
     //public static final int DEFAULT_PORT = 8081;
     //public static final String DEFAULT_BASE_URI = "http://localhost:" + DEFAULT_PORT + "/api";
-    public static final String DEFAUTLT_PATH = "";
+    public static final String DEFAULT_PATH = "/api/*";
 
     private APIKitConfig config;
     private HttpListenerConfig httpListenerConfig;

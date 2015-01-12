@@ -36,7 +36,7 @@
     <apikit:config raml="leagues.yaml" />
 
     <flow name="doorway">
-        <http:listener config-ref="HTTP_Listener_Configuration" path="api"/>
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/api/*"/>
         <apikit:router />
         <exception-strategy ref="apiKitGlobalExceptionMapping"/>
     </flow>
