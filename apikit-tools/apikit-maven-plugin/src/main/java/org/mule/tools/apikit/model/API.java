@@ -16,8 +16,9 @@ import org.apache.commons.io.FilenameUtils;
 
 public class API {
 
-    public static final int DEFAULT_PORT = 8081;
+    //public static final int DEFAULT_PORT = 8081;
     //public static final String DEFAULT_BASE_URI = "http://localhost:" + DEFAULT_PORT + "/api";
+    public static final String DEFAUTLT_PATH = "";
 
     private APIKitConfig config;
     private HttpListenerConfig httpListenerConfig;
@@ -25,6 +26,7 @@ public class API {
     private File yamlFile;
     private String id;
     private String path;
+
 
     public API(File yamlFile, File xmlFile, HttpListenerConfig httpListenerConfig, String path) {
         this.httpListenerConfig = httpListenerConfig;

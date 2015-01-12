@@ -17,8 +17,8 @@ public class HttpListenerConfig
     public static final String NAME_ATTRIBUTE = "name";
     public static final String DEFAULT_CONFIG_NAME = "HTTP_Listener_Configuration";
     public static final String DEFAULT_HOST = "localhost";
-    public static final String DEFAULT_PORT = String.valueOf(API.DEFAULT_PORT);
-    public static final String DEFAULT_BASE_PATH = "";
+    public static final String DEFAULT_PORT = "8081";
+    public static final String DEFAULT_BASE_PATH = "/api";
 
 
     private String name;
@@ -92,22 +92,6 @@ public class HttpListenerConfig
         this.basePath = basePath;
     }
 
-    public HttpListenerConfig(final String baseUri){
-        URL url;
-        try
-        {
-            url = new URL(baseUri);
-        }
-        catch (MalformedURLException ex)
-        {
-            throw new RuntimeException("MalformedURLException", ex);
-        }
-        name = DEFAULT_CONFIG_NAME;
-        host = url.getHost();
-        port = String.valueOf(url.getPort() == -1? DEFAULT_PORT : url.getPort());
-        basePath = url.getPath();
-    }
-
     public String getName() {
         return name;
     }
@@ -124,6 +108,4 @@ public class HttpListenerConfig
     {
         return basePath;
     }
-
-//    public String getUrl() { return "http://" + host + ":" + port + "/" + basePath;}
 }

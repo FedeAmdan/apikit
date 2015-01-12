@@ -33,6 +33,10 @@ public class APIFactory
             {
                 api.setHttpListenerConfig(new HttpListenerConfig.Builder().build());
             }
+            else
+            {
+                api.setHttpListenerConfig(httpListenerConfig);
+            }
             return api;
         }
 

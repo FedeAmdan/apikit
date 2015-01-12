@@ -46,7 +46,7 @@ public class HttpListenerConfigParser implements MuleConfigFileParser
             String basePath = element.getAttributeValue("basePath");
             if (basePath == null)
             {
-                basePath = "";
+                basePath = "/";
             }
             else  if (!basePath.startsWith("/")) {
                 basePath = "/" + basePath;

@@ -33,7 +33,7 @@ public class HttpListenerConfigScope implements Scope
             httpListenerConfig.setAttribute("host", api.getHttpListenerConfig().getHost());
             httpListenerConfig.setAttribute("port", api.getHttpListenerConfig().getPort());
             String basePath = api.getHttpListenerConfig().getBasePath();
-            if (basePath != null && basePath != "")
+            if (basePath != null && basePath != "/" && basePath != "")
             {
                 httpListenerConfig.setAttribute("basePath", api.getHttpListenerConfig().getBasePath());
             }
