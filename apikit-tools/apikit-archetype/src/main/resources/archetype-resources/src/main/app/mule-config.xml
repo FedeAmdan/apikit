@@ -10,8 +10,12 @@
         http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd ">
-
-#if( $useHttpListener == "true" ||  $useHttpListener == "y" || $useHttpListener == "TRUE" ||  $useHttpListener == "Y" ||  $useHttpListener == "yes")
+#set ($muleVersion = $muleVersion.toUpperCase())
+#set ($muleVersion = $muleVersion.replace(".",""))
+#set ($muleVersion = $muleVersion.replace("-",""))
+#set ($muleVersion = $muleVersion.replace("SNAPSHOT",""))
+#set ($Integer = 0)
+#if( $Integer.parseInt($muleVersion)>=360 )
     <http:listener-config name="httpListenerConfig" host="localhost" port="${http.port}"/>
 
 #end
@@ -48,7 +52,7 @@
     </apikit:mapping-exception-strategy>
 
     <flow name="api-main">
-#if( $useHttpListener == "true" ||  $useHttpListener == "y" || $useHttpListener == "TRUE" ||  $useHttpListener == "Y" || $useHttpListener == "yes")
+#if( $Integer.parseInt($muleVersion)>=360 )
         <http:listener config-ref="httpListenerConfig" path="/api/*"/>
 #else
         <http:inbound-endpoint address="http://localhost:${http.port}/api"/>
