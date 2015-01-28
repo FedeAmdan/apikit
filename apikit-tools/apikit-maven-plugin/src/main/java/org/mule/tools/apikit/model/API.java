@@ -34,10 +34,10 @@ public class API {
         id = FilenameUtils.removeExtension(yamlFile.getName()).trim();
     }
 
-    public API(File yamlFile, File xmlFile, APIKitConfig config, String host, String port, String basePath, String path){
+    public API(File yamlFile, File xmlFile, APIKitConfig config, String baseUri, String path){
         this(yamlFile, xmlFile, null, path);
         String httpListenerConfigName = id == null? HttpListenerConfig.DEFAULT_CONFIG_NAME : id + "-" + HttpListenerConfig.DEFAULT_CONFIG_NAME;
-        this.httpListenerConfig = new HttpListenerConfig.Builder(httpListenerConfigName,host,port,basePath).build();
+        this.httpListenerConfig = new HttpListenerConfig.Builder(httpListenerConfigName,baseUri).build();
         this.config = config;
     }
 

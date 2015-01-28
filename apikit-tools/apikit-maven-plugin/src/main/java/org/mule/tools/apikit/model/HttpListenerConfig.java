@@ -32,7 +32,24 @@ public class HttpListenerConfig
         private String port;
         private String basePath;
 
+
         public Builder(final String name, final String host, final String port, final String basePath) {
+            if(StringUtils.isEmpty(name)) {
+                throw new IllegalArgumentException("Name attribute cannot be null or empty");
+            }
+            if(StringUtils.isEmpty(host)) {
+                throw new IllegalArgumentException("Host attribute cannot be null or empty");
+            }
+            if(StringUtils.isEmpty(port)) {
+                throw new IllegalArgumentException("Port attribute cannot be null or empty");
+            }
+            this.name = name;
+            this.host = host;
+            this.port = port;
+            this.basePath = basePath;
+        }
+
+        public Builder(final String name, final String baseUri) {
             if(StringUtils.isEmpty(name)) {
                 throw new IllegalArgumentException("Name attribute cannot be null or empty");
             }

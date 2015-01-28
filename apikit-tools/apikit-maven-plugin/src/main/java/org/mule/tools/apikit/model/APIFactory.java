@@ -17,7 +17,7 @@ public class APIFactory
 {
     private Map<File, API> apis = new HashMap<File, API>();
 
-    public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, HttpListenerConfig httpListenerConfig, String path)
+    public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, String path)
     {
         Validate.notNull(yamlFile);
         if(apis.containsKey(yamlFile))
@@ -29,15 +29,15 @@ public class APIFactory
             }
             api.setPath(path);
             api.setConfig(config);
-            if (httpListenerConfig == null)
-            {
-                api.setHttpListenerConfig(new HttpListenerConfig.Builder().build());
-            }
-            else
-            {
-                api.setHttpListenerConfig(httpListenerConfig);
-            }
-            return api;
+            //if (httpListenerConfig == null)
+            //{
+            //    api.setHttpListenerConfig(new HttpListenerConfig.Builder().build());
+            //}
+            //else
+            //{
+            //    api.setHttpListenerConfig(httpListenerConfig);
+            //}
+            //return api;
         }
 
         API api = new API(yamlFile, xmlFile, httpListenerConfig, path);

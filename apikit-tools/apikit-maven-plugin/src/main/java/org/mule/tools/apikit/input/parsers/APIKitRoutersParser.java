@@ -65,22 +65,24 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
 
             for (File yamlPath : yamlPaths) {
                 if (yamlPath.getName().equals(config.getRaml())) {
-                    Element listener = element.getParentElement().getChildren().get(0);
-
-                    Attribute httpListenerConfigRef = listener.getAttribute("config-ref");
-                    String httpListenerConfigId = httpListenerConfigRef != null ? httpListenerConfigRef.getValue() : HttpListenerConfig.DEFAULT_CONFIG_NAME;
-
-                    HttpListenerConfig httpListenerConfig = httpListenerConfigs.get(httpListenerConfigId);
-                    if(httpListenerConfig == null) {
-                        throw new IllegalStateException("An HTTP Listener configuration is mandatory.");
+                    Element inbound = findListenerOrInboundEndpoint(element.getParentElement().getChildren());
+                    HttpListenerConfig httpListenerConfig = null;
+                    if (inbound == null)
+                    {
+                        throw new IllegalStateException("The main flow must have an inbound-endpoint or listener");
                     }
+                    if ("listener".equals(inbound.getName()))
+                    {
+                        Attribute httpListenerConfigRef = inbound.getAttribute("config-ref");
+                        String httpListenerConfigId = httpListenerConfigRef != null ? httpListenerConfigRef.getValue() : HttpListenerConfig.DEFAULT_CONFIG_NAME;
 
-                    // TODO Unhack, it is assuming that the router will always be in a flow
-                    // where the first element is going to be an http listener
-                    if (!"listener".equals(listener.getName())) {
-                        throw new IllegalStateException("The first element of the main flow must be a listener");
+                        httpListenerConfig = httpListenerConfigs.get(httpListenerConfigId);
+                        if (httpListenerConfig == null)
+                        {
+                            throw new IllegalStateException("An HTTP Listener configuration is mandatory.");
+                        }
                     }
-                    String path = getPathFromListener(listener);
+                    String path = getPathFromInbound(inbound);
 
                     includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, config, httpListenerConfig, path));
                 }
@@ -89,8 +91,26 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
         return includedApis;
     }
 
-    private String getPathFromListener(Element listener){
-        String path = listener.getAttributeValue("path");
+    private Element findListenerOrInboundEndpoint(List<Element> elements)
+    {
+        for (Element element:elements)
+        {
+            if ("listener".equals(element.getName()) || "inbound-endpoint".equals(element.getName()))
+            {
+                return element;
+            }
+        }
+        return null;
+    }
+
+
+    private String getPathFromInbound(Element inbound){
+        String path = inbound.getAttributeValue("address");
+        if (path != null)
+        {
+            return path;
+        }
+        path = inbound.getAttributeValue("path");
         if (path == null) {
             path = "";
         } else  if (!path.startsWith("/")) {
