@@ -76,8 +76,8 @@ public class RAMLFilesParser
 //                    {
 //                        port = HttpListenerConfig.DEFAULT_PORT;
 //                    }
-//                    String path = APIKitTools.getPathFromUri(raml.getBaseUri());
-                    collectResources(ramlFile, raml.getResources(), raml.getBaseUri());
+                     String path = APIKitTools.getPathFromUri(raml.getBaseUri());
+                    collectResources(ramlFile, raml.getResources(), raml.getBaseUri(), path);
                     processedFiles.add(ramlFile);
                 }
                 catch (Exception e)

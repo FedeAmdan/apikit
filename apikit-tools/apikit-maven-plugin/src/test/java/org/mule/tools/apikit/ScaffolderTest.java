@@ -37,6 +37,7 @@ public class ScaffolderTest {
     public void setUp() {
         folder.newFolder("scaffolder");
         folder.newFolder("scaffolder-existing");
+        folder.newFolder("scaffolder-existing-old");
     }
 
     @Test
@@ -106,6 +107,29 @@ public class ScaffolderTest {
 
         assertTrue(xmlFile.exists());
         String s = IOUtils.toString(new FileInputStream(xmlFile));
+        assertEquals(1, countOccurences(s, "<http:listener-config name=\"HTTP_Listener_Configuration\" host=\"localhost\" port=\"${serverPort}\" />"));
+        assertEquals(1, countOccurences(s, "<http:listener config-ref=\"HTTP_Listener_Configuration\" path=\"/api/*\" />"));
+        assertEquals(0, countOccurences(s, "<http:inbound-endpoint port=\"${serverPort}\" host=\"localhost\" path=\"api\"/>"));
+        assertEquals(1, countOccurences(s, "get:/pet"));
+        assertEquals(1, countOccurences(s, "post:/pet"));
+    }
+
+
+    @Test
+    public void testAlreadyExistsOldGenerate() throws Exception {
+        List<File> yamls = Arrays.asList(getFile("scaffolder-existing-old/simple.yaml"));
+        File xmlFile = getFile("scaffolder-existing-old/simple.xml");
+        List<File> xmls = Arrays.asList(xmlFile);
+        File muleXmlOut = folder.newFolder("mule-xml-out");
+
+        Scaffolder scaffolder = createScaffolder(yamls, xmls, muleXmlOut);
+        scaffolder.run();
+
+        assertTrue(xmlFile.exists());
+        String s = IOUtils.toString(new FileInputStream(xmlFile));
+        assertEquals(0, countOccurences(s, "<http:listener-config name=\"HTTP_Listener_Configuration\" host=\"localhost\" port=\"${serverPort}\" />"));
+        assertEquals(0, countOccurences(s, "<http:listener config-ref=\"HTTP_Listener_Configuration\" path=\"/api/*\" />"));
+        assertEquals(1, countOccurences(s, "<http:inbound-endpoint port=\"${serverPort}\" host=\"localhost\" path=\"api\"/>"));
 
         assertEquals(1, countOccurences(s, "get:/pet"));
         assertEquals(1, countOccurences(s, "post:/pet"));
