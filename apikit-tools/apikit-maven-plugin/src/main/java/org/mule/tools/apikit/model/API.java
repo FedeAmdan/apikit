@@ -20,6 +20,7 @@ public class API {
 
     private APIKitConfig config;
     private HttpListenerConfig httpListenerConfig;
+    private String baseUri;
     private File xmlFile;
     private File yamlFile;
     private String id;

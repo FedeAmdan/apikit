@@ -61,8 +61,16 @@ public class APIKitFlowsParser implements MuleConfigFileParser {
                 if (api.getPath() == null) {
                     throw new IllegalStateException("Api path is invalid");
                 }
-                String path = APIKitTools.getCompletePathFromBasePathAndPath(api.getHttpListenerConfig().getBasePath(), api.getPath());
-                entries.add(new ResourceActionMimeTypeTriplet(api, path + resource, flow.getAction(), flow.getMimeType()));
+                String completePath;
+                if (api.getHttpListenerConfig() != null)
+                {
+                    completePath = APIKitTools.getCompletePathFromBasePathAndPath(api.getHttpListenerConfig().getBasePath(), api.getPath());
+                }
+                else
+                {
+                    completePath = api.getPath();
+                }
+                entries.add(new ResourceActionMimeTypeTriplet(api, completePath + resource, flow.getAction(), flow.getMimeType()));
             } else {
                 throw new IllegalStateException("No APIKit entries found in Mule config");
             }

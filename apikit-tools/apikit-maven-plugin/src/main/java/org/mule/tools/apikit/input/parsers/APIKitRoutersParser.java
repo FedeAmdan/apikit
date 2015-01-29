@@ -105,12 +105,12 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
 
 
     private String getPathFromInbound(Element inbound){
-        String path = inbound.getAttributeValue("address");
-        if (path != null)
+        String address = inbound.getAttributeValue("address");
+        if (address != null)
         {
-            return path;
+            return APIKitTools.getPathFromUri(address);
         }
-        path = inbound.getAttributeValue("path");
+        String path = inbound.getAttributeValue("path");
         if (path == null) {
             path = "";
         } else  if (!path.startsWith("/")) {

@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
+import org.mule.tools.apikit.misc.APIKitTools;
 
 public class HttpListenerConfig
 {
@@ -50,19 +51,18 @@ public class HttpListenerConfig
         }
 
         public Builder(final String name, final String baseUri) {
-            if(StringUtils.isEmpty(name)) {
-                throw new IllegalArgumentException("Name attribute cannot be null or empty");
+            this.host = APIKitTools.getHostFromUri(baseUri);
+            if (this.host == "")
+            {
+                this.host = HttpListenerConfig.DEFAULT_HOST;
             }
-            if(StringUtils.isEmpty(host)) {
-                throw new IllegalArgumentException("Host attribute cannot be null or empty");
+            this.port = APIKitTools.getPortFromUri(baseUri);
+            if (this.port == "")
+            {
+                this.port = HttpListenerConfig.DEFAULT_PORT;
             }
-            if(StringUtils.isEmpty(port)) {
-                throw new IllegalArgumentException("Port attribute cannot be null or empty");
-            }
-            this.name = name;
-            this.host = host;
-            this.port = port;
-            this.basePath = basePath;
+            //The baseUri path is not used. It is part of the path attribute in the listener.
+            basePath = DEFAULT_BASE_PATH;
         }
 
 
