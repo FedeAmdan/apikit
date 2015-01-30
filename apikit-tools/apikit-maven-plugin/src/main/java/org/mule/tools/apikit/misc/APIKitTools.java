@@ -38,7 +38,7 @@ public class APIKitTools {
         int curlyBrace = baseUri.indexOf("{",slash);
         if (curlyBrace == -1)
         {
-            return addAsteriskToPath(path); //TODO EN MODO VIEJO TMB SE LE AGREGA ASTERISCO?
+            return addAsteriskToPath(path); //TODO EN MODO VIEJO TMB SE LE AGREGA ASTERISCO? no
         }
         path = baseUri.substring(slash,curlyBrace);
         return addAsteriskToPath(path);

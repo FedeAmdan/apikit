@@ -25,6 +25,7 @@ public class API {
     private File yamlFile;
     private String id;
     private String path;
+    private boolean useInboundEndpoints;
 
 
     public API(File yamlFile, File xmlFile, HttpListenerConfig httpListenerConfig, String path) {
@@ -33,12 +34,17 @@ public class API {
         this.xmlFile = xmlFile;
         this.path = path;
         id = FilenameUtils.removeExtension(yamlFile.getName()).trim();
+        useInboundEndpoints = false;
     }
 
-    public API(File yamlFile, File xmlFile, APIKitConfig config, String baseUri, String path){
+    public API(File yamlFile, File xmlFile, APIKitConfig config, String baseUri, String path, boolean useInboundEndpoint){
         this(yamlFile, xmlFile, null, path);
-        String httpListenerConfigName = id == null? HttpListenerConfig.DEFAULT_CONFIG_NAME : id + "-" + HttpListenerConfig.DEFAULT_CONFIG_NAME;
-        this.httpListenerConfig = new HttpListenerConfig.Builder(httpListenerConfigName,baseUri).build();
+        this.useInboundEndpoints = useInboundEndpoint;
+        if (!useInboundEndpoint)
+        {
+            String httpListenerConfigName = id == null ? HttpListenerConfig.DEFAULT_CONFIG_NAME : id + "-" + HttpListenerConfig.DEFAULT_CONFIG_NAME;
+            this.httpListenerConfig = new HttpListenerConfig.Builder(httpListenerConfigName, baseUri).build();
+        }
         this.config = config;
     }
 
@@ -94,9 +100,9 @@ public class API {
         config = new APIKitConfig.Builder(yamlFile.getName()).setName(id + "-" + APIKitConfig.DEFAULT_CONFIG_NAME).build();
     }
 
-    public void setDefaultHttpListenerConfig() {
-        httpListenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME, HttpListenerConfig.DEFAULT_HOST, HttpListenerConfig.DEFAULT_PORT, HttpListenerConfig.DEFAULT_BASE_PATH);
-    }
+    //public void setDefaultHttpListenerConfig() {
+    //    httpListenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME, HttpListenerConfig.DEFAULT_HOST, HttpListenerConfig.DEFAULT_PORT, HttpListenerConfig.DEFAULT_BASE_PATH);
+    //}
 
     @Override
     public boolean equals(Object o) {

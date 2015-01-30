@@ -40,4 +40,24 @@ public class APIFactory
         apis.put(yamlFile, api);
         return api;
     }
+
+    public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, String path)
+    {
+        Validate.notNull(yamlFile);
+        if(apis.containsKey(yamlFile))
+        {
+            API api = apis.get(yamlFile);
+            if(api.getXmlFile() == null && xmlFile != null)
+            {
+                api.setXmlFile(xmlFile);
+            }
+            api.setPath(path);
+            api.setConfig(config);
+            return api;
+        }
+
+        API api = new API(yamlFile, xmlFile, null, path);
+        apis.put(yamlFile, api);
+        return api;
+    }
 }
