@@ -125,7 +125,7 @@ public class RAMLFilesParser
                 String id = FilenameUtils.removeExtension(filename.getName()).trim();
                 String httpListenerConfigName = id == null? HttpListenerConfig.DEFAULT_CONFIG_NAME : id + "-" + HttpListenerConfig.DEFAULT_CONFIG_NAME;
 
-                API api = apiFactory.createAPIBinding(filename, null, null, new HttpListenerConfig.Builder(httpListenerConfigName, baseUri).build(), path);
+                API api = apiFactory.createAPIBinding(filename, null, null, baseUri, new HttpListenerConfig.Builder(httpListenerConfigName, baseUri).build(), path, false);
 
                 Map<String, MimeType> mimeTypes = action.getBody();
                 boolean addGenericAction = false;

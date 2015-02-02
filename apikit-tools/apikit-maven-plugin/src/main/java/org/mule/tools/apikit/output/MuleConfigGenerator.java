@@ -135,16 +135,20 @@ public class MuleConfigGenerator {
         XPathExpression muleExp = XPathFactory.instance().compile("//*[local-name()='mule']");
         List<Element> mules = muleExp.evaluate(doc);
         Element mule = mules.get(0);
-        if (api.getHttpListenerConfig() == null)
+        String listenerConfigRef = null;
+        if (!api.useInboundEndpoint())
         {
-            api.setHttpListenerConfig(new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME, HttpListenerConfig.DEFAULT_HOST, HttpListenerConfig.DEFAULT_PORT, HttpListenerConfig.DEFAULT_BASE_PATH));
+            if (api.getHttpListenerConfig() == null)
+            {
+                api.setHttpListenerConfig(new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME, HttpListenerConfig.DEFAULT_HOST, HttpListenerConfig.DEFAULT_PORT, HttpListenerConfig.DEFAULT_BASE_PATH));
+            }
+            new HttpListenerConfigScope(api,mule).generate();
+            listenerConfigRef = api.getHttpListenerConfig().getName();
         }
-        new HttpListenerConfigScope(api,mule).generate();
         new APIKitConfigScope(api.getConfig(), mule).generate();
         Element exceptionStrategy = new ExceptionStrategyScope(mule, api.getId()).generate();
         String configRef = api.getConfig() != null? api.getConfig().getName() : null;
 
-        String listenerConfigRef = api.getHttpListenerConfig().getName();
         new FlowScope(mule, exceptionStrategy.getAttribute("name").getValue(),
                       api, configRef, listenerConfigRef).generate();
     }

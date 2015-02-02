@@ -20,33 +20,44 @@ public class API {
 
     private APIKitConfig config;
     private HttpListenerConfig httpListenerConfig;
+    private String path;
+
     private String baseUri;
     private File xmlFile;
     private File yamlFile;
     private String id;
-    private String path;
-    private boolean useInboundEndpoints;
+    private Boolean useInboundEndpoint;
 
 
-    public API(File yamlFile, File xmlFile, HttpListenerConfig httpListenerConfig, String path) {
-        this.httpListenerConfig = httpListenerConfig;
+    public API(File yamlFile, File xmlFile, String baseUri) {
         this.yamlFile = yamlFile;
         this.xmlFile = xmlFile;
-        this.path = path;
+        this.baseUri = baseUri;
         id = FilenameUtils.removeExtension(yamlFile.getName()).trim();
-        useInboundEndpoints = false;
     }
 
-    public API(File yamlFile, File xmlFile, APIKitConfig config, String baseUri, String path, boolean useInboundEndpoint){
-        this(yamlFile, xmlFile, null, path);
-        this.useInboundEndpoints = useInboundEndpoint;
+    public API(File yamlFile, File xmlFile, HttpListenerConfig httpListenerConfig, String path) {
+        this(yamlFile,xmlFile,null);
+        this.httpListenerConfig = httpListenerConfig;
+        this.path = path;
+    }
+
+    public API(File yamlFile, File xmlFile, APIKitConfig config, String baseUri, Boolean useInboundEndpoint){
+        this(yamlFile, xmlFile, null, baseUri);
+        this.useInboundEndpoint = useInboundEndpoint;
         if (!useInboundEndpoint)
         {
             String httpListenerConfigName = id == null ? HttpListenerConfig.DEFAULT_CONFIG_NAME : id + "-" + HttpListenerConfig.DEFAULT_CONFIG_NAME;
             this.httpListenerConfig = new HttpListenerConfig.Builder(httpListenerConfigName, baseUri).build();
+            this.path = APIKitTools.getPathFromUri(baseUri);
         }
         this.config = config;
     }
+    //
+    //public API(File yamlFile, File xmlFile, APIKitConfig config, String baseUri, String path)
+    //{
+    //    this(yamlFile, xmlFile,config,baseUri,path,false);
+    //}
 
     public File getXmlFile() {
         return xmlFile;
@@ -94,10 +105,29 @@ public class API {
 
     public void setHttpListenerConfig(HttpListenerConfig httpListenerConfig) {
         this.httpListenerConfig = httpListenerConfig;
+        this.useInboundEndpoint = false;
     }
 
     public void setDefaultConfig() {
         config = new APIKitConfig.Builder(yamlFile.getName()).setName(id + "-" + APIKitConfig.DEFAULT_CONFIG_NAME).build();
+    }
+
+    public Boolean useInboundEndpoint()
+    {
+        return useInboundEndpoint;
+    }
+    public boolean setUseInboundEndpoint(Boolean useInboundEndpoint)
+    {
+        return this.useInboundEndpoint = useInboundEndpoint;
+    }
+    public String getBaseUri()
+    {
+        return baseUri;
+    }
+
+    public void setBaseUri(String baseUri)
+    {
+        this.baseUri = baseUri;
     }
 
     //public void setDefaultHttpListenerConfig() {

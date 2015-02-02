@@ -82,10 +82,39 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
                         {
                             throw new IllegalStateException("An HTTP Listener configuration is mandatory.");
                         }
-                    }
-                    String path = getPathFromInbound(inbound);
+                        String path = getPathFromInbound(inbound);
 
-                    includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, config, httpListenerConfig, path));
+                        includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, config, httpListenerConfig, path));
+                    }
+                    else if ("inbound-endpoint".equals(inbound.getName()))
+                    {
+
+                        String path = inbound.getAttributeValue("path");
+
+                        // Case the user is specifying baseURI using address attribute
+                        if (path == null)
+                        {
+                            String address = inbound.getAttributeValue("address");
+
+                            if (address == null)
+                            {
+                                throw new IllegalStateException("Neither 'path' nor 'address' attribute was used. " +
+                                                                "Cannot retrieve base URI.");
+                            }
+                            path = address;
+                        }
+                        else if (!path.startsWith("/"))
+                        {
+                            path = "/" + path;
+                        }
+                        includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, config, path));
+                        //includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, config, ));
+                    }
+                    else
+                    {
+                        throw new IllegalStateException("The first element of the main flow must be an " +
+                                                        "inbound-endpoint or listener");
+                    }
                 }
             }
         }

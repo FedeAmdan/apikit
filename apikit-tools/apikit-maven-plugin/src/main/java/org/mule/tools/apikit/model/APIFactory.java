@@ -17,7 +17,38 @@ public class APIFactory
 {
     private Map<File, API> apis = new HashMap<File, API>();
 
+    public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, String baseUri)
+    {
+        return createAPIBinding(yamlFile,xmlFile,config, baseUri, null, null,null);
+    }
+
     public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, HttpListenerConfig httpListenerConfig, String path)
+    {
+        return createAPIBinding(yamlFile,xmlFile,config, null, httpListenerConfig,path,null);
+    }
+
+    //public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, String path)
+    //{
+    //    Validate.notNull(yamlFile);
+    //    if(apis.containsKey(yamlFile))
+    //    {
+    //        API api = apis.get(yamlFile);
+    //        if(api.getXmlFile() == null && xmlFile != null)
+    //        {
+    //            api.setXmlFile(xmlFile);
+    //        }
+    //        api.setPath(path);
+    //        api.setConfig(config);
+    //        return api;
+    //    }
+    //
+    //    API api = new API(yamlFile, xmlFile, null, path);
+    //    apis.put(yamlFile, api);
+    //    return api;
+    //}
+
+
+    public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, String baseUri, HttpListenerConfig httpListenerConfig, String path, Boolean useInboundEndpoint)
     {
         Validate.notNull(yamlFile);
         if(apis.containsKey(yamlFile))
@@ -29,6 +60,9 @@ public class APIFactory
             }
             api.setPath(path);
             api.setConfig(config);
+            api.setBaseUri(baseUri);
+            api.setUseInboundEndpoint(useInboundEndpoint);
+
             if (httpListenerConfig != null)
             {
                 api.setHttpListenerConfig(httpListenerConfig);
@@ -37,27 +71,10 @@ public class APIFactory
         }
 
         API api = new API(yamlFile, xmlFile, httpListenerConfig, path);
+        api.setUseInboundEndpoint(useInboundEndpoint);
+        api.setBaseUri(baseUri);
         apis.put(yamlFile, api);
         return api;
     }
 
-    public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, String path)
-    {
-        Validate.notNull(yamlFile);
-        if(apis.containsKey(yamlFile))
-        {
-            API api = apis.get(yamlFile);
-            if(api.getXmlFile() == null && xmlFile != null)
-            {
-                api.setXmlFile(xmlFile);
-            }
-            api.setPath(path);
-            api.setConfig(config);
-            return api;
-        }
-
-        API api = new API(yamlFile, xmlFile, null, path);
-        apis.put(yamlFile, api);
-        return api;
-    }
 }

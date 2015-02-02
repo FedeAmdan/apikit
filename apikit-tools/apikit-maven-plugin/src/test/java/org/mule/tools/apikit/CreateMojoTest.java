@@ -22,10 +22,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+
 
 @RunWith(JUnit4.class)
 public class CreateMojoTest extends AbstractMojoTestCase {
@@ -99,11 +98,20 @@ public class CreateMojoTest extends AbstractMojoTestCase {
 
         assertTrue(apiFile.exists());
         FileInputStream input = new FileInputStream(apiFile);
-        String s = IOUtils.toString(input);
+        String ramlFileContent = IOUtils.toString(input);
         input.close();
 
-        assertTrue(s.length() > 0);
-        //TODO Assert content
+        assertTrue(ramlFileContent.length() > 0);
+        File muleConfigFile = new File (project.getPath() + "/src/main/app/hello.xml");
+        assertTrue(muleConfigFile.exists());
+
+        input = new FileInputStream(muleConfigFile);
+        String muleConfigContent = IOUtils.toString(input);
+        input.close();
+
+        assertTrue(muleConfigContent.length() > 0);
+        assertTrue(muleConfigContent.contains("listener"));
+
     }
 
 }

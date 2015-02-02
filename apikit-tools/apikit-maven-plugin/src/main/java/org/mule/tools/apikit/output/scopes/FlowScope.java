@@ -24,11 +24,19 @@ public class FlowScope implements Scope {
 
         main.setAttribute("name", api.getId() + "-" + "main");
 
-        Element httpListener = new Element("listener", HTTP_NAMESPACE.getNamespace());
-        httpListener.setAttribute("config-ref", httpListenerConfigRef);
-        httpListener.setAttribute("path", api.getPath());
-
-        main.addContent(httpListener);
+        if (httpListenerConfigRef != null)
+        {
+            Element httpListener = new Element("listener", HTTP_NAMESPACE.getNamespace());
+            httpListener.setAttribute("config-ref", httpListenerConfigRef);
+            httpListener.setAttribute("path", api.getPath());
+            main.addContent(httpListener);
+        }
+        else
+        {
+            Element httpInboundEndpoint = new Element("inbound-endpoint", HTTP_NAMESPACE.getNamespace());
+            httpInboundEndpoint.setAttribute("address", api.getBaseUri());
+            main.addContent(httpInboundEndpoint);
+        }
 
         Element restProcessor = new Element("router", APIKitTools.API_KIT_NAMESPACE.getNamespace());
         if(!StringUtils.isEmpty(configRef)) {
