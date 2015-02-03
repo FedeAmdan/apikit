@@ -6,6 +6,8 @@
  */
 package org.mule.tools.apikit.model;
 
+import org.mule.tools.apikit.misc.APIKitTools;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.HashMap;
@@ -17,9 +19,9 @@ public class APIFactory
 {
     private Map<File, API> apis = new HashMap<File, API>();
 
-    public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, String baseUri)
+    public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, String path)
     {
-        return createAPIBinding(yamlFile,xmlFile,config, baseUri, null, null,true);
+        return createAPIBinding(yamlFile, xmlFile, config, null, null, path, true);
     }
 
     public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, HttpListenerConfig httpListenerConfig, String path)

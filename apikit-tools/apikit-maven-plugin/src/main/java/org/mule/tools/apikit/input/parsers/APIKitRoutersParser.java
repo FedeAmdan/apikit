@@ -67,46 +67,38 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
                 if (yamlPath.getName().equals(config.getRaml()))
                 {
                     Element inbound = findListenerOrInboundEndpoint(element.getParentElement().getChildren());
-                    HttpListenerConfig httpListenerConfig = null;
+
                     if (inbound == null)
                     {
                         throw new IllegalStateException("The main flow must have an inbound-endpoint or listener");
                     }
                     if ("listener".equals(inbound.getName()))
                     {
-                        Attribute httpListenerConfigRef = inbound.getAttribute("config-ref");
-                        String httpListenerConfigId = httpListenerConfigRef != null ? httpListenerConfigRef.getValue() : HttpListenerConfig.DEFAULT_CONFIG_NAME;
-
-                        httpListenerConfig = httpListenerConfigs.get(httpListenerConfigId);
-                        if (httpListenerConfig == null)
-                        {
-                            throw new IllegalStateException("An HTTP Listener configuration is mandatory.");
-                        }
+                        HttpListenerConfig httpListenerConfig = getHTTPListenerConfig(inbound);
                         String path = getPathFromInbound(inbound);
-
                         includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, config, httpListenerConfig, path));
                     }
                     else if ("inbound-endpoint".equals(inbound.getName()))
                     {
-
-                        String path = inbound.getAttributeValue("path");
-
-                        // Case the user is specifying baseURI using address attribute
-                        if (path == null)
-                        {
-                            String address = inbound.getAttributeValue("address");
-
-                            if (address == null)
-                            {
-                                throw new IllegalStateException("Neither 'path' nor 'address' attribute was used. " +
-                                                                "Cannot retrieve base URI.");
-                            }
-                            path = address;
-                        }
-                        else if (!path.startsWith("/"))
-                        {
-                            path = "/" + path;
-                        }
+                        String path = getPathFromInbound(inbound);
+                        //String path = inbound.getAttributeValue("path");
+                        //
+                        //// Case the user is specifying baseURI using address attribute
+                        //if (path == null)
+                        //{
+                        //    String address = inbound.getAttributeValue("address");
+                        //
+                        //    if (address == null)
+                        //    {
+                        //        throw new IllegalStateException("Neither 'path' nor 'address' attribute was used. " +
+                        //                                        "Cannot retrieve base URI.");
+                        //    }
+                        //    path = address;
+                        //}
+                        //else if (!path.startsWith("/"))
+                        //{
+                        //    path = "/" + path;
+                        //}
                         includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, config, path));
                         //includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, config, ));
                     }
@@ -133,12 +125,26 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
         return null;
     }
 
+    private HttpListenerConfig getHTTPListenerConfig(Element inbound)
+    {
+        Attribute httpListenerConfigRef = inbound.getAttribute("config-ref");
+        String httpListenerConfigId = httpListenerConfigRef != null ? httpListenerConfigRef.getValue() : HttpListenerConfig.DEFAULT_CONFIG_NAME;
+
+        HttpListenerConfig httpListenerConfig = httpListenerConfigs.get(httpListenerConfigId);
+        if (httpListenerConfig == null)
+        {
+            throw new IllegalStateException("An HTTP Listener configuration is mandatory.");
+        }
+        return httpListenerConfig;
+
+    }
+
 
     private String getPathFromInbound(Element inbound){
         String address = inbound.getAttributeValue("address");
         if (address != null)
         {
-            return APIKitTools.getPathFromUri(address,true);
+            return APIKitTools.getPathFromUri(address,false);
         }
         String path = inbound.getAttributeValue("path");
         if (path == null) {

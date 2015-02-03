@@ -5,7 +5,6 @@ import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
-import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.APIFactory;
 import org.mule.tools.apikit.model.ResourceActionMimeTypeTriplet;
 import org.mule.tools.apikit.output.GenerationModel;
@@ -36,7 +35,7 @@ public class RAMLFilesParserTest
         yamlPaths.add(new File("leagues.yaml"));
 
         HashMap<File, InputStream> streams = new HashMap<File, InputStream>();
-        streams.put(new File(""), resourceAsStream);
+        streams.put(new File("hello"), resourceAsStream);
 
         RAMLFilesParser ramlFilesParser = new RAMLFilesParser(log, streams, new APIFactory());
 
@@ -52,6 +51,6 @@ public class RAMLFilesParserTest
         Assert.assertEquals("localhost", triplet.getApi().getHttpListenerConfig().getHost());
         Assert.assertEquals("8090", triplet.getApi().getHttpListenerConfig().getPort());
         Assert.assertEquals("/", triplet.getApi().getHttpListenerConfig().getBasePath());
-        Assert.assertEquals(null,triplet.getApi().getHttpListenerConfig().getName());
+        Assert.assertEquals("hello-httpListenerConfig",triplet.getApi().getHttpListenerConfig().getName());
     }
 }
