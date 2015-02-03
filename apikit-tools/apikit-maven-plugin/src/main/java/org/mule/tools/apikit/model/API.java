@@ -24,26 +24,26 @@ public class API {
 
     private String baseUri;
     private File xmlFile;
-    private File yamlFile;
+    private File ramlFile;
     private String id;
     private Boolean useInboundEndpoint;
 
 
-    public API(File yamlFile, File xmlFile, String baseUri) {
-        this.yamlFile = yamlFile;
+    public API(File ramlFile, File xmlFile, String baseUri) {
+        this.ramlFile = ramlFile;
         this.xmlFile = xmlFile;
         this.baseUri = baseUri;
-        id = FilenameUtils.removeExtension(yamlFile.getName()).trim();
+        id = FilenameUtils.removeExtension(ramlFile.getName()).trim();
     }
 
-    public API(File yamlFile, File xmlFile, HttpListenerConfig httpListenerConfig, String path) {
-        this(yamlFile,xmlFile,null);
+    public API(File ramlFile, File xmlFile, HttpListenerConfig httpListenerConfig, String path) {
+        this(ramlFile,xmlFile,null);
         this.httpListenerConfig = httpListenerConfig;
         this.path = path;
     }
 
-    public API(File yamlFile, File xmlFile, APIKitConfig config, String baseUri, Boolean useInboundEndpoint){
-        this(yamlFile, xmlFile, null, baseUri);
+    public API(File ramlFile, File xmlFile, APIKitConfig config, String baseUri, Boolean useInboundEndpoint){
+        this(ramlFile, xmlFile, null, baseUri);
         this.useInboundEndpoint = useInboundEndpoint;
         if (!useInboundEndpoint)
         {
@@ -72,13 +72,13 @@ public class API {
         if (xmlFile == null) {
             xmlFile = new File(rootDirectory,
                     FilenameUtils.getBaseName(
-                            yamlFile.getAbsolutePath()) + ".xml");
+                            ramlFile.getAbsolutePath()) + ".xml");
         }
         return xmlFile;
     }
 
-    public File getYamlFile() {
-        return yamlFile;
+    public File getRamlFile() {
+        return ramlFile;
     }
 
     public String getPath()
@@ -109,7 +109,7 @@ public class API {
     }
 
     public void setDefaultConfig() {
-        config = new APIKitConfig.Builder(yamlFile.getName()).setName(id + "-" + APIKitConfig.DEFAULT_CONFIG_NAME).build();
+        config = new APIKitConfig.Builder(ramlFile.getName()).setName(id + "-" + APIKitConfig.DEFAULT_CONFIG_NAME).build();
     }
 
     public Boolean useInboundEndpoint()
@@ -141,14 +141,14 @@ public class API {
 
         API api = (API) o;
 
-        if (!yamlFile.equals(api.yamlFile)) return false;
+        if (!ramlFile.equals(api.ramlFile)) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return yamlFile.hashCode();
+        return ramlFile.hashCode();
     }
 
     public String getId() {

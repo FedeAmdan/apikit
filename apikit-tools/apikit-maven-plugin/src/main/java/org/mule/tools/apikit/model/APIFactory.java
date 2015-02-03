@@ -19,14 +19,14 @@ public class APIFactory
 {
     private Map<File, API> apis = new HashMap<File, API>();
 
-    public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, String path)
+    public API createAPIBinding(File ramlFile, File xmlFile, APIKitConfig config, String path)
     {
-        return createAPIBinding(yamlFile, xmlFile, config, null, null, path, true);
+        return createAPIBinding(ramlFile, xmlFile, config, null, null, path, true);
     }
 
-    public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, HttpListenerConfig httpListenerConfig, String path)
+    public API createAPIBinding(File ramlFile, File xmlFile, APIKitConfig config, HttpListenerConfig httpListenerConfig, String path)
     {
-        return createAPIBinding(yamlFile,xmlFile,config, null, httpListenerConfig,path,false);
+        return createAPIBinding(ramlFile,xmlFile,config, null, httpListenerConfig,path,false);
     }
 
     //public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, String path)
@@ -50,12 +50,12 @@ public class APIFactory
     //}
 
 
-    public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, String baseUri, HttpListenerConfig httpListenerConfig, String path, Boolean useInboundEndpoint)
+    public API createAPIBinding(File ramlFile, File xmlFile, APIKitConfig config, String baseUri, HttpListenerConfig httpListenerConfig, String path, Boolean useInboundEndpoint)
     {
-        Validate.notNull(yamlFile);
-        if(apis.containsKey(yamlFile))
+        Validate.notNull(ramlFile);
+        if(apis.containsKey(ramlFile))
         {
-            API api = apis.get(yamlFile);
+            API api = apis.get(ramlFile);
             if(api.getXmlFile() == null && xmlFile != null)
             {
                 api.setXmlFile(xmlFile);
@@ -72,10 +72,10 @@ public class APIFactory
             return api;
         }
 
-        API api = new API(yamlFile, xmlFile, httpListenerConfig, path);
+        API api = new API(ramlFile, xmlFile, httpListenerConfig, path);
         api.setUseInboundEndpoint(useInboundEndpoint);
         api.setBaseUri(baseUri);
-        apis.put(yamlFile, api);
+        apis.put(ramlFile, api);
         return api;
     }
 

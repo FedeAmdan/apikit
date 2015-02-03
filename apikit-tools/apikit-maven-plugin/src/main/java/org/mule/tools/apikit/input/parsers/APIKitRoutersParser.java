@@ -30,18 +30,18 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
 
     private final Map<String, APIKitConfig> apikitConfigs;
     private final Map<String, HttpListenerConfig> httpListenerConfigs;
-    private final Set<File> yamlPaths;
+    private final Set<File> ramlPaths;
     private final File file;
     private final APIFactory apiFactory;
 
     public APIKitRoutersParser(final Map<String, APIKitConfig> apikitConfigs,
                                final Map<String, HttpListenerConfig> httpListenerConfigs,
-                               final Set<File> yamlPaths,
+                               final Set<File> ramlPaths,
                                final File file,
                                final APIFactory apiFactory) {
         this.apikitConfigs = apikitConfigs;
         this.httpListenerConfigs = httpListenerConfigs;
-        this.yamlPaths = yamlPaths;
+        this.ramlPaths = ramlPaths;
         this.file = file;
         this.apiFactory = apiFactory;
     }
@@ -63,8 +63,8 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
                 throw new IllegalStateException("An Apikit configuration is mandatory.");
             }
 
-            for (File yamlPath : yamlPaths) {
-                if (yamlPath.getName().equals(config.getRaml()))
+            for (File ramlPath : ramlPaths) {
+                if (ramlPath.getName().equals(config.getRaml()))
                 {
                     Element inbound = findListenerOrInboundEndpoint(element.getParentElement().getChildren());
 
@@ -76,7 +76,7 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
                     {
                         HttpListenerConfig httpListenerConfig = getHTTPListenerConfig(inbound);
                         String path = getPathFromInbound(inbound);
-                        includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, config, httpListenerConfig, path));
+                        includedApis.put(configId, apiFactory.createAPIBinding(ramlPath, file, config, httpListenerConfig, path));
                     }
                     else if ("inbound-endpoint".equals(inbound.getName()))
                     {
@@ -99,7 +99,7 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
                         //{
                         //    path = "/" + path;
                         //}
-                        includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, config, path));
+                        includedApis.put(configId, apiFactory.createAPIBinding(ramlPath, file, config, path));
                         //includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, config, ));
                     }
                     else

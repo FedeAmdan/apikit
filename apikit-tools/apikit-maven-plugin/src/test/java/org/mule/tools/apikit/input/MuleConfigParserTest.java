@@ -49,7 +49,7 @@ public class MuleConfigParserTest {
         assertNotNull(apis);
         assertEquals(1, apis.size());
         API api = apis.iterator().next();
-        assertEquals("leagues.yaml", api.getYamlFile().getName());
+        assertEquals("leagues.yaml", api.getRamlFile().getName());
         assertEquals("leagues", api.getId());
         assertNotNull(api.getHttpListenerConfig());
         assertEquals("/", api.getHttpListenerConfig().getBasePath());
@@ -82,7 +82,7 @@ public class MuleConfigParserTest {
         assertNotNull(apis);
         assertEquals(1, apis.size());
         API api = apis.iterator().next();
-        assertEquals("leagues.yaml", api.getYamlFile().getName());
+        assertEquals("leagues.yaml", api.getRamlFile().getName());
         assertEquals("leagues", api.getId());
         assertNull(api.getHttpListenerConfig());
         assertEquals("/api", api.getPath());
@@ -111,7 +111,7 @@ public class MuleConfigParserTest {
         assertNotNull(apis);
         assertEquals(1, apis.size());
         API api = apis.iterator().next();
-        assertEquals("leagues.yaml", api.getYamlFile().getName());
+        assertEquals("leagues.yaml", api.getRamlFile().getName());
         assertEquals("leagues", api.getId());
         assertNotNull(api.getHttpListenerConfig());
         assertEquals("/", api.getHttpListenerConfig().getBasePath());
@@ -151,7 +151,7 @@ public class MuleConfigParserTest {
         Set<API> apis = muleConfigParser.getIncludedApis();
         assertNotNull(apis);
         assertEquals(1, apis.size());
-        assertEquals("leagues.yaml", apis.iterator().next().getYamlFile().getName());
+        assertEquals("leagues.yaml", apis.iterator().next().getRamlFile().getName());
 
         Map<String, APIKitConfig> configs = muleConfigParser.getApikitConfigs();
         APIKitConfig leaguesConfig = configs.get("leagues-config");

@@ -60,7 +60,7 @@ public class RAMLFilesParser
             }
             ResourceLoader resourceLoader = new CompositeResourceLoader(new DefaultResourceLoader(), new FileResourceLoader(ramlFile.getParentFile()));
 
-            if (isValidYaml(ramlFile.getName(), content, resourceLoader))
+            if (isValidRaml(ramlFile.getName(), content, resourceLoader))
             {
                 RamlDocumentBuilder builderNodeHandler = new RamlDocumentBuilder(resourceLoader);
                 try
@@ -99,7 +99,7 @@ public class RAMLFilesParser
         }
     }
 
-    private boolean isValidYaml(String fileName, String content, ResourceLoader resourceLoader)
+    private boolean isValidRaml(String fileName, String content, ResourceLoader resourceLoader)
     {
         List<ValidationResult> validationResults = RamlValidationService.createDefault(resourceLoader).validate(content, fileName);
         if (validationResults != null && !validationResults.isEmpty())

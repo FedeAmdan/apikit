@@ -22,6 +22,12 @@ public class APIKitToolsTest
         Assert.assertEquals("localhost.com", APIKitTools.getHostFromUri(uri));
         Assert.assertEquals("333", APIKitTools.getPortFromUri(uri));
         Assert.assertEquals("/path/path2/*", APIKitTools.getPathFromUri(uri,true));
+
+        uri = "http://localhost.com:${port}/path/path2/";
+        Assert.assertEquals("localhost.com", APIKitTools.getHostFromUri(uri));
+        Assert.assertEquals("${port}", APIKitTools.getPortFromUri(uri));
+        Assert.assertEquals("/path/path2/*", APIKitTools.getPathFromUri(uri,true));
+
     }
 
     @Ignore

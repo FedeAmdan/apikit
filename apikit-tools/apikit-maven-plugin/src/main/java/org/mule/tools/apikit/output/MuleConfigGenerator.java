@@ -69,7 +69,7 @@ public class MuleConfigGenerator {
             try {
                 doc = getOrCreateDocument(docs, api);
             } catch (Exception e) {
-                log.error("Error generating xml for file: [" + api.getYamlFile() + "]", e);
+                log.error("Error generating xml for file: [" + api.getRamlFile() + "]", e);
                 continue;
             }
 
@@ -78,14 +78,14 @@ public class MuleConfigGenerator {
         }
 
         // Write everything to files
-        for (Map.Entry<API, Document> yamlFileDescriptorDocumentEntry : docs.entrySet()) {
+        for (Map.Entry<API, Document> ramlFileDescriptorDocumentEntry : docs.entrySet()) {
             Format prettyFormat = Format.getPrettyFormat();
             prettyFormat.setIndent(INDENTATION);
             prettyFormat.setLineSeparator(System.getProperty("line.separator"));
             prettyFormat.setEncoding("UTF-8");
             XMLOutputter xout = new XMLOutputter(prettyFormat);
-            Document doc = yamlFileDescriptorDocumentEntry.getValue();
-            File xmlFile = yamlFileDescriptorDocumentEntry.getKey().getXmlFile(rootDirectory);
+            Document doc = ramlFileDescriptorDocumentEntry.getValue();
+            File xmlFile = ramlFileDescriptorDocumentEntry.getKey().getXmlFile(rootDirectory);
             try {
                 FileOutputStream fileOutputStream = new FileOutputStream(xmlFile);
                 xout.output(doc, fileOutputStream);

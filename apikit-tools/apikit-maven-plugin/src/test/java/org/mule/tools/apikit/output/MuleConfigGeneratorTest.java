@@ -64,7 +64,7 @@ public class MuleConfigGeneratorTest {
         File file = folder.newFile("hello.xml");
         HttpListenerConfig listenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME,"localhost","8080",HttpListenerConfig.DEFAULT_BASE_PATH);
         when(api.getId()).thenReturn("hello");
-        when(api.getYamlFile()).thenReturn(yaml);
+        when(api.getRamlFile()).thenReturn(yaml);
         when(api.getXmlFile(any(File.class))).thenReturn(file);
         when(api.getPath()).thenReturn("/api/*");
         when(api.getHttpListenerConfig()).thenReturn(listenerConfig);
@@ -119,7 +119,7 @@ public class MuleConfigGeneratorTest {
 
         File yaml = mock(File.class);
         when(yaml.getName()).thenReturn("hello.yaml");
-        when(api.getYamlFile()).thenReturn(yaml);
+        when(api.getRamlFile()).thenReturn(yaml);
         when(api.getId()).thenReturn("hello");
         File file = folder.newFile("hello.xml");
         when(api.getXmlFile(any(File.class))).thenReturn(file);
