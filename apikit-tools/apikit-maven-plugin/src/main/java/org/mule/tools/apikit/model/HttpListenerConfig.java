@@ -51,6 +51,7 @@ public class HttpListenerConfig
         }
 
         public Builder(final String name, final String baseUri) {
+            this.name = name;
             this.host = APIKitTools.getHostFromUri(baseUri);
             if (this.host == "")
             {

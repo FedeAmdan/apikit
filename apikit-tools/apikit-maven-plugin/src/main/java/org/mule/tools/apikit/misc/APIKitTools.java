@@ -9,6 +9,7 @@ package org.mule.tools.apikit.misc;
 import org.jdom2.Namespace;
 
 import org.mule.tools.apikit.model.API;
+import org.mule.tools.apikit.model.HttpListenerConfig;
 import org.mule.tools.apikit.output.NamespaceWithLocation;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class APIKitTools {
             "http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd"
     );
 
-    public static String getPathFromUri(String baseUri) {
+    public static String getPathFromUri(String baseUri, boolean addAsterisk) {
         int start = baseUri.indexOf("//") + 2;
         if (start == -1)
         {
@@ -32,16 +33,16 @@ public class APIKitTools {
         int slash = baseUri.indexOf("/", start);
         if (slash == -1 || slash == baseUri.length())
         {
-            return "/*";
+            return addAsterisk? "/*" : "/";
         }
         String path = baseUri.substring(slash, baseUri.length());
         int curlyBrace = baseUri.indexOf("{",slash);
         if (curlyBrace == -1)
         {
-            return addAsteriskToPath(path); //TODO EN MODO VIEJO TMB SE LE AGREGA ASTERISCO? no
+            return addAsterisk? addAsteriskToPath(path): path;
         }
         path = baseUri.substring(slash,curlyBrace);
-        return addAsteriskToPath(path);
+        return addAsterisk? addAsteriskToPath(path): path;
     }
 
     private static String addAsteriskToPath(String path)
@@ -94,7 +95,7 @@ public class APIKitTools {
         int twoDots = baseUri.indexOf(":", hostStart);
         if (twoDots == -1 || twoDots > slash)
         {
-            return "";
+            return HttpListenerConfig.DEFAULT_PORT;
         }
         return baseUri.substring(twoDots + 1, slash);
     }

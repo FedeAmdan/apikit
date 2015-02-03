@@ -138,7 +138,7 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
         String address = inbound.getAttributeValue("address");
         if (address != null)
         {
-            return APIKitTools.getPathFromUri(address);
+            return APIKitTools.getPathFromUri(address,true);
         }
         String path = inbound.getAttributeValue("path");
         if (path == null) {

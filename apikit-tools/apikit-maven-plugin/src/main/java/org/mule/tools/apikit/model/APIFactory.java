@@ -19,12 +19,12 @@ public class APIFactory
 
     public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, String baseUri)
     {
-        return createAPIBinding(yamlFile,xmlFile,config, baseUri, null, null,null);
+        return createAPIBinding(yamlFile,xmlFile,config, baseUri, null, null,true);
     }
 
     public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, HttpListenerConfig httpListenerConfig, String path)
     {
-        return createAPIBinding(yamlFile,xmlFile,config, null, httpListenerConfig,path,null);
+        return createAPIBinding(yamlFile,xmlFile,config, null, httpListenerConfig,path,false);
     }
 
     //public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, String path)

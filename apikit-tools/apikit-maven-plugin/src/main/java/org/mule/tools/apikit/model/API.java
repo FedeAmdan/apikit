@@ -49,7 +49,7 @@ public class API {
         {
             String httpListenerConfigName = id == null ? HttpListenerConfig.DEFAULT_CONFIG_NAME : id + "-" + HttpListenerConfig.DEFAULT_CONFIG_NAME;
             this.httpListenerConfig = new HttpListenerConfig.Builder(httpListenerConfigName, baseUri).build();
-            this.path = APIKitTools.getPathFromUri(baseUri);
+            this.path = APIKitTools.getPathFromUri(baseUri,true);
         }
         this.config = config;
     }

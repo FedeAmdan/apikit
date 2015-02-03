@@ -129,7 +129,8 @@ public class ScaffolderTest {
         String s = IOUtils.toString(new FileInputStream(xmlFile));
         assertEquals(0, countOccurences(s, "<http:listener-config name=\"HTTP_Listener_Configuration\" host=\"localhost\" port=\"${serverPort}\" />"));
         assertEquals(0, countOccurences(s, "<http:listener config-ref=\"HTTP_Listener_Configuration\" path=\"/api/*\" />"));
-        assertEquals(1, countOccurences(s, "<http:inbound-endpoint port=\"${serverPort}\" host=\"localhost\" path=\"api\"/>"));
+        assertEquals(1, countOccurences(s, "<http:inbound-endpoint port=\"${serverPort}\" host=\"localhost\" path=\"api\" />"));
+
 
         assertEquals(1, countOccurences(s, "get:/pet"));
         assertEquals(1, countOccurences(s, "post:/pet"));
