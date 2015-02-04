@@ -13,44 +13,25 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.Validate;
 
 public class APIFactory
 {
     private Map<File, API> apis = new HashMap<File, API>();
 
-    public API createAPIBinding(File ramlFile, File xmlFile, APIKitConfig config, String path)
+
+    public API createAPIBinding(File ramlFile, File xmlFile, String baseUri, String path, APIKitConfig config)
     {
-        return createAPIBinding(ramlFile, xmlFile, config, null, null, path, true);
+        return createAPIBinding(ramlFile, xmlFile, baseUri, path, config, null, true);
     }
 
-    public API createAPIBinding(File ramlFile, File xmlFile, APIKitConfig config, HttpListenerConfig httpListenerConfig, String path)
+    public API createAPIBinding(File ramlFile, File xmlFile, String path, APIKitConfig config, HttpListenerConfig httpListenerConfig)
     {
-        return createAPIBinding(ramlFile,xmlFile,config, null, httpListenerConfig,path,false);
+        return createAPIBinding(ramlFile, xmlFile, null, path, config, httpListenerConfig, false);
     }
 
-    //public API createAPIBinding(File yamlFile, File xmlFile, APIKitConfig config, String path)
-    //{
-    //    Validate.notNull(yamlFile);
-    //    if(apis.containsKey(yamlFile))
-    //    {
-    //        API api = apis.get(yamlFile);
-    //        if(api.getXmlFile() == null && xmlFile != null)
-    //        {
-    //            api.setXmlFile(xmlFile);
-    //        }
-    //        api.setPath(path);
-    //        api.setConfig(config);
-    //        return api;
-    //    }
-    //
-    //    API api = new API(yamlFile, xmlFile, null, path);
-    //    apis.put(yamlFile, api);
-    //    return api;
-    //}
-
-
-    public API createAPIBinding(File ramlFile, File xmlFile, APIKitConfig config, String baseUri, HttpListenerConfig httpListenerConfig, String path, Boolean useInboundEndpoint)
+    public API createAPIBinding(File ramlFile, File xmlFile, String baseUri, String path, APIKitConfig config, HttpListenerConfig httpListenerConfig, Boolean useInboundEndpoint)
     {
         Validate.notNull(ramlFile);
         if(apis.containsKey(ramlFile))
@@ -60,23 +41,35 @@ public class APIFactory
             {
                 api.setXmlFile(xmlFile);
             }
-            api.setPath(path);
-            api.setConfig(config);
-            api.setBaseUri(baseUri);
             api.setUseInboundEndpoint(useInboundEndpoint);
-
-            if (httpListenerConfig != null)
+            if (httpListenerConfig == null && !useInboundEndpoint)
             {
-                api.setHttpListenerConfig(httpListenerConfig);
+               httpListenerConfig = createHttpListenerConfig(ramlFile, baseUri);
             }
+            api.setHttpListenerConfig(httpListenerConfig);
+
+            api.setConfig(config);
+
             return api;
         }
-
-        API api = new API(ramlFile, xmlFile, httpListenerConfig, path);
+        API api = new API(ramlFile, xmlFile, baseUri, path, config);
         api.setUseInboundEndpoint(useInboundEndpoint);
-        api.setBaseUri(baseUri);
+        if (httpListenerConfig == null && !useInboundEndpoint)
+        {
+            httpListenerConfig = createHttpListenerConfig(ramlFile, baseUri);
+        }
+        api.setHttpListenerConfig(httpListenerConfig);
         apis.put(ramlFile, api);
         return api;
+    }
+
+
+    private HttpListenerConfig createHttpListenerConfig(File ramlFile, String baseUri)
+    {
+        String id = FilenameUtils.removeExtension(ramlFile.getName()).trim();
+        String httpListenerConfigName = id == null? HttpListenerConfig.DEFAULT_CONFIG_NAME : id + "-" + HttpListenerConfig.DEFAULT_CONFIG_NAME;
+        return new HttpListenerConfig.Builder(httpListenerConfigName, baseUri).build();
+
     }
 
 }

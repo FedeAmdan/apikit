@@ -76,31 +76,27 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
                     {
                         HttpListenerConfig httpListenerConfig = getHTTPListenerConfig(inbound);
                         String path = getPathFromInbound(inbound);
-                        includedApis.put(configId, apiFactory.createAPIBinding(ramlPath, file, config, httpListenerConfig, path));
+                        includedApis.put(configId, apiFactory.createAPIBinding(ramlPath, file,path, config, httpListenerConfig));
                     }
                     else if ("inbound-endpoint".equals(inbound.getName()))
                     {
-                        String path = getPathFromInbound(inbound);
-                        //String path = inbound.getAttributeValue("path");
-                        //
-                        //// Case the user is specifying baseURI using address attribute
-                        //if (path == null)
-                        //{
-                        //    String address = inbound.getAttributeValue("address");
-                        //
-                        //    if (address == null)
-                        //    {
-                        //        throw new IllegalStateException("Neither 'path' nor 'address' attribute was used. " +
-                        //                                        "Cannot retrieve base URI.");
-                        //    }
-                        //    path = address;
-                        //}
-                        //else if (!path.startsWith("/"))
-                        //{
-                        //    path = "/" + path;
-                        //}
-                        includedApis.put(configId, apiFactory.createAPIBinding(ramlPath, file, config, path));
-                        //includedApis.put(configId, apiFactory.createAPIBinding(yamlPath, file, config, ));
+                        String baseUri = null;
+                        String path = inbound.getAttributeValue("path");
+
+                        // Case the user is specifying baseURI using address attribute
+                        if (path == null) {
+                            baseUri = inbound.getAttributeValue("address");
+
+                            if (baseUri == null) {
+                                throw new IllegalStateException("Neither 'path' nor 'address' attribute was used. " +
+                                                                "Cannot retrieve base URI.");
+                            }
+
+                            path = APIKitTools.getPathFromUri(baseUri,false);
+                        } else  if (!path.startsWith("/")) {
+                            path = "/" + path;
+                        }
+                        includedApis.put(configId, apiFactory.createAPIBinding(ramlPath, file, baseUri, path, config));
                     }
                     else
                     {

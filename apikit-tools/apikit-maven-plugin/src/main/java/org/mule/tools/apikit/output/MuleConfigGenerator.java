@@ -18,6 +18,7 @@ import org.jdom2.output.XMLOutputter;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
 
+import org.mule.tools.apikit.misc.APIKitTools;
 import org.mule.tools.apikit.model.HttpListenerConfig;
 import org.mule.tools.apikit.output.deployer.MuleDeployWriter;
 import org.mule.tools.apikit.output.scopes.*;
@@ -140,10 +141,11 @@ public class MuleConfigGenerator {
         {
             if (api.getHttpListenerConfig() == null)
             {
-                api.setHttpListenerConfig(new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME, HttpListenerConfig.DEFAULT_HOST, HttpListenerConfig.DEFAULT_PORT, HttpListenerConfig.DEFAULT_BASE_PATH));
+                api.setHttpListenerConfig(new HttpListenerConfig.Builder(HttpListenerConfig.DEFAULT_CONFIG_NAME, API.DEFAULT_BASE_URI).build());
             }
             new HttpListenerConfigScope(api,mule).generate();
             listenerConfigRef = api.getHttpListenerConfig().getName();
+            api.setPath(APIKitTools.addAsteriskToPath(api.getPath()));
         }
         new APIKitConfigScope(api.getConfig(), mule).generate();
         Element exceptionStrategy = new ExceptionStrategyScope(mule, api.getId()).generate();

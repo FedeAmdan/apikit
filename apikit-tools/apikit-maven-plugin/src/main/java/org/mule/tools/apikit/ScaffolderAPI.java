@@ -30,8 +30,8 @@ public class ScaffolderAPI {
      * @param appDir the directory which contained the generated Mule config files
      */
     public void run(List<File> ramlFiles, File appDir) {
-        List<String> muleXmlFiles = retrieveFilePaths(appDir, appExtensions);
         List<String> ramlFilePaths = retrieveFilePaths(ramlFiles, apiExtensions);
+        List<String> muleXmlFiles = retrieveFilePaths(appDir, appExtensions);
         Scaffolder scaffolder;
         try {
             scaffolder = Scaffolder.createScaffolder(new SystemStreamLog(), appDir, ramlFilePaths, muleXmlFiles);

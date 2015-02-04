@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.mule.tools.apikit.model.APIFactory;
-import org.mule.tools.apikit.model.HttpListenerConfig;
 import org.mule.tools.apikit.output.GenerationModel;
 import org.mule.tools.apikit.model.ResourceActionMimeTypeTriplet;
 import org.mule.tools.apikit.output.GenerationStrategy;
@@ -46,7 +45,8 @@ public class GenerationStrategyTest {
 
     @Test
     public void testNotEmptyYamlGenerate() throws Exception {
-        final API fromYAMLFile = apiFactory.createAPIBinding(new File("sample.yaml"), null, null, new HttpListenerConfig.Builder(HttpListenerConfig.DEFAULT_CONFIG_NAME, "localhost", "80","").build(), "");
+        final API fromYAMLFile = apiFactory.createAPIBinding(new File("sample.yaml"), null, "http://localhost:8080", "/api/*",  null);
+
         RAMLFilesParser yaml = mock(RAMLFilesParser.class);
         MuleConfigParser mule = mock(MuleConfigParser.class);
 
@@ -64,7 +64,7 @@ public class GenerationStrategyTest {
         RAMLFilesParser yaml = mock(RAMLFilesParser.class);
         MuleConfigParser mule = mock(MuleConfigParser.class);
         final API api =
-                apiFactory.createAPIBinding(new File("sample.yaml"), new File("sample.xml"), null, new HttpListenerConfig.Builder().build(),"/api/*");
+                apiFactory.createAPIBinding(new File("sample.yaml"), new File("sample.xml"), "http://localhost:8080", "/api/*",  null);
 
         when(mule.getIncludedApis()).thenReturn(new HashSet<API>() {{
             this.add(api);
@@ -88,7 +88,7 @@ public class GenerationStrategyTest {
         RAMLFilesParser yaml = mock(RAMLFilesParser.class);
         MuleConfigParser mule = mock(MuleConfigParser.class);
         final API api =
-                apiFactory.createAPIBinding(new File("sample.yaml"), new File("sample.xml"), null, new HttpListenerConfig.Builder().build(),"/api/*");
+                apiFactory.createAPIBinding(new File("sample.yaml"), null, "http://localhost:8080", "/api/*",  null);
 
         when(mule.getIncludedApis()).thenReturn(new HashSet<API>() {{
             this.add(api);
@@ -97,7 +97,8 @@ public class GenerationStrategyTest {
         when(mule.getEntries()).thenReturn(new HashSet<ResourceActionMimeTypeTriplet>() {{
             this.add(new ResourceActionMimeTypeTriplet(api, "/pet", "GET"));
         }});
-        API fromYAMLFile = apiFactory.createAPIBinding(new File("sample.yaml"), null, null, new HttpListenerConfig.Builder(HttpListenerConfig.DEFAULT_CONFIG_NAME, "localhost", "80","").build(), "");
+        API fromYAMLFile = apiFactory.createAPIBinding(new File("sample.yaml"), null, "http://localhost:8080", "/api/*",  null);
+
         final Map<ResourceActionMimeTypeTriplet, GenerationModel> yamlEntries = new HashMap<ResourceActionMimeTypeTriplet, GenerationModel>();
         yamlEntries.put(new ResourceActionMimeTypeTriplet(fromYAMLFile, "/pet", "GET"), mock(GenerationModel.class));
         yamlEntries.put(new ResourceActionMimeTypeTriplet(fromYAMLFile, "/pet", "POST"), mock(GenerationModel.class));

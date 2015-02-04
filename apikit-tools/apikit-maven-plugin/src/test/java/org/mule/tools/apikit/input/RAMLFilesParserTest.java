@@ -51,10 +51,10 @@ public class RAMLFilesParserTest
         ResourceActionMimeTypeTriplet triplet = yamlEntries.iterator().next();
         Assert.assertEquals("/api/pet", triplet.getUri());
         Assert.assertEquals("GET", triplet.getVerb());
-        Assert.assertEquals("/api/*",triplet.getApi().getPath());
+        Assert.assertEquals("/api",triplet.getApi().getPath());
         Assert.assertNotNull(triplet.getApi().getHttpListenerConfig());
         Assert.assertEquals("localhost", triplet.getApi().getHttpListenerConfig().getHost());
-        Assert.assertEquals("8090", triplet.getApi().getHttpListenerConfig().getPort());
+        Assert.assertEquals("8081", triplet.getApi().getHttpListenerConfig().getPort());
         Assert.assertEquals("/", triplet.getApi().getHttpListenerConfig().getBasePath());
         Assert.assertEquals("hello-httpListenerConfig",triplet.getApi().getHttpListenerConfig().getName());
     }

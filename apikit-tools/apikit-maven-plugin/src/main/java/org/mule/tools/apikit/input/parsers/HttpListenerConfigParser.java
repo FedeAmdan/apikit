@@ -6,6 +6,7 @@
  */
 package org.mule.tools.apikit.input.parsers;
 
+import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.HttpListenerConfig;
 
 import static org.mule.tools.apikit.output.MuleConfigGenerator.HTTP_NAMESPACE;
@@ -41,7 +42,7 @@ public class HttpListenerConfigParser implements MuleConfigFileParser
             String port = element.getAttributeValue("port");
             if (port == null)
             {
-                port = HttpListenerConfig.DEFAULT_PORT;
+                port = Integer.toString(API.DEFAULT_PORT);
             }
             String basePath = element.getAttributeValue("basePath");
             if (basePath == null)

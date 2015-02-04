@@ -11,13 +11,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
 import org.mule.tools.apikit.misc.APIKitTools;
 import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.APIFactory;
-import org.mule.tools.apikit.model.HttpListenerConfig;
 import org.mule.tools.apikit.output.GenerationModel;
 import org.mule.tools.apikit.model.ResourceActionMimeTypeTriplet;
 
@@ -66,18 +64,8 @@ public class RAMLFilesParser
                 try
                 {
                     Raml raml = builderNodeHandler.build(content, ramlFile.getName());
-//                    String host = APIKitTools.getHostFromUri(raml.getBaseUri());
-//                    if (host == "")
-//                    {
-//                        host = HttpListenerConfig.DEFAULT_HOST;
-//                    }
-//                    String port = APIKitTools.getPortFromUri(raml.getBaseUri());
-//                    if (port == "")
-//                    {
-//                        port = HttpListenerConfig.DEFAULT_PORT;
-//                    }
-                     String path = APIKitTools.getPathFromUri(raml.getBaseUri(),true);
-                    collectResources(ramlFile, raml.getResources(), raml.getBaseUri(), path);
+
+                    collectResources(ramlFile, raml.getResources(), API.DEFAULT_BASE_URI);
                     processedFiles.add(ramlFile);
                 }
                 catch (Exception e)
@@ -116,16 +104,14 @@ public class RAMLFilesParser
         return true;
     }
 
-    void collectResources(File filename, Map<String, Resource> resourceMap, String baseUri, String path)
+    void collectResources(File filename, Map<String, Resource> resourceMap, String baseUri)
     {
         for (Resource resource : resourceMap.values())
         {
             for (Action action : resource.getActions().values())
             {
-                String id = FilenameUtils.removeExtension(filename.getName()).trim();
-                String httpListenerConfigName = id == null? HttpListenerConfig.DEFAULT_CONFIG_NAME : id + "-" + HttpListenerConfig.DEFAULT_CONFIG_NAME;
 
-                API api = apiFactory.createAPIBinding(filename, null, null, baseUri, new HttpListenerConfig.Builder(httpListenerConfigName, baseUri).build(), path, false);
+                API api = apiFactory.createAPIBinding(filename,null, baseUri, APIKitTools.getPathFromUri(baseUri,false), null, null, false);
 
                 Map<String, MimeType> mimeTypes = action.getBody();
                 boolean addGenericAction = false;
@@ -147,7 +133,7 @@ public class RAMLFilesParser
                 }
             }
 
-            collectResources(filename, resource.getResources(), baseUri, path);
+            collectResources(filename, resource.getResources(), baseUri);
         }
     }
 

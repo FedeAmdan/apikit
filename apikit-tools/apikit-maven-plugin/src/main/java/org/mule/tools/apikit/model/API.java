@@ -15,8 +15,9 @@ import java.net.URL;
 import org.apache.commons.io.FilenameUtils;
 
 public class API {
-
-    public static final String DEFAULT_PATH = "/api/*";
+    public static final int DEFAULT_PORT = 8081;
+    public static final String DEFAULT_BASE_URI = "http://localhost:" + DEFAULT_PORT + "/api";
+    public static final String DEFAULT_BASE_PATH = "/";
 
     private APIKitConfig config;
     private HttpListenerConfig httpListenerConfig;
@@ -29,35 +30,18 @@ public class API {
     private Boolean useInboundEndpoint;
 
 
-    public API(File ramlFile, File xmlFile, String baseUri) {
+    public API(File ramlFile, File xmlFile, String baseUri, String path) {
+        this.path = path;
         this.ramlFile = ramlFile;
         this.xmlFile = xmlFile;
         this.baseUri = baseUri;
         id = FilenameUtils.removeExtension(ramlFile.getName()).trim();
     }
 
-    public API(File ramlFile, File xmlFile, HttpListenerConfig httpListenerConfig, String path) {
-        this(ramlFile,xmlFile,null);
-        this.httpListenerConfig = httpListenerConfig;
-        this.path = path;
-    }
-
-    public API(File ramlFile, File xmlFile, APIKitConfig config, String baseUri, Boolean useInboundEndpoint){
-        this(ramlFile, xmlFile, null, baseUri);
-        this.useInboundEndpoint = useInboundEndpoint;
-        if (!useInboundEndpoint)
-        {
-            String httpListenerConfigName = id == null ? HttpListenerConfig.DEFAULT_CONFIG_NAME : id + "-" + HttpListenerConfig.DEFAULT_CONFIG_NAME;
-            this.httpListenerConfig = new HttpListenerConfig.Builder(httpListenerConfigName, baseUri).build();
-            this.path = APIKitTools.getPathFromUri(baseUri,true);
-        }
+    public API(File ramlFile, File xmlFile, String baseUri, String path, APIKitConfig config) {
+        this(ramlFile, xmlFile, baseUri, path);
         this.config = config;
     }
-    //
-    //public API(File yamlFile, File xmlFile, APIKitConfig config, String baseUri, String path)
-    //{
-    //    this(yamlFile, xmlFile,config,baseUri,path,false);
-    //}
 
     public File getXmlFile() {
         return xmlFile;
@@ -129,10 +113,6 @@ public class API {
     {
         this.baseUri = baseUri;
     }
-
-    //public void setDefaultHttpListenerConfig() {
-    //    httpListenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME, HttpListenerConfig.DEFAULT_HOST, HttpListenerConfig.DEFAULT_PORT, HttpListenerConfig.DEFAULT_BASE_PATH);
-    //}
 
     @Override
     public boolean equals(Object o) {

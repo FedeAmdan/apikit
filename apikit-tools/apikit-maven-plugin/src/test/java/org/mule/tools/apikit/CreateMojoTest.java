@@ -114,4 +114,33 @@ public class CreateMojoTest extends AbstractMojoTestCase {
 
     }
 
+
+    @Test
+    public void testExecuteComplexRaml() throws  Exception {
+        setVariableValueToObject(mojo, "muleXmlDirectory", app);
+        setVariableValueToObject(mojo, "specDirectory", project);
+        setVariableValueToObject(mojo, "muleXmlOutputDirectory", app);
+
+        IOUtils.copy(this.getClass().getClassLoader().getResourceAsStream("create-mojo/complex.raml"),
+                     new FileOutputStream(apiFile));
+
+        mojo.execute();
+
+        assertTrue(apiFile.exists());
+        FileInputStream input = new FileInputStream(apiFile);
+        String ramlFileContent = IOUtils.toString(input);
+        input.close();
+
+        assertTrue(ramlFileContent.length() > 0);
+        File muleConfigFile = new File (project.getPath() + "/src/main/app/hello.xml");
+        assertTrue(muleConfigFile.exists());
+
+        input = new FileInputStream(muleConfigFile);
+        String muleConfigContent = IOUtils.toString(input);
+        input.close();
+
+        assertTrue(muleConfigContent.length() > 0);
+        assertTrue(muleConfigContent.contains("listener"));
+
+    }
 }

@@ -45,11 +45,11 @@ public class APIKitTools {
         return addAsterisk? addAsteriskToPath(path): path;
     }
 
-    private static String addAsteriskToPath(String path)
+    public static String addAsteriskToPath(String path)
     {
         if (path == null)
         {
-            return API.DEFAULT_PATH;
+            return "/*";
         }
         if (!path.endsWith("*"))
         {
@@ -95,7 +95,7 @@ public class APIKitTools {
         int twoDots = baseUri.indexOf(":", hostStart);
         if (twoDots == -1 || twoDots > slash)
         {
-            return HttpListenerConfig.DEFAULT_PORT;
+            return Integer.toString(API.DEFAULT_PORT);
         }
         return baseUri.substring(twoDots + 1, slash);
     }

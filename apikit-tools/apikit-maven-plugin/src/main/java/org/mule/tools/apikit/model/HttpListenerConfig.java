@@ -17,10 +17,6 @@ public class HttpListenerConfig
     public static final String ELEMENT_NAME = "listener-config";
     public static final String NAME_ATTRIBUTE = "name";
     public static final String DEFAULT_CONFIG_NAME = "httpListenerConfig";
-    public static final String DEFAULT_HOST = "localhost";
-    public static final String DEFAULT_PORT = "8081";
-    public static final String DEFAULT_BASE_PATH = "/";
-
 
     private String name;
     private String host;
@@ -55,15 +51,15 @@ public class HttpListenerConfig
             this.host = APIKitTools.getHostFromUri(baseUri);
             if (this.host == "")
             {
-                this.host = HttpListenerConfig.DEFAULT_HOST;
+                this.host = APIKitTools.getHostFromUri(API.DEFAULT_BASE_URI);
             }
             this.port = APIKitTools.getPortFromUri(baseUri);
             if (this.port == "")
             {
-                this.port = HttpListenerConfig.DEFAULT_PORT;
+                this.port = APIKitTools.getPortFromUri(API.DEFAULT_BASE_URI);
             }
             //The baseUri path is not used. It is part of the path attribute in the listener.
-            basePath = DEFAULT_BASE_PATH;
+            basePath = API.DEFAULT_BASE_PATH;
         }
 
 
@@ -90,9 +86,9 @@ public class HttpListenerConfig
         public Builder()
         {
             this.name = DEFAULT_CONFIG_NAME;
-            this.host = DEFAULT_HOST;
-            this.port = DEFAULT_PORT;
-            this.basePath = DEFAULT_BASE_PATH;
+            this.host = APIKitTools.getHostFromUri(API.DEFAULT_BASE_URI);
+            this.port = APIKitTools.getPortFromUri(API.DEFAULT_BASE_URI);;
+            this.basePath = API.DEFAULT_BASE_PATH;
         }
 
         public HttpListenerConfig build() {
