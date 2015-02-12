@@ -6,6 +6,8 @@
  */
 package org.mule.tools.apikit;
 
+import org.mule.tools.apikit.misc.APIKitTools;
+import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.APIFactory;
 import org.mule.tools.apikit.output.GenerationModel;
 import org.mule.tools.apikit.output.GenerationStrategy;
@@ -18,24 +20,30 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.*;
 
+import org.apache.commons.lang.StringUtils;
+
 public class Scaffolder {
     private final MuleConfigGenerator muleConfigGenerator;
 
     public static Scaffolder createScaffolder(ApikitLogger log, File muleXmlOutputDirectory,
-                                   List<String> specFiles, List<String> muleXmlFiles) {
+                                   List<String> specFiles, List<String> muleXmlFiles, String muleVersion) {
         FileListUtils fileUtils = new FileListUtils(log);
 
         Map<File, InputStream> fileInputStreamMap = fileUtils.toStreamsOrFail(specFiles);
         Map<File, InputStream> streams = fileUtils.toStreamsOrFail(muleXmlFiles);
 
-        return new Scaffolder(log, muleXmlOutputDirectory, fileInputStreamMap, streams);
+        return new Scaffolder(log, muleXmlOutputDirectory, fileInputStreamMap, streams, muleVersion);
     }
 
     public Scaffolder(ApikitLogger log, File muleXmlOutputDirectory,  Map<File, InputStream> ramls,
-                      Map<File, InputStream> xmls)  {
+                      Map<File, InputStream> xmls, String muleVersion)  {
         APIFactory apiFactory = new APIFactory();
         RAMLFilesParser RAMLFilesParser = new RAMLFilesParser(log, ramls, apiFactory);
+        if (APIKitTools.isForcedToCreateInboundEndpoints(muleVersion)){
+            xmls = new HashMap<File, InputStream>();
+        }
         MuleConfigParser muleConfigParser = new MuleConfigParser(log, ramls.keySet(), xmls, apiFactory);
+
         List<GenerationModel> generationModels = new GenerationStrategy(log).generate(RAMLFilesParser, muleConfigParser);
         muleConfigGenerator = new MuleConfigGenerator(log, muleXmlOutputDirectory, generationModels);
     }
@@ -43,6 +51,5 @@ public class Scaffolder {
     public void run() {
         muleConfigGenerator.generate();
     }
-
 
 }

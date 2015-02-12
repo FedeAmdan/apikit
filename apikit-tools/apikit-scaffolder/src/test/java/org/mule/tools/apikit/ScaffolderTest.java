@@ -53,6 +53,14 @@ public class ScaffolderTest {
         assertEquals(1, countOccurences(s, "get:/pet:simple-config"));
     }
 
+    @Test
+    public void testSimpleGenerateForcingEndpoints() throws Exception {
+        File muleXmlSimple = simpleGeneration("simple", "3.5.1");
+        assertTrue(muleXmlSimple.exists());
+        String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
+
+        assertEquals(1, countOccurences(s, "get:/pet:simple-config"));
+    }
 
     @Test
     public void testTwoResourceGenerate() throws Exception {
@@ -219,19 +227,23 @@ public class ScaffolderTest {
         assertTrue(s.contains("post:/pet:application/x-www-form-urlencoded:multipleMimeTypes-config"));
         assertTrue(s.contains("post:/pet:multipleMimeTypes-config"));
         assertTrue(!s.contains("post:/pet:application/xml:multipleMimeTypes-config"));
-
         assertTrue(s.contains("post:/vet:multipleMimeTypes-config"));
         assertTrue(!s.contains("post:/vet:application/xml:multipleMimeTypes-config"));
     }
 
     private Scaffolder createScaffolder(List<File> ramls, List<File> xmls, File muleXmlOut)
             throws MojoExecutionException {
+        return createScaffolder(ramls, xmls, muleXmlOut, null);
+    }
+
+    private Scaffolder createScaffolder(List<File> ramls, List<File> xmls, File muleXmlOut, String muleVersion)
+            throws MojoExecutionException {
         ApikitLogger log = mock(ApikitLogger.class);
 
         Map<File, InputStream> ramlMap = getFileInputStreamMap(ramls);
         Map<File, InputStream> xmlMap = getFileInputStreamMap(xmls);
 
-        return new Scaffolder(log, muleXmlOut, ramlMap, xmlMap);
+        return new Scaffolder(log, muleXmlOut, ramlMap, xmlMap,muleVersion);
     }
 
     private Map<File, InputStream> getFileInputStreamMap(List<File> ramls) {
@@ -248,11 +260,14 @@ public class ScaffolderTest {
     }
 
     private File simpleGeneration(String name) throws Exception {
+        return simpleGeneration(name, null);
+    }
+    private File simpleGeneration(String name, String muleVersion) throws Exception {
         List<File> ramls = Arrays.asList(getFile("scaffolder/" + name + ".raml"));
         List<File> xmls = Arrays.asList();
         File muleXmlOut = folder.newFolder("mule-xml-out");
 
-        Scaffolder scaffolder = createScaffolder(ramls, xmls, muleXmlOut);
+        Scaffolder scaffolder = createScaffolder(ramls, xmls, muleXmlOut, muleVersion);
         scaffolder.run();
 
         return new File(muleXmlOut, name + ".xml");

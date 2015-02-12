@@ -6,6 +6,9 @@
  */
 package org.mule.tools.apikit;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.mule.tools.apikit.misc.APIKitTools;
 import org.mule.tools.apikit.model.API;
 
@@ -36,5 +39,16 @@ public class APIKitToolsTest
         Assert.assertEquals("/path/path2/*", APIKitTools.getPathFromUri(uri,true));
         Assert.assertEquals("/path/path2/", APIKitTools.getPathFromUri(uri,false));
 
+    }
+
+    @Test
+    public void isForcedToCreateInboundEndpointsTest(){
+        assertTrue(APIKitTools.isForcedToCreateInboundEndpoints("3.5.0"));
+        assertFalse(APIKitTools.isForcedToCreateInboundEndpoints("3.6.0"));
+        assertTrue(APIKitTools.isForcedToCreateInboundEndpoints("3.5.1-SNAPSHOT"));
+        assertFalse(APIKitTools.isForcedToCreateInboundEndpoints("3.6.0-SNAPSHOT"));
+        assertFalse(APIKitTools.isForcedToCreateInboundEndpoints("3.6.1"));
+        assertTrue(APIKitTools.isForcedToCreateInboundEndpoints("3.5.11"));
+        assertFalse(APIKitTools.isForcedToCreateInboundEndpoints(null));
     }
 }

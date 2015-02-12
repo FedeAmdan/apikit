@@ -27,12 +27,12 @@ public class ScaffolderAPI {
      * @param ramlFiles the ramlFiles to which the scaffolder will be run on
      * @param appDir the directory which contained the generated Mule config files
      */
-    public void run(List<File> ramlFiles, File appDir, ApikitLoggerProvider loggerProvider, Object endpointOListener) {
+    public void run(List<File> ramlFiles, File appDir, ApikitLogger logger, String muleVersion) {
         List<String> ramlFilePaths = retrieveFilePaths(ramlFiles, apiExtensions);
         List<String> muleXmlFiles = retrieveFilePaths(appDir, appExtensions);
         Scaffolder scaffolder;
         try {
-            scaffolder = Scaffolder.createScaffolder(loggerProvider.getApikitLogger(), appDir, ramlFilePaths, muleXmlFiles);
+            scaffolder = Scaffolder.createScaffolder(logger, appDir, ramlFilePaths, muleXmlFiles, muleVersion);
         } catch(Exception e) {
             throw new RuntimeException("Error executing scaffolder", e);
         }

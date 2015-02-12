@@ -6,6 +6,7 @@
  */
 package org.mule.tools.apikit.misc;
 
+import org.apache.commons.lang.StringUtils;
 import org.jdom2.Namespace;
 
 import org.mule.tools.apikit.model.API;
@@ -18,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class APIKitTools {
+    private static final String MULE_VERSION_WITH_LISTENERS = "360";
     public static final NamespaceWithLocation API_KIT_NAMESPACE = new NamespaceWithLocation(
             Namespace.getNamespace("apikit", "http://www.mulesoft.org/schema/mule/apikit"),
             "http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd"
@@ -118,4 +120,21 @@ public class APIKitTools {
         }
         return path;
     }
+
+    public static boolean isForcedToCreateInboundEndpoints(String muleVersion){
+        if (muleVersion == null){
+            return false;
+        }
+        muleVersion = muleVersion.replace("-","").replace("SNAPSHOT","").replace(".","");
+        String muleVersionWithListeners = MULE_VERSION_WITH_LISTENERS;
+        int digitsDifference = muleVersion.length() - muleVersionWithListeners.length();
+        if (digitsDifference > 0){
+            muleVersionWithListeners = muleVersionWithListeners.concat(StringUtils.repeat("0", digitsDifference));
+        }
+        else if (digitsDifference < 0){
+            muleVersion = muleVersion.concat(StringUtils.repeat("0", digitsDifference * -1));
+        }
+        return (Integer.parseInt(muleVersion) < Integer.parseInt(muleVersionWithListeners));
+    }
+
 }
