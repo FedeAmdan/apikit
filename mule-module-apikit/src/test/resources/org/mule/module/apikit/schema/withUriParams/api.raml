@@ -1,0 +1,50 @@
+#%RAML 0.8
+---
+title: Kilometros de Vantagens Ipiranga
+version: 1.0
+
+#baseUri: http://localhost:8585/kmv/api/v1
+baseUri: https://api-sandbox.kmdevantagens.com.br/kmv/api/v1
+
+documentation:
+  - title: KMV API
+    content: |
+      Api de Kilometros de Vantagens Ipiranga
+/cliente:
+  displayName: Recurso que representa o cliente KMV
+  /{cpf}:
+    displayName: Cliente
+    description: |
+      Representa o cliente existente
+    uriParameters:
+      cpf:
+        description: |
+          11 digitos do cpf do cliente
+        type: string
+        minLength: 11
+        maxLength: 11
+        example: 12312312345
+  /{cpf}/resgate:
+    displayName: Pedido
+    description: |
+          Representa resgate de um cliente
+    uriParameters:
+      cpf:
+          description: |
+            11 digitos do cpf do cliente
+          type: string
+          minLength: 11
+          maxLength: 11
+          example: 12312312345
+    post:
+      description: Efetua uma Pedido
+      body:
+        application/json:
+         # example: !include exemplos/cliente/resgate/post.json
+          schema: !include schema-post.json
+      responses:
+        201:
+          body:
+            application/json:
+          #    example: !include exemplos/cliente/resgate/post-response.json
+              schema: !include schema-post-response.json

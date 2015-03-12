@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-03/schema#",
+  "id": "http://api.kmdevantagens.com.br",
+  "type": "object",
+  "properties": {
+    "parceiroId": {
+      "id": "http://api.kmdevantagens.com.br/parceiroId",
+      "required": true,
+      "type": "integer"
+    },
+    "produtoId": {
+      "id": "http://api.kmdevantagens.com.br/produtoId",
+      "required": true,
+      "type": "integer"
+    },
+    "qtd": {
+      "id": "http://api.kmdevantagens.com.br/qtd",
+      "required": true,
+      "type": "integer"
+    }
+  },
+  "additionalProperties": false
+}

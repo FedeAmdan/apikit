@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-03/schema#",
+  "id": "http://api.kmdevantagens.com.br",
+  "type": "object",
+  "properties": {
+    "pedido": {
+      "id": "http://api.kmdevantagens.com.br/pedido",
+      "type": "integer"
+    },
+    "mensagem": {
+      "id": "http://api.kmdevantagens.com.br/mensagem",
+      "type": "string"
+    },
+    "cupom": {
+      "id": "http://api.kmdevantagens.com.br/cupom",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}
