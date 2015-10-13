@@ -4,7 +4,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.tools.apikit;
+package test.java.org.mule.tools.apikit;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;

@@ -4,7 +4,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.tools.apikit;
+package main.java.org.mule.tools.apikit;
 
 import org.apache.commons.lang.Validate;
 import org.apache.maven.plugin.AbstractMojo;
