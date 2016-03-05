@@ -19,7 +19,7 @@ import org.mule.config.i18n.MessageFactory;
 
 import java.util.Collection;
 
-import org.raml.model.Raml;
+import com.mulesoft.raml1.java.parser.model.api.Api;
 
 public class Console implements MessageProcessor, Initialisable, MuleContextAware, FlowConstructAware
 {
@@ -52,7 +52,7 @@ public class Console implements MessageProcessor, Initialisable, MuleContextAwar
         return config;
     }
 
-    private Raml getApi()
+    private Api getApi()
     {
         return getConfig().getApi();
     }

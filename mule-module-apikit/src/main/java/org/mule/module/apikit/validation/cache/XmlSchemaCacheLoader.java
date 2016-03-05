@@ -12,15 +12,15 @@ import java.io.IOException;
 
 import javax.xml.validation.Schema;
 
-import org.raml.model.Raml;
+import com.mulesoft.raml1.java.parser.model.api.Api;
 import org.xml.sax.SAXException;
 
 public class XmlSchemaCacheLoader extends CacheLoader<String, Schema>
 {
 
-    private Raml api;
+    private Api api;
 
-    public XmlSchemaCacheLoader(Raml api)
+    public XmlSchemaCacheLoader(Api api)
     {
         this.api = api;
     }

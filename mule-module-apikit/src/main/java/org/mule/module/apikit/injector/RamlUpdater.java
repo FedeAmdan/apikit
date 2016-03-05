@@ -14,22 +14,22 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.raml.interfaces.api.Api;
 import org.raml.model.Action;
-import org.raml.model.Raml;
 import org.raml.model.SecurityScheme;
 import org.raml.model.Template;
 
 public class RamlUpdater
 {
 
-    private Raml raml;
+    private Api raml;
     private AbstractConfiguration config;
     private Set<String> currentTraits;
     private Set<String> currentSecuritySchemes;
     private Map<String, InjectableTrait> injectedTraits;
     private Map<String, InjectableSecurityScheme> injectedSecuritySchemes;
 
-    public RamlUpdater(Raml raml, AbstractConfiguration config)
+    public RamlUpdater(Api raml, AbstractConfiguration config)
     {
         this.raml = raml;
         this.config = config;

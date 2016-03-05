@@ -15,10 +15,9 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
-import org.raml.model.Action;
-import org.raml.model.MimeType;
-import org.raml.model.Resource;
-import org.raml.model.Response;
+import org.raml.interfaces.methodsAndResources.Method;
+import org.raml.interfaces.methodsAndResources.Resource;
+import org.raml.interfaces.methodsAndResources.Response;
 
 public class GenerationModel implements Comparable<GenerationModel> {
 
@@ -26,25 +25,25 @@ public class GenerationModel implements Comparable<GenerationModel> {
     public static final String DEFAULT_TEXT = "#[NullPayload.getInstance()]";
 
     private final String verb;
-    private Action action;
+    private Method action;
     private Resource resource;
     private String mimeType;
     private List<String> splitPath;
     private API api;
 
-    public GenerationModel(API api, Resource resource, Action action) { this(api, resource, action, null); }
+    public GenerationModel(API api, Resource resource, Method action) { this(api, resource, action, null); }
 
-    public GenerationModel(API api, Resource resource, Action action, String mimeType) {
+    public GenerationModel(API api, Resource resource, Method action, String mimeType) {
         this.api = api;
         Validate.notNull(api);
         Validate.notNull(action);
-        Validate.notNull(action.getType());
-        Validate.notNull(resource.getUri());
+        Validate.notNull(action.method());
+        Validate.notNull(resource.relativeUri());
 
         this.resource = resource;
         this.action = action;
-        this.splitPath = new ArrayList<String>(Arrays.asList(this.resource.getUri().split("/")));
-        this.verb = action.getType().toString();
+        this.splitPath = new ArrayList<String>(Arrays.asList(this.resource.relativeUri().split("/")));
+        this.verb = action.method().toString();
         this.mimeType = mimeType;
         if(!splitPath.isEmpty()) {
             splitPath.remove(0);
@@ -57,17 +56,17 @@ public class GenerationModel implements Comparable<GenerationModel> {
     }
 
     public String getStringFromActionType() {
-        switch (action.getType()) {
-            case GET:
+        switch (action.method()) {
+            case "GET":
                 return "retrieve";
-            case POST:
+            case "POST":
                 return "update";
-            case PUT:
+            case "PUT":
                 return "create";
-            case DELETE:
+            case "DELETE":
                 return "delete";
             default:
-                return action.getType().toString().toLowerCase();
+                return action.method().toLowerCase();
         }
     }
 
@@ -83,7 +82,7 @@ public class GenerationModel implements Comparable<GenerationModel> {
     }
 
     private String getExampleWrappee() {
-        Map<String, Response> responses = action.getResponses();
+        List<Response> responses = action.responses();
 
         Response response = responses.get("200");
 

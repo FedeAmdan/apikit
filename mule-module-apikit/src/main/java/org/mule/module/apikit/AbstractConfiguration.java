@@ -58,7 +58,7 @@ import org.apache.commons.lang.SerializationUtils;
 import org.raml.emitter.RamlEmitter;
 import org.raml.model.Action;
 import org.raml.model.ActionType;
-import org.raml.model.Raml;
+import com.mulesoft.raml1.java.parser.model.api.Api;
 import org.raml.model.Resource;
 import org.raml.parser.loader.ResourceLoader;
 import org.raml.parser.rule.ValidationResult;
@@ -80,8 +80,8 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
     protected MuleContext muleContext;
     private String name;
     protected String raml;
-    private Raml baseApi; //original raml
-    protected Raml api; //current raml
+    private Api baseApi; //original raml
+    protected Api api; //current raml
     private String baseSchemeHostPort;
     private Map<String, String> apikitRaml = new ConcurrentHashMap<String, String>();
     private boolean disableValidations;
@@ -170,7 +170,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
             String parentUri = resource.getParentUri();
             if (parentUri.contains("{version}"))
             {
-                resource.setParentUri(parentUri.replaceAll("\\{version}", getApi().getVersion()));
+                resource.setParentUri(parentUri.replaceAll("\\{version}", getApi().version()));
             }
             String uri = resource.getUri();
             logger.debug("Adding URI to the routing table: " + uri);
@@ -189,7 +189,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         resetRamlMap();
     }
 
-    public void updateApi(Raml newApi)
+    public void updateApi(Api newApi)
     {
         api = newApi;
         loadRoutingTable();
@@ -250,14 +250,14 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
 
     public abstract ResourceLoader getRamlResourceLoader();
 
-    private void injectEndpointUri(Raml ramlApi)
+    private void injectEndpointUri(Api ramlApi)
     {
         String address = getEndpointAddress(flowConstruct);
         ramlApi.setBaseUri(address);
         baseSchemeHostPort = getBaseSchemeHostPort(address);
     }
 
-    private void cleanBaseUriParameters(Raml ramlApi)
+    private void cleanBaseUriParameters(Api ramlApi)
     {
         ramlApi.getBaseUriParameters().clear();
         cleanBaseUriParameters(ramlApi.getResources());
@@ -321,7 +321,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         String hostRaml = apikitRaml.get(schemeHostPort);
         if (hostRaml == null)
         {
-            Raml clone = shallowCloneRaml(api);
+            Api clone = shallowCloneRaml(api);
             clone.setBaseUri(api.getBaseUri().replace(baseSchemeHostPort, schemeHostPort));
             hostRaml = new RamlEmitter().dump(clone);
             apikitRaml.put(schemeHostPort, hostRaml);
@@ -359,9 +359,9 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         return getApikitRaml(schemeHostPort);
     }
 
-    private Raml deepCloneRaml(Raml source)
+    private Api deepCloneRaml(Api source)
     {
-        Raml target = (Raml) SerializationUtils.deserialize(SerializationUtils.serialize(source));
+        Api target = (Api) SerializationUtils.deserialize(SerializationUtils.serialize(source));
         copyCompiledSchemas(source, target);
         return target;
     }

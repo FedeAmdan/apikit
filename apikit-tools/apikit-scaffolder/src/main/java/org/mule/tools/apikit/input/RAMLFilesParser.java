@@ -22,10 +22,12 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
+import org.raml.interfaces.bodies.BodyLike;
+import org.raml.interfaces.methodsAndResources.Method;
 import org.raml.model.Action;
 import org.raml.model.MimeType;
-import org.raml.model.Raml;
-import org.raml.model.Resource;
+import org.raml.interfaces.api.Api;
+import org.raml.interfaces.methodsAndResources.Resource;
 import org.raml.parser.loader.CompositeResourceLoader;
 import org.raml.parser.loader.DefaultResourceLoader;
 import org.raml.parser.loader.FileResourceLoader;
@@ -69,9 +71,9 @@ public class RAMLFilesParser
                 RamlDocumentBuilder builderNodeHandler = new RamlDocumentBuilder(resourceLoader);
                 try
                 {
-                    Raml raml = builderNodeHandler.build(content, ramlFile.getName());
+                    Api raml = builderNodeHandler.build(content, ramlFile.getName());
 
-                    collectResources(ramlFile, raml.getResources(), API.DEFAULT_BASE_URI);
+                    collectResources(ramlFile, raml.resources(), API.DEFAULT_BASE_URI);
                     processedFiles.add(ramlFile);
                 }
                 catch (Exception e)
@@ -122,24 +124,25 @@ public class RAMLFilesParser
         return problemCount;
     }
 
-    void collectResources(File filename, Map<String, Resource> resourceMap, String baseUri)
+    void collectResources(File filename, List<Resource> resourceList, String baseUri)
     {
-        for (Resource resource : resourceMap.values())
+        for (Resource resource : resourceList)
         {
-            for (Action action : resource.getActions().values())
+
+            for (Method action : resource.methods())
             {
 
                 API api = apiFactory.createAPIBinding(filename,null, baseUri, APIKitTools.getPathFromUri(baseUri,false), null, null, APIKitTools.defaultIsInboundEndpoint(muleVersion));
 
-                Map<String, MimeType> mimeTypes = action.getBody();
+                List<BodyLike> mimeTypes = action.body();
                 boolean addGenericAction = false;
                 if (mimeTypes != null)
                 {
-                    for (MimeType mimeType : mimeTypes.values())
+                    for (BodyLike mimeType : mimeTypes)
                     {
-                        if (mimeType.getSchema() != null || mimeType.getFormParameters() != null)
+                        if (mimeType.schemaContent() != null || mimeType.formParameters() != null)
                         {
-                            addResource(api, resource, action, mimeType.getType());
+                            addResource(api, resource, action, mimeType.name());
                         }
                         else { addGenericAction = true; }
                     }
@@ -151,11 +154,11 @@ public class RAMLFilesParser
                 }
             }
 
-            collectResources(filename, resource.getResources(), baseUri);
+            collectResources(filename, resource.resources(), baseUri);
         }
     }
 
-    void addResource(API api, Resource resource, Action action, String mimeType) {
+    void addResource(API api, Resource resource, Method action, String mimeType) {
         String completePath;
         if (!api.useInboundEndpoint() && api.getHttpListenerConfig() != null)
         {
@@ -165,8 +168,8 @@ public class RAMLFilesParser
         {
             completePath = api.getPath();
         }
-        ResourceActionMimeTypeTriplet resourceActionTriplet = new ResourceActionMimeTypeTriplet(api, completePath + resource.getUri(),
-                    action.getType().toString(), mimeType);
+        ResourceActionMimeTypeTriplet resourceActionTriplet = new ResourceActionMimeTypeTriplet(api, completePath + resource.relativeUri(),
+                    action.method().toString(), mimeType);
         entries.put(resourceActionTriplet, new GenerationModel(api, resource, action, mimeType));
     }
 

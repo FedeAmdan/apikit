@@ -25,7 +25,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
 import org.mule.module.apikit.exception.BadRequestException;
-import org.raml.model.Raml;
+import com.mulesoft.raml1.java.parser.model.api.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -43,7 +43,7 @@ public class RestXmlSchemaValidator extends AbstractRestSchemaValidator
     }
 
     @Override
-    public void validate(String configId, String schemaPath, MuleEvent muleEvent, Raml api) throws BadRequestException
+    public void validate(String configId, String schemaPath, MuleEvent muleEvent, Api api) throws BadRequestException
     {
         try
         {

@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import org.raml.model.Raml;
+import com.mulesoft.raml1.java.parser.model.api.Api;
 import org.raml.model.Resource;
 import org.raml.model.parameter.UriParameter;
 import org.slf4j.Logger;
@@ -61,7 +61,7 @@ public abstract class AbstractRouter extends AbstractRequestResponseMessageProce
 
     protected abstract void startConfiguration() throws StartException;
 
-    protected Raml getApi()
+    protected Api getApi()
     {
         return config.getApi();
     }

@@ -23,16 +23,16 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 
-import org.raml.model.Raml;
+import com.mulesoft.raml1.java.parser.model.api.Api;
 
 public class JsonSchemaCacheLoader extends CacheLoader<String, JsonSchema>
 {
 
     private static final String RESOURCE_PREFIX = "resource:/";
 
-    private Raml api;
+    private Api api;
 
-    public JsonSchemaCacheLoader(Raml api)
+    public JsonSchemaCacheLoader(Api api)
     {
         this.api = api;
     }

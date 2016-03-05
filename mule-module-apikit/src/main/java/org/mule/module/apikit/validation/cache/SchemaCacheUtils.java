@@ -16,7 +16,7 @@ import javax.xml.validation.Schema;
 
 import org.raml.model.Action;
 import org.raml.model.MimeType;
-import org.raml.model.Raml;
+import com.mulesoft.raml1.java.parser.model.api.Api;
 
 public class SchemaCacheUtils
 {
@@ -34,7 +34,7 @@ public class SchemaCacheUtils
     /**
      * Returns the compiled representation of an XML schema.
      */
-    public static Schema resolveXmlSchema(String schemaCacheKey, Raml api)
+    public static Schema resolveXmlSchema(String schemaCacheKey, Api api)
     {
         MimeType mimeType = getMimeType(schemaCacheKey, api);
 
@@ -58,7 +58,7 @@ public class SchemaCacheUtils
         throw new ApikitRuntimeException("XML Schema could not be resolved for key: " + schemaCacheKey);
     }
 
-    private static MimeType getMimeType(String schemaCacheKey, Raml api)
+    private static MimeType getMimeType(String schemaCacheKey, Api api)
     {
         String[] path = schemaCacheKey.split(SEPARATOR);
         Action action = api.getResource(path[0]).getAction(path[1]);
@@ -69,7 +69,7 @@ public class SchemaCacheUtils
      * may return either a string representing the path to the schema
      * or a JsonNode for inline schema definitions
      */
-    public static Object resolveJsonSchema(String schemaCacheKey, Raml api)
+    public static Object resolveJsonSchema(String schemaCacheKey, Api api)
     {
         MimeType mimeType = getMimeType(schemaCacheKey, api);
         String path = (String) mimeType.getCompiledSchema();
