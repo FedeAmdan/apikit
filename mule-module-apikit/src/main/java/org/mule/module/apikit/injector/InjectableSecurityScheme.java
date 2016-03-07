@@ -6,6 +6,8 @@
  */
 package org.mule.module.apikit.injector;
 
+import org.raml.interfaces.model.IAction;
+import org.raml.interfaces.model.ISecurityScheme;
 import org.raml.model.Action;
 import org.raml.model.SecurityReference;
 import org.raml.model.SecurityScheme;
@@ -13,7 +15,7 @@ import org.raml.model.SecurityScheme;
 public class InjectableSecurityScheme extends InjectableRamlFeature
 {
 
-    private SecurityScheme cache;
+    private ISecurityScheme cache;
     private static final String KEY = "scheme";
 
     private static final String TEMPLATE = "#%RAML 0.8\ntitle: t\nsecuritySchemes:\n - " + KEY + ":\n";
@@ -26,13 +28,13 @@ public class InjectableSecurityScheme extends InjectableRamlFeature
         cache = parse().getSecuritySchemes().get(0).get(KEY);
     }
 
-    public SecurityScheme getSecurityScheme()
+    public ISecurityScheme getSecurityScheme()
     {
         return cache;
     }
 
     @Override
-    public void applyToAction(Action target)
+    public void applyToAction(IAction target)
     {
         target.getSecuredBy().add(new SecurityReference(name));
     }

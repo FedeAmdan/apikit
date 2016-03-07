@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.raml.model.ActionType;
+import org.raml.interfaces.model.ActionType;
 
 public class APIKitFlow {
 

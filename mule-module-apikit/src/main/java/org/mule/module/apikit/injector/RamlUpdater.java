@@ -14,22 +14,22 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.raml.model.Action;
-import org.raml.model.Raml;
-import org.raml.model.SecurityScheme;
+import org.raml.interfaces.model.IAction;
+import org.raml.interfaces.model.IRaml;
+import org.raml.interfaces.model.ISecurityScheme;
 import org.raml.model.Template;
 
 public class RamlUpdater
 {
 
-    private Raml raml;
+    private IRaml raml;
     private AbstractConfiguration config;
     private Set<String> currentTraits;
     private Set<String> currentSecuritySchemes;
     private Map<String, InjectableTrait> injectedTraits;
     private Map<String, InjectableSecurityScheme> injectedSecuritySchemes;
 
-    public RamlUpdater(Raml raml, AbstractConfiguration config)
+    public RamlUpdater(IRaml raml, AbstractConfiguration config)
     {
         this.raml = raml;
         this.config = config;
@@ -42,7 +42,7 @@ public class RamlUpdater
     private void populateCurrentSecuritySchemes()
     {
         currentSecuritySchemes = new HashSet<String>();
-        for (Map<String, SecurityScheme> schemes : raml.getSecuritySchemes())
+        for (Map<String, ISecurityScheme> schemes : raml.getSecuritySchemes())
         {
             currentSecuritySchemes.addAll(schemes.keySet());
         }
@@ -51,7 +51,7 @@ public class RamlUpdater
     private void populateCurrentTraits()
     {
         currentTraits = new HashSet<String>();
-        for (Map<String, Template> traitMap : raml.getTraits())
+        for (Map<String, ITemplate> traitMap : raml.getTraits())
         {
             currentTraits.addAll(traitMap.keySet());
         }
@@ -99,7 +99,7 @@ public class RamlUpdater
     {
         for (String actionRef : actionRefs)
         {
-            Action action = getAction(actionRef);
+            IAction action = getAction(actionRef);
             InjectableTrait injectableTrait = injectedTraits.get(name);
             if (injectableTrait == null)
             {
@@ -110,10 +110,10 @@ public class RamlUpdater
         return this;
     }
 
-    private Action getAction(String actionRef)
+    private IAction getAction(String actionRef)
     {
         String[] coord = actionRef.split(":");
-        Action action = raml.getResource(coord[1]).getAction(coord[0]);
+        IAction action = raml.getResource(coord[1]).getAction(coord[0]);
         return action;
     }
 
@@ -124,7 +124,7 @@ public class RamlUpdater
             throw new SecuritySchemeAlreadyDefinedException("Duplicate Security Scheme definition: " + name);
         }
         currentSecuritySchemes.add(name);
-        Map<String, SecurityScheme> securitySchemeDef = new HashMap<String, SecurityScheme>();
+        Map<String, ISecurityScheme> securitySchemeDef = new HashMap<String, ISecurityScheme>();
         InjectableSecurityScheme injectableSecurityScheme = new InjectableSecurityScheme(name, securitySchemeYaml);
         securitySchemeDef.put(name, injectableSecurityScheme.getSecurityScheme());
         raml.getSecuritySchemes().add(securitySchemeDef);
@@ -136,7 +136,7 @@ public class RamlUpdater
     {
         for (String actionRef : actionRefs)
         {
-            Action action = getAction(actionRef);
+            IAction action = getAction(actionRef);
             InjectableSecurityScheme injectableSecurityScheme = injectedSecuritySchemes.get(name);
             if (injectableSecurityScheme == null)
             {

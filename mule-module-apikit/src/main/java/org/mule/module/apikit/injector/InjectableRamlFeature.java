@@ -6,8 +6,8 @@
  */
 package org.mule.module.apikit.injector;
 
-import org.raml.model.Action;
-import org.raml.model.Raml;
+import org.raml.interfaces.model.IAction;
+import org.raml.interfaces.model.IRaml;
 import org.raml.parser.visitor.RamlDocumentBuilder;
 
 public abstract class InjectableRamlFeature
@@ -25,7 +25,7 @@ public abstract class InjectableRamlFeature
         this.yaml = yaml;
     }
 
-    protected Raml parse()
+    protected IRaml parse()
     {
         StringBuilder wholeYaml = new StringBuilder(getBoilerPlateBefore());
         String[] split = yaml.split("[\r\n]+");
@@ -37,7 +37,7 @@ public abstract class InjectableRamlFeature
         return new RamlDocumentBuilder().build(wholeYaml.toString(), "");
     }
 
-    public abstract void applyToAction(Action target);
+    public abstract void applyToAction(IAction target);
 
     protected abstract String getBoilerPlateBefore();
 

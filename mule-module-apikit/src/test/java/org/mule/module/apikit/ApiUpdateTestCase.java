@@ -16,7 +16,7 @@ import org.mule.tck.junit4.AbstractMuleContextTestCase;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.raml.model.Action;
+import org.raml.interfaces.model.IAction;
 
 public class ApiUpdateTestCase extends AbstractMuleContextTestCase
 {
@@ -75,7 +75,7 @@ public class ApiUpdateTestCase extends AbstractMuleContextTestCase
         assertInitialStateWithTraits();
     }
 
-    private void assertTraitInjected(Action action)
+    private void assertTraitInjected(IAction action)
     {
         assertThat(action.getIs().size(), is(1));
         assertThat(action.getIs().get(0), is(traitName));
@@ -148,7 +148,7 @@ public class ApiUpdateTestCase extends AbstractMuleContextTestCase
         assertInitialStateWithTraits();
     }
 
-    private void assertSecuritySchemeInjected(Action action, String name)
+    private void assertSecuritySchemeInjected(IAction action, String name)
     {
         assertThat(action.getSecuredBy().size(), is(1));
         assertThat(action.getSecuredBy().get(0).getName(), is(name));
@@ -176,7 +176,7 @@ public class ApiUpdateTestCase extends AbstractMuleContextTestCase
     {
         assertThat(config.getApi().getTraits().size(), is(traits));
         assertThat(config.getApi().getSecuritySchemes().size(), is(0));
-        Action action = config.getApi().getResource(resource).getAction(METHOD_GET);
+        IAction action = config.getApi().getResource(resource).getAction(METHOD_GET);
         assertThat(action.getIs().size(), is(0));
         assertThat(action.getHeaders().size(), is(0));
         assertThat(action.getQueryParameters().size(), is(0));

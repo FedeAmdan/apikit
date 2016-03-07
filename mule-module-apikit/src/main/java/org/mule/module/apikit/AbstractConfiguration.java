@@ -56,14 +56,10 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang.SerializationUtils;
 import org.raml.emitter.RamlEmitter;
-import org.raml.model.Action;
-import org.raml.model.ActionType;
-import org.raml.model.Raml;
-import org.raml.model.Resource;
-import org.raml.parser.loader.ResourceLoader;
-import org.raml.parser.rule.ValidationResult;
-import org.raml.parser.visitor.RamlDocumentBuilder;
-import org.raml.parser.visitor.RamlValidationService;
+import org.raml.interfaces.model.ActionType;
+import org.raml.interfaces.model.IAction;
+import org.raml.interfaces.model.IRaml;
+import org.raml.interfaces.model.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,13 +76,13 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
     protected MuleContext muleContext;
     private String name;
     protected String raml;
-    private Raml baseApi; //original raml
-    protected Raml api; //current raml
+    private IRaml baseApi; //original raml
+    protected IRaml api; //current raml
     private String baseSchemeHostPort;
     private Map<String, String> apikitRaml = new ConcurrentHashMap<String, String>();
     private boolean disableValidations;
     protected Map<String, FlowResolver> restFlowMapWrapper;
-    protected Map<URIPattern, Resource> routingTable;
+    protected Map<URIPattern, IResource> routingTable;
     protected LoadingCache<String, URIResolver> uriResolverCache;
     protected LoadingCache<String, URIPattern> uriPatternCache;
     private List<String> consoleUrls = new ArrayList<String>();
@@ -124,7 +120,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
     {
         if (routingTable == null)
         {
-            routingTable = new ConcurrentHashMap<URIPattern, Resource>();
+            routingTable = new ConcurrentHashMap<URIPattern, IResource>();
         }
         buildRoutingTable(getApi().getResources());
     }
@@ -163,9 +159,9 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
                         });
     }
 
-    private void buildRoutingTable(Map<String, Resource> resources)
+    private void buildRoutingTable(Map<String, IResource> resources)
     {
-        for (Resource resource : resources.values())
+        for (IResource resource : resources.values())
         {
             String parentUri = resource.getParentUri();
             if (parentUri.contains("{version}"))
@@ -189,7 +185,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         resetRamlMap();
     }
 
-    public void updateApi(Raml newApi)
+    public void updateApi(IRaml newApi)
     {
         api = newApi;
         loadRoutingTable();
@@ -250,25 +246,25 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
 
     public abstract ResourceLoader getRamlResourceLoader();
 
-    private void injectEndpointUri(Raml ramlApi)
+    private void injectEndpointUri(IRaml ramlApi)
     {
         String address = getEndpointAddress(flowConstruct);
         ramlApi.setBaseUri(address);
         baseSchemeHostPort = getBaseSchemeHostPort(address);
     }
 
-    private void cleanBaseUriParameters(Raml ramlApi)
+    private void cleanBaseUriParameters(IRaml ramlApi)
     {
         ramlApi.getBaseUriParameters().clear();
         cleanBaseUriParameters(ramlApi.getResources());
     }
 
-    private void cleanBaseUriParameters(Map<String, Resource> resources)
+    private void cleanBaseUriParameters(Map<String, IResource> resources)
     {
-        for (Resource resource : resources.values())
+        for (IResource resource : resources.values())
         {
             resource.getBaseUriParameters().clear();
-            for (Action action : resource.getActions().values())
+            for (IAction action : resource.getActions().values())
             {
                 action.getBaseUriParameters().clear();
             }
@@ -321,7 +317,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         String hostRaml = apikitRaml.get(schemeHostPort);
         if (hostRaml == null)
         {
-            Raml clone = shallowCloneRaml(api);
+            IRaml clone = shallowCloneRaml(api);
             clone.setBaseUri(api.getBaseUri().replace(baseSchemeHostPort, schemeHostPort));
             hostRaml = new RamlEmitter().dump(clone);
             apikitRaml.put(schemeHostPort, hostRaml);
@@ -359,23 +355,23 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         return getApikitRaml(schemeHostPort);
     }
 
-    private Raml deepCloneRaml(Raml source)
+    private IRaml deepCloneRaml(IRaml source)
     {
-        Raml target = (Raml) SerializationUtils.deserialize(SerializationUtils.serialize(source));
+        IRaml target = (IRaml) SerializationUtils.deserialize(SerializationUtils.serialize(source));
         copyCompiledSchemas(source, target);
         return target;
     }
 
-    private void copyCompiledSchemas(Raml source, Raml target)
+    private void copyCompiledSchemas(IRaml source, IRaml target)
     {
         target.setCompiledSchemas(source.getCompiledSchemas());
     }
 
-    private Raml shallowCloneRaml(Raml source)
+    private IRaml shallowCloneRaml(IRaml source)
     {
         try
         {
-            return (Raml) BeanUtils.cloneBean(source);
+            return (IRaml) BeanUtils.cloneBean(source);
         }
         catch (Exception e)
         {
@@ -393,7 +389,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         this.disableValidations = disableValidations;
     }
 
-    public Raml getApi()
+    public IRaml getApi()
     {
         return api;
     }
@@ -425,12 +421,12 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         return map;
     }
 
-    private void populateMapKeys(Map<String, FlowResolver> wrapperFlowMap, Map<String, Resource> resources)
+    private void populateMapKeys(Map<String, FlowResolver> wrapperFlowMap, Map<String, IResource> resources)
     {
-        for (Map.Entry<String, Resource> resourceEntry : resources.entrySet())
+        for (Map.Entry<String, IResource> resourceEntry : resources.entrySet())
         {
             String resource = resourceEntry.getValue().getUri();
-            for (Map.Entry<ActionType, Action> actionEntry : resourceEntry.getValue().getActions().entrySet())
+            for (Map.Entry<ActionType, IAction> actionEntry : resourceEntry.getValue().getActions().entrySet())
             {
                 String key = actionEntry.getKey().name().toLowerCase() + ":" + resource;
                 wrapperFlowMap.put(key, getFlowResolver(this, key));
@@ -540,7 +536,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         this.raml = raml;
     }
 
-    public Action getEventAction(MuleEvent event)
+    public IAction getEventAction(MuleEvent event)
     {
         HttpRestRequest request = getHttpRestRequest(event);
         String path = request.getResourcePath();
@@ -553,7 +549,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         {
             return null;
         }
-        Resource resource = routingTable.get(uriPattern);
+        IResource resource = routingTable.get(uriPattern);
         return resource.getAction(request.getMethod());
     }
 

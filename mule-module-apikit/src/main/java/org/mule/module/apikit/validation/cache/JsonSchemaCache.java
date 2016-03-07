@@ -13,14 +13,14 @@ import com.github.fge.jsonschema.main.JsonSchema;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 
-import org.raml.model.Raml;
+import org.raml.interfaces.model.IRaml;
 
 public final class JsonSchemaCache
 {
 
     private static final String REGISTRY_JSON_SCHEMA_CACHE_KEY_PREFIX = "__restRouterJsonSchemaCache__";
 
-    public static LoadingCache<String, JsonSchema> getJsonSchemaCache(MuleContext muleContext, String configId, Raml api) throws RegistrationException
+    public static LoadingCache<String, JsonSchema> getJsonSchemaCache(MuleContext muleContext, String configId, IRaml api) throws RegistrationException
     {
         String cacheKey = REGISTRY_JSON_SCHEMA_CACHE_KEY_PREFIX + configId;
         if (muleContext.getRegistry().get(cacheKey) == null)

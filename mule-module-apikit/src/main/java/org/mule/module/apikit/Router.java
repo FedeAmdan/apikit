@@ -15,7 +15,7 @@ import org.mule.construct.Flow;
 
 import java.util.Map;
 
-import org.raml.model.Resource;
+import org.raml.interfaces.model.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +75,7 @@ public class Router extends AbstractRouter
      * if there is no match it retries using method and resource only.
      */
     @Override
-    protected Flow getFlow(Resource resource, HttpRestRequest request)
+    protected Flow getFlow(IResource resource, HttpRestRequest request)
     {
         String baseKey = request.getMethod() + ":" + resource.getUri();
         String contentType = request.getContentType();

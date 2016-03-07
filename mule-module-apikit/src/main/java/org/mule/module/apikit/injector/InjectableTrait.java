@@ -8,6 +8,8 @@ package org.mule.module.apikit.injector;
 
 import java.util.Map;
 
+import org.raml.interfaces.model.IAction;
+import org.raml.interfaces.model.IResponse;
 import org.raml.model.Action;
 import org.raml.model.Response;
 
@@ -20,7 +22,7 @@ public class InjectableTrait extends InjectableRamlFeature
     private static final String TEMPLATE_AFTER = RESOURCE + ":\n " + ACTION + ":\n  is: [injected]\n";
     private static final String INDENTATION = "    ";
 
-    private Action cache;
+    private IAction cache;
 
     public InjectableTrait(String name, String yaml)
     {
@@ -46,18 +48,18 @@ public class InjectableTrait extends InjectableRamlFeature
     }
 
     @Override
-    public void applyToAction(Action target)
+    public void applyToAction(IAction target)
     {
         if (cache == null)
         {
             cache = parse().getResource(RESOURCE).getAction(ACTION);
         }
-        Action source = resolveParams(target);
+        IAction source = resolveParams(target);
         mergeActions(target, source);
         target.getIs().add(name);
     }
 
-    private void mergeActions(Action target, Action source)
+    private void mergeActions(IAction target, IAction source)
     {
         putAllSkipExisting(target.getHeaders(), source.getHeaders());
         putAllSkipExisting(target.getQueryParameters(), source.getQueryParameters());
@@ -65,7 +67,7 @@ public class InjectableTrait extends InjectableRamlFeature
         {
             putAllSkipExisting(target.getBody(), source.getBody());
         }
-        for (Map.Entry<String, Response> response : source.getResponses().entrySet())
+        for (Map.Entry<String, IResponse> response : source.getResponses().entrySet())
         {
             if (target.getResponses().containsKey(response.getKey()))
             {
@@ -79,7 +81,7 @@ public class InjectableTrait extends InjectableRamlFeature
         }
     }
 
-    private Action resolveParams(Action target)
+    private IAction resolveParams(IAction target)
     {
         //TODO replace implicit parameters
         return cache;

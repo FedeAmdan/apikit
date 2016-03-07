@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.raml.model.Action;
-import org.raml.model.Resource;
+import org.raml.interfaces.model.IAction;
+import org.raml.interfaces.model.IResource;
 import org.raml.parser.loader.CompositeResourceLoader;
 import org.raml.parser.loader.DefaultResourceLoader;
 import org.raml.parser.loader.FileResourceLoader;
@@ -46,7 +46,7 @@ public class Configuration extends AbstractConfiguration
     private List<FlowMapping> flowMappings = new ArrayList<FlowMapping>();
     private Map<String, Flow> restFlowMap;
     private Map<String, Flow> restFlowMapUnwrapped;
-    private Map<String, Resource> flatResourceTree = new HashMap<String, Resource>();
+    private Map<String, IResource> flatResourceTree = new HashMap<String, IResource>();
 
     public boolean isConsoleEnabled()
     {
@@ -127,9 +127,9 @@ public class Configuration extends AbstractConfiguration
         }
     }
 
-    private void flattenResourceTree(Map<String, Resource> resources)
+    private void flattenResourceTree(Map<String, IResource> resources)
     {
-        for (Resource resource : resources.values())
+        for (IResource resource : resources.values())
         {
             flatResourceTree.put(resource.getUri(), resource);
             if (resource.getResources() != null)
@@ -141,10 +141,10 @@ public class Configuration extends AbstractConfiguration
 
     private void logMissingMappings()
     {
-        for (Resource resource : flatResourceTree.values())
+        for (IResource resource : flatResourceTree.values())
         {
             String fullResource = resource.getUri();
-            for (Action action : resource.getActions().values())
+            for (IAction action : resource.getActions().values())
             {
                 String method = action.getType().name().toLowerCase();
                 String key = method + ":" + fullResource;
@@ -266,10 +266,10 @@ public class Configuration extends AbstractConfiguration
         {
             key = key + ":" + type;
         }
-        Resource apiResource = flatResourceTree.get(resource);
+        IResource apiResource = flatResourceTree.get(resource);
         if (apiResource != null)
         {
-            Action action = apiResource.getAction(method);
+            IAction action = apiResource.getAction(method);
             if (action != null)
             {
                 if (type == null)

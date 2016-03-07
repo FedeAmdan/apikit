@@ -15,10 +15,10 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
-import org.raml.model.Action;
-import org.raml.model.MimeType;
-import org.raml.model.Resource;
-import org.raml.model.Response;
+import org.raml.interfaces.model.IAction;
+import org.raml.interfaces.model.IMimeType;
+import org.raml.interfaces.model.IResource;
+import org.raml.interfaces.model.IResponse;
 
 public class GenerationModel implements Comparable<GenerationModel> {
 
@@ -26,15 +26,15 @@ public class GenerationModel implements Comparable<GenerationModel> {
     public static final String DEFAULT_TEXT = "#[NullPayload.getInstance()]";
 
     private final String verb;
-    private Action action;
-    private Resource resource;
+    private IAction action;
+    private IResource resource;
     private String mimeType;
     private List<String> splitPath;
     private API api;
 
-    public GenerationModel(API api, Resource resource, Action action) { this(api, resource, action, null); }
+    public GenerationModel(API api, IResource resource, IAction action) { this(api, resource, action, null); }
 
-    public GenerationModel(API api, Resource resource, Action action, String mimeType) {
+    public GenerationModel(API api, IResource resource, IAction action, String mimeType) {
         this.api = api;
         Validate.notNull(api);
         Validate.notNull(action);
@@ -83,19 +83,19 @@ public class GenerationModel implements Comparable<GenerationModel> {
     }
 
     private String getExampleWrappee() {
-        Map<String, Response> responses = action.getResponses();
+        Map<String, IResponse> responses = action.getResponses();
 
-        Response response = responses.get("200");
+        IResponse response = responses.get("200");
 
         if (response == null || response.getBody() == null) {
-            for (Response response1 : responses.values()) {
+            for (IResponse response1 : responses.values()) {
                 if (response1.getBody() != null) {
-                    Map<String, MimeType> responseBody1 = response1.getBody();
-                    MimeType mimeType = responseBody1.get("application/json");
+                    Map<String, IMimeType> responseBody1 = response1.getBody();
+                    IMimeType mimeType = responseBody1.get("application/json");
                     if (mimeType != null && mimeType.getExample() != null) {
                         return mimeType.getExample();
                     } else {
-                        for (MimeType type : responseBody1.values()) {
+                        for (IMimeType type : responseBody1.values()) {
                             if (type.getExample() != null) {
                                 return type.getExample();
                             }
@@ -106,13 +106,13 @@ public class GenerationModel implements Comparable<GenerationModel> {
         }
 
         if (response != null && response.getBody() != null) {
-            Map<String, MimeType> body = response.getBody();
-            MimeType mimeType = body.get("application/json");
+            Map<String, IMimeType> body = response.getBody();
+            IMimeType mimeType = body.get("application/json");
             if (mimeType != null && mimeType.getExample() != null) {
                 return mimeType.getExample();
             }
 
-            for (MimeType mimeType2 : response.getBody().values()) {
+            for (IMimeType mimeType2 : response.getBody().values()) {
                 if (mimeType2 != null && mimeType2.getExample() != null) {
                     return mimeType2.getExample();
                 }

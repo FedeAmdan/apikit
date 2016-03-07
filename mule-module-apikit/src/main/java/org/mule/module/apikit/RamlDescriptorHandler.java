@@ -14,7 +14,7 @@ import org.mule.api.MuleException;
 import org.mule.transformer.types.DataTypeFactory;
 import org.mule.transport.http.HttpConstants;
 
-import org.raml.model.ActionType;
+import org.raml.interfaces.model.ActionType;
 
 public class RamlDescriptorHandler
 {
