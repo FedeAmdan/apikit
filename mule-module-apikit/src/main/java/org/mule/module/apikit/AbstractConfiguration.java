@@ -55,11 +55,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang.SerializationUtils;
-import org.raml.emitter.RamlEmitter;
+import org.raml.interfaces.RamlFactory;
+import org.raml.interfaces.emitter.IRamlEmitter;
 import org.raml.interfaces.model.ActionType;
 import org.raml.interfaces.model.IAction;
 import org.raml.interfaces.model.IRaml;
 import org.raml.interfaces.model.IResource;
+import org.raml.interfaces.parser.loader.IResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -195,7 +197,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
     private void resetRamlMap()
     {
         apikitRaml = new ConcurrentHashMap<String, String>();
-        apikitRaml.put(baseSchemeHostPort, new RamlEmitter().dump(api));
+        apikitRaml.put(baseSchemeHostPort, RamlFactory.createRamlEmitter().dump(api));
     }
 
     protected abstract void initializeRestFlowMap();
@@ -244,7 +246,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         return sb.toString();
     }
 
-    public abstract ResourceLoader getRamlResourceLoader();
+    public abstract IResourceLoader getRamlResourceLoader();
 
     private void injectEndpointUri(IRaml ramlApi)
     {
@@ -319,7 +321,8 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         {
             IRaml clone = shallowCloneRaml(api);
             clone.setBaseUri(api.getBaseUri().replace(baseSchemeHostPort, schemeHostPort));
-            hostRaml = new RamlEmitter().dump(clone);
+            IRamlEmitter ramlEmitter = RamlFactory.createRamlEmitter();
+            hostRaml = ramlEmitter.dump(clone);
             apikitRaml.put(schemeHostPort, hostRaml);
         }
         return hostRaml;

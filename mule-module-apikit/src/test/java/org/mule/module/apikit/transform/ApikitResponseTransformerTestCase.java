@@ -38,6 +38,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.raml.interfaces.RamlFactory;
 import org.raml.interfaces.model.IMimeType;
 
 public class ApikitResponseTransformerTestCase
@@ -72,7 +73,7 @@ public class ApikitResponseTransformerTestCase
         when(message.getDataType()).thenReturn(new SimpleDataType(String.class, "application/json"));
         when(message.getEncoding()).thenReturn("UTF-8");
         List<IMimeType> responseMimeType = new ArrayList<IMimeType>();
-        responseMimeType.add(new MimeType("application/json"));
+        responseMimeType.add(RamlFactory.createMimeType("application/json"));
         Object responsePayload = responseTransformer.transformToExpectedContentType(message, "application/json", responseMimeType, "application/json");
 
         assertNotNull(responsePayload);
@@ -90,7 +91,7 @@ public class ApikitResponseTransformerTestCase
         when(message.getEncoding()).thenReturn("UTF-8");
         when(message.getOutboundProperty("Content-Type")).thenReturn("application/xml");
         List<IMimeType> responseMimeType = new ArrayList<IMimeType>();
-        responseMimeType.add(new MimeType("application/json"));
+        responseMimeType.add(RamlFactory.createMimeType("application/json"));
         Object responsePayload = responseTransformer.transformToExpectedContentType(message, "application/json", responseMimeType, "application/json");
 
         assertNotNull(responsePayload);
@@ -108,7 +109,7 @@ public class ApikitResponseTransformerTestCase
         when(message.getEncoding()).thenReturn("UTF-8");
         when(message.getOutboundProperty("Content-Type")).thenReturn("application/json");
         List<IMimeType> responseMimeType = new ArrayList<IMimeType>();
-        responseMimeType.add(new MimeType("application/json"));
+        responseMimeType.add(RamlFactory.createMimeType("application/json"));
         Object responsePayload = responseTransformer.transformToExpectedContentType(message, "application/json", responseMimeType, "application/json");
 
         assertNotNull(responsePayload);
@@ -128,7 +129,7 @@ public class ApikitResponseTransformerTestCase
         when(TransformerCache.getTransformerCache(muleContext)).thenReturn(transformerCache);
         when(transformerCache.get(Mockito.isA(DataTypePair.class))).thenReturn(transformer);
         List<IMimeType> responseMimeType = new ArrayList<IMimeType>();
-        responseMimeType.add(new MimeType("application/json"));
+        responseMimeType.add(RamlFactory.createMimeType("application/json"));
         Object responsePayload = responseTransformer.transformToExpectedContentType(message, "application/xml", responseMimeType, "application/json");
 
         assertNull(responsePayload);
@@ -145,7 +146,7 @@ public class ApikitResponseTransformerTestCase
         when(TransformerCache.getTransformerCache(muleContext)).thenReturn(transformerCache);
         when(transformerCache.get(Mockito.isA(DataTypePair.class))).thenReturn(transformer);
         List<IMimeType> responseMimeType = new ArrayList<IMimeType>();
-        responseMimeType.add(new MimeType("application/json"));
+        responseMimeType.add(RamlFactory.createMimeType("application/json"));
         Object responsePayload = responseTransformer.transformToExpectedContentType(message, "application/xml", responseMimeType, "application/xml");
 
         assertNull(responsePayload);
@@ -163,7 +164,7 @@ public class ApikitResponseTransformerTestCase
         when(TransformerCache.getTransformerCache(muleContext)).thenReturn(transformerCache);
         when(transformerCache.get(Mockito.isA(DataTypePair.class))).thenReturn(transformer);
         List<IMimeType> responseMimeType = new ArrayList<IMimeType>();
-        responseMimeType.add(new MimeType("application/json"));
+        responseMimeType.add(RamlFactory.createMimeType("application/json"));
         Object responsePayload = responseTransformer.transformToExpectedContentType(message, "application/json", responseMimeType, "application/json");
 
         assertNotNull(payload);
@@ -221,8 +222,8 @@ public class ApikitResponseTransformerTestCase
         when(TransformerCache.getTransformerCache(muleContext)).thenReturn(transformerCache);
         when(transformerCache.get(Mockito.isA(DataTypePair.class))).thenReturn(transformer);
         Mockito.when(transformer.transform(message.getPayload())).thenThrow(new NullPointerException());
-        List<MimeType> responseMimeType = new ArrayList<MimeType>();
-        responseMimeType.add(new MimeType("application/json"));
+        List<IMimeType> responseMimeType = new ArrayList<IMimeType>();
+        responseMimeType.add(RamlFactory.createMimeType("application/json"));
         Object responsePayload = null;
         try
         {
@@ -244,7 +245,7 @@ public class ApikitResponseTransformerTestCase
         when(message.getDataType()).thenReturn(new SimpleDataType(String.class, "application/json"));
         when(message.getEncoding()).thenReturn("UTF-8");
         List<IMimeType> responseMimeType = new ArrayList<IMimeType>();
-        responseMimeType.add(new MimeType("application/json"));
+        responseMimeType.add(RamlFactory.createMimeType("application/json"));
         Object responsePayload = responseTransformer.transformToExpectedContentType(message, "application/json", responseMimeType, "application/json,application/xml;q=0.9,*/*;q=0.8;charset=UTF-8");
 
         assertNotNull(responsePayload);
@@ -262,7 +263,7 @@ public class ApikitResponseTransformerTestCase
         when(message.getDataType()).thenReturn(new SimpleDataType(String.class, "application/xml"));
         when(message.getEncoding()).thenReturn("UTF-8");
         List<IMimeType> responseMimeType = new ArrayList<IMimeType>();
-        responseMimeType.add(new MimeType("application/xml"));
+        responseMimeType.add(RamlFactory.createMimeType("application/xml"));
         Object responsePayload = responseTransformer.transformToExpectedContentType(message, "application/xml", responseMimeType, "application/json,application/xml;q=0.9,*/*;q=0.8;charset=UTF-8");
 
         assertNotNull(responsePayload);
@@ -280,7 +281,7 @@ public class ApikitResponseTransformerTestCase
         when(message.getDataType()).thenReturn(new SimpleDataType(String.class, "application/json"));
         when(message.getEncoding()).thenReturn("UTF-8");
         List<IMimeType> responseMimeType = new ArrayList<IMimeType>();
-        responseMimeType.add(new MimeType("text/plain"));
+        responseMimeType.add(RamlFactory.createMimeType("text/plain"));
         DataType sourceDataType = DataTypeFactory.create(String.class, "application/json;charset=UTF-8");
         DataType resultDataType = DataTypeFactory.create(String.class, "*/*");
         when(transformerCache.get(Mockito.isA(DataTypePair.class))).thenThrow(new ExecutionException(new TransformerException(CoreMessages.noTransformerFoundForMessage(sourceDataType, resultDataType))));

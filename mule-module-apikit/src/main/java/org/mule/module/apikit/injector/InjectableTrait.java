@@ -10,8 +10,6 @@ import java.util.Map;
 
 import org.raml.interfaces.model.IAction;
 import org.raml.interfaces.model.IResponse;
-import org.raml.model.Action;
-import org.raml.model.Response;
 
 public class InjectableTrait extends InjectableRamlFeature
 {
