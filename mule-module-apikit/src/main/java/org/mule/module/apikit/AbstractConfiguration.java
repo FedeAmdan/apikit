@@ -55,6 +55,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang.SerializationUtils;
+import org.raml.interfaces.IRamlDocumentBuilder;
 import org.raml.interfaces.RamlFactory;
 import org.raml.interfaces.emitter.IRamlEmitter;
 import org.raml.interfaces.model.ActionType;
@@ -102,7 +103,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
 
         ResourceLoader loader = getRamlResourceLoader();
         validateRaml(loader);
-        RamlDocumentBuilder builder = new RamlDocumentBuilder(loader);
+        IRamlDocumentBuilder builder = new RamlDocumentBuilder(loader);
         api = builder.build(raml);
         cleanBaseUriParameters(api);
         baseSchemeHostPort = getBaseSchemeHostPort(api.getBaseUri());

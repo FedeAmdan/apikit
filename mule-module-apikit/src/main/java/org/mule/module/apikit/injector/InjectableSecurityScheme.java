@@ -6,11 +6,9 @@
  */
 package org.mule.module.apikit.injector;
 
+import org.raml.interfaces.RamlFactory;
 import org.raml.interfaces.model.IAction;
 import org.raml.interfaces.model.ISecurityScheme;
-import org.raml.model.Action;
-import org.raml.model.SecurityReference;
-import org.raml.model.SecurityScheme;
 
 public class InjectableSecurityScheme extends InjectableRamlFeature
 {
@@ -36,7 +34,7 @@ public class InjectableSecurityScheme extends InjectableRamlFeature
     @Override
     public void applyToAction(IAction target)
     {
-        target.getSecuredBy().add(new SecurityReference(name));
+        target.getSecuredBy().add(RamlFactory.createSecurityReference(name));
     }
 
     @Override

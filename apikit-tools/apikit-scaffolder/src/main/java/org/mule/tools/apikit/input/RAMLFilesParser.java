@@ -22,6 +22,8 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
+import org.raml.interfaces.IRamlDocumentBuilder;
+import org.raml.interfaces.RamlFactory;
 import org.raml.interfaces.model.IAction;
 import org.raml.interfaces.model.IMimeType;
 import org.raml.interfaces.model.IRaml;
@@ -62,11 +64,12 @@ public class RAMLFilesParser
                 break;
 
             }
-            ResourceLoader resourceLoader = new CompositeResourceLoader(new DefaultResourceLoader(), new FileResourceLoader(ramlFile.getParentFile()));
+            //ResourceLoader resourceLoader = new CompositeResourceLoader(new DefaultResourceLoader(), new FileResourceLoader(ramlFile.getParentFile()));
 
             if (isValidRaml(ramlFile.getName(), content, resourceLoader))
             {
-                RamlDocumentBuilder builderNodeHandler = new RamlDocumentBuilder(resourceLoader);
+                RamlFactory.createRamlDocumentBuilder(ramlFile.getParentFile().getPath());
+                IRamlDocumentBuilder builderNodeHandler = RamlFactory.createRamlDocumentBuilder(ramlFile.getParentFile().getPath());
                 try
                 {
                     IRaml raml = builderNodeHandler.build(content, ramlFile.getName());
