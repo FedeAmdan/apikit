@@ -12,16 +12,10 @@ import org.mule.api.MuleException;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.construct.Flow;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Collections;
 
-import org.raml.parser.loader.ClassPathResourceLoader;
-import org.raml.parser.loader.CompositeResourceLoader;
-import org.raml.parser.loader.ResourceLoader;
+import org.raml.interfaces.IRamlDocumentBuilder;
+import org.raml.interfaces.RamlFactory;
 
 public class ProxyConfiguration extends AbstractConfiguration
 {
@@ -44,33 +38,17 @@ public class ProxyConfiguration extends AbstractConfiguration
         return new HttpRestProxyRequest(event, this);
     }
 
+    //@Override
+    //public ResourceLoader getRamlResourceLoader()
+    //{
+    //    return new CompositeResourceLoader(new RamlUrlResourceLoader(), new ClassPathResourceLoader());
+    //}
+
     @Override
-    public ResourceLoader getRamlResourceLoader()
+    public IRamlDocumentBuilder getRamlDocumentBuilder()
     {
-        return new CompositeResourceLoader(new RamlUrlResourceLoader(), new ClassPathResourceLoader());
-    }
-
-    private static class RamlUrlResourceLoader implements ResourceLoader
-    {
-
-        @Override
-        public InputStream fetchResource(String resourceName)
-        {
-            InputStream inputStream = null;
-            try
-            {
-                URL url = new URL(resourceName);
-                URLConnection connection = url.openConnection();
-                connection.setRequestProperty("Accept", APPLICATION_RAML + ", */*");
-                inputStream = new BufferedInputStream(connection.getInputStream());
-            }
-            catch (IOException e)
-            {
-                //ignore on resource not found
-            }
-            return inputStream;
-
-        }
+        IRamlDocumentBuilder ramlDocumentBuilder = RamlFactory.createRamlDocumentBuilder();
+        return ramlDocumentBuilder.setUrlLookup().addClassPathLookup();
     }
 
     @Override

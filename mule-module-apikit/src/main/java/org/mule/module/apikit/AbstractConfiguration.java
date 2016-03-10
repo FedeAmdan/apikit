@@ -101,9 +101,11 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
             return;
         }
 
-        ResourceLoader loader = getRamlResourceLoader();
-        validateRaml(loader);
-        IRamlDocumentBuilder builder = new RamlDocumentBuilder(loader);
+        //TODO validation
+        //ResourceLoader loader = getRamlResourceLoader();
+        //validateRaml(loader);
+        //IRamlDocumentBuilder builder = new RamlDocumentBuilder(loader);
+        IRamlDocumentBuilder builder = getRamlDocumentBuilder();
         api = builder.build(raml);
         cleanBaseUriParameters(api);
         baseSchemeHostPort = getBaseSchemeHostPort(api.getBaseUri());
@@ -247,7 +249,9 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         return sb.toString();
     }
 
-    public abstract IResourceLoader getRamlResourceLoader();
+    //public abstract IResourceLoader getRamlResourceLoader();
+
+    public abstract IRamlDocumentBuilder getRamlDocumentBuilder();
 
     private void injectEndpointUri(IRaml ramlApi)
     {
