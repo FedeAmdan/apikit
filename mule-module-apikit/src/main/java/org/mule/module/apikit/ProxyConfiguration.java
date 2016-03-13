@@ -48,7 +48,7 @@ public class ProxyConfiguration extends AbstractConfiguration
     public IRamlDocumentBuilder getRamlDocumentBuilder()
     {
         IRamlDocumentBuilder ramlDocumentBuilder = RamlFactory.createRamlDocumentBuilder();
-        return ramlDocumentBuilder.setUrlLookup().addClassPathLookup();
+        return ramlDocumentBuilder.setRamlUrlLookup().addClassPathLookup();
     }
 
     @Override

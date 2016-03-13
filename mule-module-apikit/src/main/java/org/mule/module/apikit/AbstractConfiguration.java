@@ -7,9 +7,6 @@
 package org.mule.module.apikit;
 
 import static org.mule.module.apikit.UrlUtils.getBaseSchemeHostPort;
-import static org.raml.parser.rule.ValidationResult.Level.ERROR;
-import static org.raml.parser.rule.ValidationResult.Level.WARN;
-import static org.raml.parser.rule.ValidationResult.UNKNOWN;
 
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
@@ -39,7 +36,6 @@ import com.google.common.collect.Sets;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -56,13 +52,14 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang.SerializationUtils;
 import org.raml.interfaces.IRamlDocumentBuilder;
+import org.raml.interfaces.IRamlValidationService;
 import org.raml.interfaces.RamlFactory;
 import org.raml.interfaces.emitter.IRamlEmitter;
 import org.raml.interfaces.model.ActionType;
 import org.raml.interfaces.model.IAction;
 import org.raml.interfaces.model.IRaml;
 import org.raml.interfaces.model.IResource;
-import org.raml.interfaces.parser.loader.IResourceLoader;
+import org.raml.interfaces.parser.rule.IValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,12 +97,8 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         {
             return;
         }
-
-        //TODO validation
-        //ResourceLoader loader = getRamlResourceLoader();
-        //validateRaml(loader);
-        //IRamlDocumentBuilder builder = new RamlDocumentBuilder(loader);
         IRamlDocumentBuilder builder = getRamlDocumentBuilder();
+        validateRaml(builder);
         api = builder.build(raml);
         cleanBaseUriParameters(api);
         baseSchemeHostPort = getBaseSchemeHostPort(api.getBaseUri());
@@ -205,41 +198,34 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
 
     protected abstract void initializeRestFlowMap();
 
-    protected void validateRaml(ResourceLoader resourceLoader)
+    protected void validateRaml(IRamlDocumentBuilder ramlDocumentBuilder)
     {
-        List<ValidationResult> results = new ArrayList<ValidationResult>();
-        InputStream content = resourceLoader.fetchResource(raml);
-        if (content != null)
-        {
-            results = RamlValidationService.createDefault(resourceLoader).validate(raml);
-        }
-        else
-        {
-            results.add(ValidationResult.createErrorResult("Raml resource not found "));
-        }
-        List<ValidationResult> errors = ValidationResult.getLevel(ERROR, results);
+        IRamlValidationService ramlValidationService = RamlFactory.createRamlValidationService(ramlDocumentBuilder);
+        ramlValidationService.validate(raml);
+        List<IValidationResult> errors = ramlValidationService.getErrors();
         if (!errors.isEmpty())
         {
             String msg = aggregateMessages(errors, "Invalid API descriptor -- errors found: ");
             throw new ApikitRuntimeException(msg);
         }
-        List<ValidationResult> warnings = ValidationResult.getLevel(WARN, results);
+        List<IValidationResult> warnings = ramlValidationService.getWarnings();
+
         if (!warnings.isEmpty())
         {
             logger.warn(aggregateMessages(warnings, "API descriptor Warnings -- warnings found: "));
         }
     }
 
-    private String aggregateMessages(List<ValidationResult> results, String header)
+    private String aggregateMessages(List<IValidationResult> results, String header)
     {
         StringBuilder sb = new StringBuilder();
         sb.append(header).append(results.size()).append("\n\n");
-        for (ValidationResult result : results)
+        for (IValidationResult result : results)
         {
             sb.append(result.getMessage()).append(" -- ");
             sb.append(" file: ");
             sb.append(result.getIncludeName() != null ? result.getIncludeName() : raml);
-            if (result.getLine() != UNKNOWN)
+            if (result.isLineUnknown())
             {
                 sb.append(" -- line ");
                 sb.append(result.getLine());
@@ -248,8 +234,6 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         }
         return sb.toString();
     }
-
-    //public abstract IResourceLoader getRamlResourceLoader();
 
     public abstract IRamlDocumentBuilder getRamlDocumentBuilder();
 
@@ -262,7 +246,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
 
     private void cleanBaseUriParameters(IRaml ramlApi)
     {
-        ramlApi.getBaseUriParameters().clear();
+        ramlApi.cleanBaseUriParameters();
         cleanBaseUriParameters(ramlApi.getResources());
     }
 
@@ -270,10 +254,10 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
     {
         for (IResource resource : resources.values())
         {
-            resource.getBaseUriParameters().clear();
+            resource.cleanBaseUriParameters();
             for (IAction action : resource.getActions().values())
             {
-                action.getBaseUriParameters().clear();
+                action.cleanBaseUriParameters();
             }
             if (!resource.getResources().isEmpty())
             {
@@ -365,9 +349,11 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
 
     private IRaml deepCloneRaml(IRaml source)
     {
-        IRaml target = (IRaml) SerializationUtils.deserialize(SerializationUtils.serialize(source));
-        copyCompiledSchemas(source, target);
-        return target;
+        //TODO DEEP CLONE
+        return source;
+        //IRaml target = (IRaml) SerializationUtils.deserialize(SerializationUtils.serialize(source));
+        //copyCompiledSchemas(source, target);
+        //return target;
     }
 
     private void copyCompiledSchemas(IRaml source, IRaml target)
@@ -377,14 +363,15 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
 
     private IRaml shallowCloneRaml(IRaml source)
     {
-        try
+        return source; // TODO SHALLOW CLONE NOT WORKING
+        /*try
         {
             return (IRaml) BeanUtils.cloneBean(source);
         }
         catch (Exception e)
         {
             throw new RuntimeException(e);
-        }
+        }*/
     }
 
     public boolean isDisableValidations()

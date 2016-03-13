@@ -10,6 +10,11 @@ package org.mule.tools.apikit;
 import org.junit.Test;
 import org.mule.tools.apikit.output.GenerationModel;
 import org.mule.tools.apikit.model.API;
+
+import org.raml.interfaces.model.IAction;
+import org.raml.interfaces.model.IMimeType;
+import org.raml.interfaces.model.IResource;
+import org.raml.interfaces.model.IResponse;
 import org.raml.model.*;
 
 import java.util.HashMap;
@@ -23,9 +28,9 @@ public class GenerationModelTest {
 
     @Test
     public void testGetVerb() throws Exception {
-        Action action = mock(Action.class);
-        when(action.getType()).thenReturn(ActionType.GET);
-        Resource resource = mock(Resource.class);
+        IAction action = mock(IAction.class);
+        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
         assertEquals("GET", new GenerationModel(api, resource, action).getVerb());
@@ -33,45 +38,44 @@ public class GenerationModelTest {
 
     @Test
     public void testGetStringFromActionType() throws Exception {
-        Resource resource = mock(Resource.class);
+        IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
-
-        Action action = mock(Action.class);
-        when(action.getType()).thenReturn(ActionType.GET);
+        IAction action = mock(IAction.class);
+        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
         assertEquals("retrieve", new GenerationModel(api, resource, action).getStringFromActionType());
 
-        action = mock(Action.class);
-        when(action.getType()).thenReturn(ActionType.PUT);
+        action = mock(IAction.class);
+        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.PUT);
         assertEquals("create", new GenerationModel(api, resource, action).getStringFromActionType());
 
-        action = mock(Action.class);
-        when(action.getType()).thenReturn(ActionType.POST);
+        action = mock(IAction.class);
+        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.POST);
         assertEquals("update", new GenerationModel(api, resource, action).getStringFromActionType());
 
-        action = mock(Action.class);
-        when(action.getType()).thenReturn(ActionType.DELETE);
+        action = mock(IAction.class);
+        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.DELETE);
         assertEquals("delete", new GenerationModel(api, resource, action).getStringFromActionType());
 
-        action = mock(Action.class);
-        when(action.getType()).thenReturn(ActionType.OPTIONS);
+        action = mock(IAction.class);
+        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.OPTIONS);
         assertEquals("options", new GenerationModel(api, resource, action).getStringFromActionType());
     }
 
     @Test
     public void testGetExample() throws Exception {
-        Action action = mock(Action.class);
-        HashMap<String, Response> stringResponseHashMap = new HashMap<String, Response>();
-        Response response = mock(Response.class);
-        HashMap<String, MimeType> stringMimeTypeHashMap = new HashMap<String, MimeType>();
-        MimeType mimeType = mock(MimeType.class);
+        IAction action = mock(IAction.class);
+        HashMap<String, IResponse> stringResponseHashMap = new HashMap<String, IResponse>();
+        IResponse response = mock(IResponse.class);
+        HashMap<String, IMimeType> stringMimeTypeHashMap = new HashMap<String, IMimeType>();
+        IMimeType mimeType = mock(IMimeType.class);
         when(mimeType.getExample()).thenReturn("{\n\"hello\": \">world<\"\n}");
         stringMimeTypeHashMap.put("application/json", mimeType);
         when(response.getBody()).thenReturn(stringMimeTypeHashMap);
         stringResponseHashMap.put("200", response);
         when(action.getResponses()).thenReturn(stringResponseHashMap);
-        when(action.getType()).thenReturn(ActionType.GET);
-        Resource resource = mock(Resource.class);
+        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
         assertEquals("{\n\"hello\": \">world<\"\n}",
@@ -80,18 +84,18 @@ public class GenerationModelTest {
 
     @Test
     public void testGetExample200Complex() throws Exception {
-        Action action = mock(Action.class);
-        HashMap<String, Response> stringResponseHashMap = new HashMap<String, Response>();
-        Response response = mock(Response.class);
-        HashMap<String, MimeType> stringMimeTypeHashMap = new HashMap<String, MimeType>();
-        MimeType mimeType = mock(MimeType.class);
+        IAction action = mock(IAction.class);
+        HashMap<String, IResponse> stringResponseHashMap = new HashMap<String, IResponse>();
+        IResponse response = mock(IResponse.class);
+        HashMap<String, IMimeType> stringMimeTypeHashMap = new HashMap<String, IMimeType>();
+        IMimeType mimeType = mock(IMimeType.class);
         when(mimeType.getExample()).thenReturn("<hello>world</hello>");
         stringMimeTypeHashMap.put("application/xml", mimeType);
         when(response.getBody()).thenReturn(stringMimeTypeHashMap);
         stringResponseHashMap.put("200", response);
         when(action.getResponses()).thenReturn(stringResponseHashMap);
-        when(action.getType()).thenReturn(ActionType.GET);
-        Resource resource = mock(Resource.class);
+        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
         assertEquals("<hello>world</hello>",
@@ -100,18 +104,18 @@ public class GenerationModelTest {
 
     @Test
     public void testGetExampleComplex() throws Exception {
-        Action action = mock(Action.class);
-        HashMap<String, Response> stringResponseHashMap = new HashMap<String, Response>();
-        Response response = mock(Response.class);
-        HashMap<String, MimeType> stringMimeTypeHashMap = new HashMap<String, MimeType>();
-        MimeType mimeType = mock(MimeType.class);
+        IAction action = mock(IAction.class);
+        HashMap<String, IResponse> stringResponseHashMap = new HashMap<String, IResponse>();
+        IResponse response = mock(IResponse.class);
+        HashMap<String, IMimeType> stringMimeTypeHashMap = new HashMap<String, IMimeType>();
+        IMimeType mimeType = mock(IMimeType.class);
         when(mimeType.getExample()).thenReturn("<hello>world</hello>");
         stringMimeTypeHashMap.put("application/xml", mimeType);
         when(response.getBody()).thenReturn(stringMimeTypeHashMap);
         stringResponseHashMap.put("403", response);
         when(action.getResponses()).thenReturn(stringResponseHashMap);
-        when(action.getType()).thenReturn(ActionType.GET);
-        Resource resource = mock(Resource.class);
+        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
         assertEquals("<hello>world</hello>",
@@ -120,9 +124,9 @@ public class GenerationModelTest {
 
     @Test
     public void testGetExampleNull() throws Exception {
-        Action action = mock(Action.class);
-        when(action.getType()).thenReturn(ActionType.GET);
-        Resource resource = mock(Resource.class);
+        IAction action = mock(IAction.class);
+        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
         assertEquals(GenerationModel.DEFAULT_TEXT, new GenerationModel(api, resource, action).getExample());
@@ -130,9 +134,9 @@ public class GenerationModelTest {
 
     @Test
     public void testGetMadeUpName() throws Exception {
-        Action action = mock(Action.class);
-        when(action.getType()).thenReturn(ActionType.GET);
-        Resource resource = mock(Resource.class);
+        IAction action = mock(IAction.class);
+        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
         assertEquals("retrievePet", new GenerationModel(api, resource, action).getName());
@@ -140,9 +144,9 @@ public class GenerationModelTest {
 
     @Test
     public void testGetRealName() throws Exception {
-        Action action = mock(Action.class);
-        when(action.getType()).thenReturn(ActionType.GET);
-        Resource resource = mock(Resource.class);
+        IAction action = mock(IAction.class);
+        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        IResource resource = mock(IResource.class);
         when(resource.getDisplayName()).thenReturn("Animal");
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
@@ -151,9 +155,9 @@ public class GenerationModelTest {
 
     @Test
     public void testGetMadeUpNameWithMimeTypes() throws Exception {
-        Action action = mock(Action.class);
-        when(action.getType()).thenReturn(ActionType.POST);
-        Resource resource = mock(Resource.class);
+        IAction action = mock(IAction.class);
+        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.POST);
+        IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
         GenerationModel model1 = new GenerationModel(api, resource, action, "text/xml");
@@ -165,9 +169,9 @@ public class GenerationModelTest {
 
     @Test
     public void testGetRelativeURI() throws Exception {
-        Action action = mock(Action.class);
-        when(action.getType()).thenReturn(ActionType.GET);
-        Resource resource = mock(Resource.class);
+        IAction action = mock(IAction.class);
+        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
         assertEquals("/pet", new GenerationModel(api, resource, action).getRelativeURI());

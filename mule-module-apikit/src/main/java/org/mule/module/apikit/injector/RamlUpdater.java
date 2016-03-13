@@ -91,7 +91,7 @@ public class RamlUpdater
         currentTraits.add(name);
         Map<String, ITemplate> traitDef = new HashMap<String, ITemplate>();
         traitDef.put(name, getTemplate(name));
-        raml.getTraits().add(traitDef);
+        raml.injectTrait(traitDef);
         this.injectedTraits.put(name, new InjectableTrait(name, traitYaml));
         return this;
     }

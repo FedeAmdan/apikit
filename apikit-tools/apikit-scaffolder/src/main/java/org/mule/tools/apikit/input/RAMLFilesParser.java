@@ -23,19 +23,13 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
 import org.raml.interfaces.IRamlDocumentBuilder;
+import org.raml.interfaces.IRamlValidationService;
 import org.raml.interfaces.RamlFactory;
 import org.raml.interfaces.model.IAction;
 import org.raml.interfaces.model.IMimeType;
 import org.raml.interfaces.model.IRaml;
 import org.raml.interfaces.model.IResource;
-import org.raml.parser.loader.CompositeResourceLoader;
-import org.raml.parser.loader.DefaultResourceLoader;
-import org.raml.parser.loader.FileResourceLoader;
-import org.raml.interfaces.parser.loader.ResourceLoader;
-import org.raml.interfaces.parser.rule.ValidationResult;
-import org.raml.interfaces.parser.rule.ValidationResult.Level;
-import org.raml.parser.visitor.RamlDocumentBuilder;
-import org.raml.parser.visitor.RamlValidationService;
+import org.raml.interfaces.parser.rule.IValidationResult;
 
 public class RAMLFilesParser
 {
@@ -64,12 +58,17 @@ public class RAMLFilesParser
                 break;
 
             }
-            //ResourceLoader resourceLoader = new CompositeResourceLoader(new DefaultResourceLoader(), new FileResourceLoader(ramlFile.getParentFile()));
-
-            if (isValidRaml(ramlFile.getName(), content, resourceLoader))
+            IRamlDocumentBuilder builderNodeHandler = RamlFactory.createRamlDocumentBuilder();
+            if (ramlFile.getParentFile() != null)
             {
-                RamlFactory.createRamlDocumentBuilder(ramlFile.getParentFile().getPath());
-                IRamlDocumentBuilder builderNodeHandler = RamlFactory.createRamlDocumentBuilder(ramlFile.getParentFile().getPath());
+                builderNodeHandler.addPathLookup(ramlFile.getParentFile().getPath());
+            }
+            //else
+            //{
+            //    builderNodeHandler.addPathLookup(null);
+            //}
+            if (isValidRaml(ramlFile.getName(), content, builderNodeHandler))
+            {
                 try
                 {
                     IRaml raml = builderNodeHandler.build(content, ramlFile.getName());
@@ -96,31 +95,28 @@ public class RAMLFilesParser
         }
     }
 
-    private boolean isValidRaml(String fileName, String content, ResourceLoader resourceLoader)
+    private boolean isValidRaml(String fileName, String content, IRamlDocumentBuilder ramlDocumentBuilder)
     {
-        List<ValidationResult> validationResults = RamlValidationService.createDefault(resourceLoader).validate(content, fileName);
-        if (validationResults != null && !validationResults.isEmpty())
+        IRamlValidationService ramlValidationService = RamlFactory.createRamlValidationService(ramlDocumentBuilder).validate(content, fileName);
+        if (ramlValidationService.getErrors().size() > 0 || ramlValidationService.getWarnings().size() > 0)
         {
             log.info("File '" + fileName + "' is not a valid root RAML file. It contains some errors/warnings. See below: ");
-            int errorsFound = findProblems(fileName, validationResults, Level.ERROR);
-            //log warnings
-            findProblems(fileName, validationResults, Level.WARN);
-            if (errorsFound > 0) {
+            findProblems(fileName, ramlValidationService.getErrors(), "ERROR");
+            findProblems(fileName, ramlValidationService.getWarnings(), "WARNING");
+            if (ramlValidationService.getErrors().size() > 0)
+            {
                 return false;
             }
         }
         return true;
     }
 
-    private int findProblems(String fileName, List<ValidationResult> validationResults, Level problemLevel)
+    private int findProblems(String fileName, List<IValidationResult> validationResults, String problemLevelName)
     {
         int problemCount = 0;
-        for (ValidationResult validationResult : validationResults)
+        for (IValidationResult validationResult : validationResults)
         {
-            if (validationResult.getLevel() == problemLevel)
-            {
-                log.info(problemLevel.name() + " " + (++problemCount) + ": " + validationResult.toString());
-            }
+            log.info(problemLevelName + " " + (++problemCount) + ": " + validationResult.toString());
         }
         return problemCount;
     }
