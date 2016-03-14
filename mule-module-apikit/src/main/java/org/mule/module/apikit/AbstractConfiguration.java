@@ -349,21 +349,20 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
 
     private IRaml deepCloneRaml(IRaml source)
     {
-        //TODO DEEP CLONE
-        return source;
+        return RamlFactory.createRamlCloningService().deepCloneRaml(source);
         //IRaml target = (IRaml) SerializationUtils.deserialize(SerializationUtils.serialize(source));
         //copyCompiledSchemas(source, target);
         //return target;
     }
 
-    private void copyCompiledSchemas(IRaml source, IRaml target)
-    {
-        target.setCompiledSchemas(source.getCompiledSchemas());
-    }
+    //private void copyCompiledSchemas(IRaml source, IRaml target)
+    //{
+    //    target.setCompiledSchemas(source.getCompiledSchemas());
+    //}
 
     private IRaml shallowCloneRaml(IRaml source)
     {
-        return source; // TODO SHALLOW CLONE NOT WORKING
+        return RamlFactory.createRamlCloningService().shallowCloneRaml(source);
         /*try
         {
             return (IRaml) BeanUtils.cloneBean(source);

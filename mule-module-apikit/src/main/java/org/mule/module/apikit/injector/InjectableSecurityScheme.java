@@ -34,7 +34,7 @@ public class InjectableSecurityScheme extends InjectableRamlFeature
     @Override
     public void applyToAction(IAction target)
     {
-        target.getSecuredBy().add(RamlFactory.createSecurityReference(name));
+        target.addSecurityReference(RamlFactory.createSecurityReference(name));
     }
 
     @Override

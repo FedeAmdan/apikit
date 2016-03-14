@@ -128,7 +128,7 @@ public class RamlUpdater
         Map<String, ISecurityScheme> securitySchemeDef = new HashMap<String, ISecurityScheme>();
         InjectableSecurityScheme injectableSecurityScheme = new InjectableSecurityScheme(name, securitySchemeYaml);
         securitySchemeDef.put(name, injectableSecurityScheme.getSecurityScheme());
-        raml.getSecuritySchemes().add(securitySchemeDef);
+        raml.injectSecurityScheme(securitySchemeDef);
         this.injectedSecuritySchemes.put(name, injectableSecurityScheme);
         return this;
     }

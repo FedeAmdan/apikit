@@ -54,27 +54,28 @@ public class InjectableTrait extends InjectableRamlFeature
         }
         IAction source = resolveParams(target);
         mergeActions(target, source);
-        target.getIs().add(name);
+        target.addIs(name);
     }
 
     private void mergeActions(IAction target, IAction source)
     {
-        putAllSkipExisting(target.getHeaders(), source.getHeaders());
-        putAllSkipExisting(target.getQueryParameters(), source.getQueryParameters());
+        target.setHeaders(putAllSkipExisting(target.getHeaders(), source.getHeaders()));
+        target.setQueryParameters(putAllSkipExisting(target.getQueryParameters(), source.getQueryParameters()));
         if (source.getBody() != null)
         {
-            putAllSkipExisting(target.getBody(), source.getBody());
+            target.setBody(putAllSkipExisting(target.getBody(), source.getBody()));
         }
         for (Map.Entry<String, IResponse> response : source.getResponses().entrySet())
         {
             if (target.getResponses().containsKey(response.getKey()))
             {
-                putAllSkipExisting(target.getResponses().get(response.getKey()).getBody(), response.getValue().getBody());
-                putAllSkipExisting(target.getResponses().get(response.getKey()).getHeaders(), response.getValue().getHeaders());
+                target.getResponses().get(response.getKey()).setBody(putAllSkipExisting(target.getResponses().get(response.getKey()).getBody(), response.getValue().getBody()));
+                target.getResponses().get(response.getKey()).setHeaders(putAllSkipExisting(target.getResponses().get(response.getKey()).getHeaders(), response.getValue().getHeaders()));
             }
             else
             {
-                target.getResponses().put(response.getKey(), response.getValue());
+                target.addResponse(response.getKey(), response.getValue());
+//                target.getResponses().put(response.getKey(), response.getValue());
             }
         }
     }
@@ -85,7 +86,7 @@ public class InjectableTrait extends InjectableRamlFeature
         return cache;
     }
 
-    private <K, V> void putAllSkipExisting(Map<K, V> to, Map<K, V> from)
+    private <K, V> Map<K, V> putAllSkipExisting(Map<K, V> to, Map<K, V> from)
     {
         if (to != null && from != null)
         {
@@ -97,6 +98,7 @@ public class InjectableTrait extends InjectableRamlFeature
                 }
             }
         }
+        return to;
     }
 
 }
