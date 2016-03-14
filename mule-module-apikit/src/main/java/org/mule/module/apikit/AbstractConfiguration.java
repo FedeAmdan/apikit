@@ -49,7 +49,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
-import org.raml.interfaces.RamlFactory;
+import org.raml.interfaces.RamlFactoryHelper;
 import org.raml.interfaces.emitter.IRamlEmitter;
 import org.raml.interfaces.model.ActionType;
 import org.raml.interfaces.model.IAction;
@@ -191,14 +191,14 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
     private void resetRamlMap()
     {
         apikitRaml = new ConcurrentHashMap<String, String>();
-        apikitRaml.put(baseSchemeHostPort, RamlFactory.createRamlEmitter().dump(api));
+        apikitRaml.put(baseSchemeHostPort, RamlFactoryHelper.createRamlEmitter().dump(api));
     }
 
     protected abstract void initializeRestFlowMap();
 
     protected void validateRaml(IRamlDocumentBuilder ramlDocumentBuilder)
     {
-        IRamlValidationService ramlValidationService = RamlFactory.createRamlValidationService(ramlDocumentBuilder);
+        IRamlValidationService ramlValidationService = RamlFactoryHelper.createRamlValidationService(ramlDocumentBuilder);
         ramlValidationService.validate(raml);
         List<IValidationResult> errors = ramlValidationService.getErrors();
         if (!errors.isEmpty())
@@ -308,7 +308,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         {
             IRaml clone = shallowCloneRaml(api);
             clone.setBaseUri(api.getBaseUri().replace(baseSchemeHostPort, schemeHostPort));
-            IRamlEmitter ramlEmitter = RamlFactory.createRamlEmitter();
+            IRamlEmitter ramlEmitter = RamlFactoryHelper.createRamlEmitter();
             hostRaml = ramlEmitter.dump(clone);
             apikitRaml.put(schemeHostPort, hostRaml);
         }
@@ -347,28 +347,12 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
 
     private IRaml deepCloneRaml(IRaml source)
     {
-        return RamlFactory.createRamlCloningService().deepCloneRaml(source);
-        //IRaml target = (IRaml) SerializationUtils.deserialize(SerializationUtils.serialize(source));
-        //copyCompiledSchemas(source, target);
-        //return target;
+        return RamlFactoryHelper.createRamlCloningService().deepCloneRaml(source);
     }
-
-    //private void copyCompiledSchemas(IRaml source, IRaml target)
-    //{
-    //    target.setCompiledSchemas(source.getCompiledSchemas());
-    //}
 
     private IRaml shallowCloneRaml(IRaml source)
     {
-        return RamlFactory.createRamlCloningService().shallowCloneRaml(source);
-        /*try
-        {
-            return (IRaml) BeanUtils.cloneBean(source);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }*/
+        return RamlFactoryHelper.createRamlCloningService().shallowCloneRaml(source);
     }
 
     public boolean isDisableValidations()

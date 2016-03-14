@@ -38,7 +38,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.raml.interfaces.RamlFactory;
 import org.raml.interfaces.model.IMimeType;
 
 public class ApikitResponseTransformerTestCase

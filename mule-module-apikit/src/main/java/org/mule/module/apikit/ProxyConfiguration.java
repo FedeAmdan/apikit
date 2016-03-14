@@ -14,7 +14,7 @@ import org.mule.construct.Flow;
 
 import java.util.Collections;
 
-import org.raml.interfaces.RamlFactory;
+import org.raml.interfaces.RamlFactoryHelper;
 import org.raml.interfaces.parser.visitor.IRamlDocumentBuilder;
 
 public class ProxyConfiguration extends AbstractConfiguration
@@ -41,7 +41,7 @@ public class ProxyConfiguration extends AbstractConfiguration
     @Override
     public IRamlDocumentBuilder getRamlDocumentBuilder()
     {
-        IRamlDocumentBuilder ramlDocumentBuilder = RamlFactory.createRamlDocumentBuilder();
+        IRamlDocumentBuilder ramlDocumentBuilder = RamlFactoryHelper.createRamlDocumentBuilder();
         return ramlDocumentBuilder.setRamlUrlLookup().addClassPathLookup();
     }
 

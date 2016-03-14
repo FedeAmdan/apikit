@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
 import org.mule.module.apikit.exception.ApikitRuntimeException;
 
 import org.junit.Test;
-import org.raml.interfaces.RamlFactory;
+import org.raml.interfaces.RamlFactoryHelper;
 import org.raml.interfaces.parser.visitor.IRamlDocumentBuilder;
 
 public class InvalidRamlTestCase
@@ -28,7 +28,7 @@ public class InvalidRamlTestCase
         router.getConfig().setRaml("org/mule/module/apikit/invalid-config.yaml");
         try
         {
-            IRamlDocumentBuilder ramlDocumentBuilder = RamlFactory.createRamlDocumentBuilder();
+            IRamlDocumentBuilder ramlDocumentBuilder = RamlFactoryHelper.createRamlDocumentBuilder();
             router.getConfig().validateRaml(ramlDocumentBuilder);
             fail();
         }
@@ -47,7 +47,7 @@ public class InvalidRamlTestCase
         router.getConfig().setRaml("invalidRamlLocation.raml");
         try
         {
-            IRamlDocumentBuilder ramlDocumentBuilder = RamlFactory.createRamlDocumentBuilder();
+            IRamlDocumentBuilder ramlDocumentBuilder = RamlFactoryHelper.createRamlDocumentBuilder();
             router.getConfig().validateRaml(ramlDocumentBuilder);
             fail();
         }

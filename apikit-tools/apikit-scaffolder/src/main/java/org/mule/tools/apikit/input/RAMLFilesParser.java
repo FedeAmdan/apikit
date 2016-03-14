@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
-import org.raml.interfaces.RamlFactory;
+import org.raml.interfaces.RamlFactoryHelper;
 import org.raml.interfaces.model.IAction;
 import org.raml.interfaces.model.IMimeType;
 import org.raml.interfaces.model.IRaml;
@@ -58,7 +58,7 @@ public class RAMLFilesParser
                 break;
 
             }
-            IRamlDocumentBuilder builderNodeHandler = RamlFactory.createRamlDocumentBuilder();
+            IRamlDocumentBuilder builderNodeHandler = RamlFactoryHelper.createRamlDocumentBuilder();
             if (ramlFile.getParentFile() != null)
             {
                 builderNodeHandler.addPathLookup(ramlFile.getParentFile().getPath());
@@ -93,7 +93,7 @@ public class RAMLFilesParser
 
     private boolean isValidRaml(String fileName, String content, IRamlDocumentBuilder ramlDocumentBuilder)
     {
-        IRamlValidationService ramlValidationService = RamlFactory.createRamlValidationService(ramlDocumentBuilder).validate(content, fileName);
+        IRamlValidationService ramlValidationService = RamlFactoryHelper.createRamlValidationService(ramlDocumentBuilder).validate(content, fileName);
         if (ramlValidationService.getErrors().size() > 0 || ramlValidationService.getWarnings().size() > 0)
         {
             log.info("File '" + fileName + "' is not a valid root RAML file. It contains some errors/warnings. See below: ");

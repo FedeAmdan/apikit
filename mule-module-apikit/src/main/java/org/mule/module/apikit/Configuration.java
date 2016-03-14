@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.raml.interfaces.RamlFactory;
+import org.raml.interfaces.RamlFactoryHelper;
 import org.raml.interfaces.model.IAction;
 import org.raml.interfaces.model.IResource;
 import org.raml.interfaces.parser.visitor.IRamlDocumentBuilder;
@@ -84,7 +84,7 @@ public class Configuration extends AbstractConfiguration
 
     public IRamlDocumentBuilder getRamlDocumentBuilder()
     {
-        IRamlDocumentBuilder ramlDocumentBuilder = RamlFactory.createRamlDocumentBuilder();
+        IRamlDocumentBuilder ramlDocumentBuilder = RamlFactoryHelper.createRamlDocumentBuilder();
         String appHome = muleContext.getRegistry().get(MuleProperties.APP_HOME_DIRECTORY_PROPERTY);
         if (appHome != null)
         {
