@@ -14,8 +14,8 @@ import org.mule.construct.Flow;
 
 import java.util.Collections;
 
-import org.raml.interfaces.IRamlDocumentBuilder;
 import org.raml.interfaces.RamlFactory;
+import org.raml.interfaces.parser.visitor.IRamlDocumentBuilder;
 
 public class ProxyConfiguration extends AbstractConfiguration
 {
@@ -37,12 +37,6 @@ public class ProxyConfiguration extends AbstractConfiguration
     {
         return new HttpRestProxyRequest(event, this);
     }
-
-    //@Override
-    //public ResourceLoader getRamlResourceLoader()
-    //{
-    //    return new CompositeResourceLoader(new RamlUrlResourceLoader(), new ClassPathResourceLoader());
-    //}
 
     @Override
     public IRamlDocumentBuilder getRamlDocumentBuilder()

@@ -25,10 +25,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.raml.interfaces.IRamlDocumentBuilder;
 import org.raml.interfaces.RamlFactory;
 import org.raml.interfaces.model.IAction;
 import org.raml.interfaces.model.IResource;
+import org.raml.interfaces.parser.visitor.IRamlDocumentBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,18 +81,6 @@ public class Configuration extends AbstractConfiguration
     {
         return new HttpRestRequest(event, this);
     }
-
-    //@Override
-    //public ResourceLoader getRamlResourceLoader()
-    //{
-    //    ResourceLoader loader = new DefaultResourceLoader();
-    //    String appHome = muleContext.getRegistry().get(MuleProperties.APP_HOME_DIRECTORY_PROPERTY);
-    //    if (appHome != null)
-    //    {
-    //        loader = new CompositeResourceLoader(new FileResourceLoader(appHome), loader);
-    //    }
-    //    return loader;
-    //}
 
     public IRamlDocumentBuilder getRamlDocumentBuilder()
     {

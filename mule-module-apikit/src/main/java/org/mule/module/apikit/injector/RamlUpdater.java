@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.raml.interfaces.RamlFactory;
 import org.raml.interfaces.model.IAction;
 import org.raml.interfaces.model.IRaml;
 import org.raml.interfaces.model.ISecurityScheme;
@@ -75,13 +74,6 @@ public class RamlUpdater
         }
     }
 
-    private ITemplate getTemplate(String name)
-    {
-        ITemplate template = RamlFactory.createTemplate();
-        template.setDisplayName(name);
-        return template;
-    }
-
     public RamlUpdater injectTrait(String name, String traitYaml)
     {
         if (currentTraits.contains(name))
@@ -89,9 +81,8 @@ public class RamlUpdater
             throw new TraitAlreadyDefinedException("Duplicate Trait definition: " + name);
         }
         currentTraits.add(name);
-        Map<String, ITemplate> traitDef = new HashMap<String, ITemplate>();
-        traitDef.put(name, getTemplate(name));
-        raml.injectTrait(traitDef);
+
+        raml.injectTrait(name);
         this.injectedTraits.put(name, new InjectableTrait(name, traitYaml));
         return this;
     }

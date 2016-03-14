@@ -67,11 +67,5 @@
             <artifactId>mule-module-apikit-spi</artifactId>
             <version>${project.version}</version>
        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-apikit-odata</artifactId>
-            <version>0.9.1</version>
-        </dependency>
     </dependencies>
-
 </project>

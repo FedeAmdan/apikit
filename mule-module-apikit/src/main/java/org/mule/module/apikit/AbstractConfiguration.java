@@ -23,7 +23,6 @@ import org.mule.module.apikit.injector.RamlUpdater;
 import org.mule.module.apikit.spi.RouterService;
 import org.mule.module.apikit.uri.URIPattern;
 import org.mule.module.apikit.uri.URIResolver;
-import org.mule.util.BeanUtils;
 import org.mule.util.IOUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
@@ -50,9 +49,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
-import org.apache.commons.lang.SerializationUtils;
-import org.raml.interfaces.IRamlDocumentBuilder;
-import org.raml.interfaces.IRamlValidationService;
 import org.raml.interfaces.RamlFactory;
 import org.raml.interfaces.emitter.IRamlEmitter;
 import org.raml.interfaces.model.ActionType;
@@ -60,6 +56,8 @@ import org.raml.interfaces.model.IAction;
 import org.raml.interfaces.model.IRaml;
 import org.raml.interfaces.model.IResource;
 import org.raml.interfaces.parser.rule.IValidationResult;
+import org.raml.interfaces.parser.visitor.IRamlDocumentBuilder;
+import org.raml.interfaces.parser.visitor.IRamlValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

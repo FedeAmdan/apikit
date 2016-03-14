@@ -75,7 +75,6 @@ public class InjectableTrait extends InjectableRamlFeature
             else
             {
                 target.addResponse(response.getKey(), response.getValue());
-//                target.getResponses().put(response.getKey(), response.getValue());
             }
         }
     }

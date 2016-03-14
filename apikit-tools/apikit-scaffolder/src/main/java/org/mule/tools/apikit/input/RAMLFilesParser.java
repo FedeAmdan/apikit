@@ -22,14 +22,14 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
-import org.raml.interfaces.IRamlDocumentBuilder;
-import org.raml.interfaces.IRamlValidationService;
 import org.raml.interfaces.RamlFactory;
 import org.raml.interfaces.model.IAction;
 import org.raml.interfaces.model.IMimeType;
 import org.raml.interfaces.model.IRaml;
 import org.raml.interfaces.model.IResource;
 import org.raml.interfaces.parser.rule.IValidationResult;
+import org.raml.interfaces.parser.visitor.IRamlDocumentBuilder;
+import org.raml.interfaces.parser.visitor.IRamlValidationService;
 
 public class RAMLFilesParser
 {
@@ -63,10 +63,6 @@ public class RAMLFilesParser
             {
                 builderNodeHandler.addPathLookup(ramlFile.getParentFile().getPath());
             }
-            //else
-            //{
-            //    builderNodeHandler.addPathLookup(null);
-            //}
             if (isValidRaml(ramlFile.getName(), content, builderNodeHandler))
             {
                 try
