@@ -36,10 +36,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.raml.interfaces.model.IAction;
+import org.raml.interfaces.model.IActionType;
 import org.raml.interfaces.model.IResource;
-import org.raml.model.Action;
-import org.raml.model.ActionType;
-import org.raml.model.Resource;
 
 public class MuleConfigGeneratorTest {
 
@@ -56,11 +54,11 @@ public class MuleConfigGeneratorTest {
 
         IAction action = mock(IAction.class);
 
-        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        when(action.getType()).thenReturn(IActionType.GET);
 
         IAction postAction = mock(IAction.class);
 
-        when(postAction.getType()).thenReturn(org.raml.interfaces.model.ActionType.POST);
+        when(postAction.getType()).thenReturn(IActionType.POST);
 
         API api = mock(API.class);
         File raml = mock(File.class);

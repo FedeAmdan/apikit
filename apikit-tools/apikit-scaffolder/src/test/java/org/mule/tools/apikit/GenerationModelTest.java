@@ -12,6 +12,7 @@ import org.mule.tools.apikit.output.GenerationModel;
 import org.mule.tools.apikit.model.API;
 
 import org.raml.interfaces.model.IAction;
+import org.raml.interfaces.model.IActionType;
 import org.raml.interfaces.model.IMimeType;
 import org.raml.interfaces.model.IResource;
 import org.raml.interfaces.model.IResponse;
@@ -29,7 +30,7 @@ public class GenerationModelTest {
     @Test
     public void testGetVerb() throws Exception {
         IAction action = mock(IAction.class);
-        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        when(action.getType()).thenReturn(IActionType.GET);
         IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
@@ -42,23 +43,23 @@ public class GenerationModelTest {
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
         IAction action = mock(IAction.class);
-        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        when(action.getType()).thenReturn(IActionType.GET);
         assertEquals("retrieve", new GenerationModel(api, resource, action).getStringFromActionType());
 
         action = mock(IAction.class);
-        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.PUT);
+        when(action.getType()).thenReturn(IActionType.PUT);
         assertEquals("create", new GenerationModel(api, resource, action).getStringFromActionType());
 
         action = mock(IAction.class);
-        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.POST);
+        when(action.getType()).thenReturn(IActionType.POST);
         assertEquals("update", new GenerationModel(api, resource, action).getStringFromActionType());
 
         action = mock(IAction.class);
-        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.DELETE);
+        when(action.getType()).thenReturn(IActionType.DELETE);
         assertEquals("delete", new GenerationModel(api, resource, action).getStringFromActionType());
 
         action = mock(IAction.class);
-        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.OPTIONS);
+        when(action.getType()).thenReturn(IActionType.OPTIONS);
         assertEquals("options", new GenerationModel(api, resource, action).getStringFromActionType());
     }
 
@@ -74,7 +75,7 @@ public class GenerationModelTest {
         when(response.getBody()).thenReturn(stringMimeTypeHashMap);
         stringResponseHashMap.put("200", response);
         when(action.getResponses()).thenReturn(stringResponseHashMap);
-        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        when(action.getType()).thenReturn(IActionType.GET);
         IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
@@ -94,7 +95,7 @@ public class GenerationModelTest {
         when(response.getBody()).thenReturn(stringMimeTypeHashMap);
         stringResponseHashMap.put("200", response);
         when(action.getResponses()).thenReturn(stringResponseHashMap);
-        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        when(action.getType()).thenReturn(IActionType.GET);
         IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
@@ -114,7 +115,7 @@ public class GenerationModelTest {
         when(response.getBody()).thenReturn(stringMimeTypeHashMap);
         stringResponseHashMap.put("403", response);
         when(action.getResponses()).thenReturn(stringResponseHashMap);
-        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        when(action.getType()).thenReturn(IActionType.GET);
         IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
@@ -125,7 +126,7 @@ public class GenerationModelTest {
     @Test
     public void testGetExampleNull() throws Exception {
         IAction action = mock(IAction.class);
-        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        when(action.getType()).thenReturn(IActionType.GET);
         IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
@@ -135,7 +136,7 @@ public class GenerationModelTest {
     @Test
     public void testGetMadeUpName() throws Exception {
         IAction action = mock(IAction.class);
-        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        when(action.getType()).thenReturn(IActionType.GET);
         IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
@@ -145,7 +146,7 @@ public class GenerationModelTest {
     @Test
     public void testGetRealName() throws Exception {
         IAction action = mock(IAction.class);
-        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        when(action.getType()).thenReturn(IActionType.GET);
         IResource resource = mock(IResource.class);
         when(resource.getDisplayName()).thenReturn("Animal");
         when(resource.getUri()).thenReturn("/api/pet");
@@ -156,7 +157,7 @@ public class GenerationModelTest {
     @Test
     public void testGetMadeUpNameWithMimeTypes() throws Exception {
         IAction action = mock(IAction.class);
-        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.POST);
+        when(action.getType()).thenReturn(IActionType.POST);
         IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
@@ -170,7 +171,7 @@ public class GenerationModelTest {
     @Test
     public void testGetRelativeURI() throws Exception {
         IAction action = mock(IAction.class);
-        when(action.getType()).thenReturn(org.raml.interfaces.model.ActionType.GET);
+        when(action.getType()).thenReturn(IActionType.GET);
         IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);

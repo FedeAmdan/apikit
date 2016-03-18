@@ -51,8 +51,8 @@ import java.util.concurrent.ExecutionException;
 
 import org.raml.interfaces.RamlFactoryHelper;
 import org.raml.interfaces.emitter.IRamlEmitter;
-import org.raml.interfaces.model.ActionType;
 import org.raml.interfaces.model.IAction;
+import org.raml.interfaces.model.IActionType;
 import org.raml.interfaces.model.IRaml;
 import org.raml.interfaces.model.IResource;
 import org.raml.interfaces.parser.rule.IValidationResult;
@@ -402,7 +402,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         for (Map.Entry<String, IResource> resourceEntry : resources.entrySet())
         {
             String resource = resourceEntry.getValue().getUri();
-            for (Map.Entry<ActionType, IAction> actionEntry : resourceEntry.getValue().getActions().entrySet())
+            for (Map.Entry<IActionType, IAction> actionEntry : resourceEntry.getValue().getActions().entrySet())
             {
                 String key = actionEntry.getKey().name().toLowerCase() + ":" + resource;
                 wrapperFlowMap.put(key, getFlowResolver(this, key));

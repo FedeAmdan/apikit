@@ -14,7 +14,7 @@ import org.mule.api.MuleException;
 import org.mule.transformer.types.DataTypeFactory;
 import org.mule.transport.http.HttpConstants;
 
-import org.raml.interfaces.model.ActionType;
+import org.raml.interfaces.model.IActionType;
 
 public class RamlDescriptorHandler
 {
@@ -30,7 +30,7 @@ public class RamlDescriptorHandler
     {
         String path = request.getResourcePath();
         return (path.equals(config.getApi().getUri()) &&
-                ActionType.GET.toString().equals(request.getMethod().toUpperCase()) &&
+                IActionType.GET.toString().equals(request.getMethod().toUpperCase()) &&
                 request.getAdapter().getAcceptableResponseMediaTypes().contains(APPLICATION_RAML));
     }
 
