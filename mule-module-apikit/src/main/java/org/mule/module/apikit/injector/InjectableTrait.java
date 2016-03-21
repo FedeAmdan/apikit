@@ -8,8 +8,8 @@ package org.mule.module.apikit.injector;
 
 import java.util.Map;
 
-import org.raml.model.Action;
-import org.raml.model.Response;
+import org.raml.interfaces.model.IAction;
+import org.raml.interfaces.model.IResponse;
 
 public class InjectableTrait extends InjectableRamlFeature
 {
@@ -20,7 +20,7 @@ public class InjectableTrait extends InjectableRamlFeature
     private static final String TEMPLATE_AFTER = RESOURCE + ":\n " + ACTION + ":\n  is: [injected]\n";
     private static final String INDENTATION = "    ";
 
-    private Action cache;
+    private IAction cache;
 
     public InjectableTrait(String name, String yaml)
     {
@@ -46,46 +46,46 @@ public class InjectableTrait extends InjectableRamlFeature
     }
 
     @Override
-    public void applyToAction(Action target)
+    public void applyToAction(IAction target)
     {
         if (cache == null)
         {
             cache = parse().getResource(RESOURCE).getAction(ACTION);
         }
-        Action source = resolveParams(target);
+        IAction source = resolveParams(target);
         mergeActions(target, source);
-        target.getIs().add(name);
+        target.addIs(name);
     }
 
-    private void mergeActions(Action target, Action source)
+    private void mergeActions(IAction target, IAction source)
     {
-        putAllSkipExisting(target.getHeaders(), source.getHeaders());
-        putAllSkipExisting(target.getQueryParameters(), source.getQueryParameters());
+        target.setHeaders(putAllSkipExisting(target.getHeaders(), source.getHeaders()));
+        target.setQueryParameters(putAllSkipExisting(target.getQueryParameters(), source.getQueryParameters()));
         if (source.getBody() != null)
         {
-            putAllSkipExisting(target.getBody(), source.getBody());
+            target.setBody(putAllSkipExisting(target.getBody(), source.getBody()));
         }
-        for (Map.Entry<String, Response> response : source.getResponses().entrySet())
+        for (Map.Entry<String, IResponse> response : source.getResponses().entrySet())
         {
             if (target.getResponses().containsKey(response.getKey()))
             {
-                putAllSkipExisting(target.getResponses().get(response.getKey()).getBody(), response.getValue().getBody());
-                putAllSkipExisting(target.getResponses().get(response.getKey()).getHeaders(), response.getValue().getHeaders());
+                target.getResponses().get(response.getKey()).setBody(putAllSkipExisting(target.getResponses().get(response.getKey()).getBody(), response.getValue().getBody()));
+                target.getResponses().get(response.getKey()).setHeaders(putAllSkipExisting(target.getResponses().get(response.getKey()).getHeaders(), response.getValue().getHeaders()));
             }
             else
             {
-                target.getResponses().put(response.getKey(), response.getValue());
+                target.addResponse(response.getKey(), response.getValue());
             }
         }
     }
 
-    private Action resolveParams(Action target)
+    private IAction resolveParams(IAction target)
     {
         //TODO replace implicit parameters
         return cache;
     }
 
-    private <K, V> void putAllSkipExisting(Map<K, V> to, Map<K, V> from)
+    private <K, V> Map<K, V> putAllSkipExisting(Map<K, V> to, Map<K, V> from)
     {
         if (to != null && from != null)
         {
@@ -97,6 +97,7 @@ public class InjectableTrait extends InjectableRamlFeature
                 }
             }
         }
+        return to;
     }
 
 }

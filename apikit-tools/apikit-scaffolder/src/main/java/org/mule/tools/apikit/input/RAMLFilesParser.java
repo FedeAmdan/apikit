@@ -22,18 +22,14 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
-import org.raml.model.Action;
-import org.raml.model.MimeType;
-import org.raml.model.Raml;
-import org.raml.model.Resource;
-import org.raml.parser.loader.CompositeResourceLoader;
-import org.raml.parser.loader.DefaultResourceLoader;
-import org.raml.parser.loader.FileResourceLoader;
-import org.raml.parser.loader.ResourceLoader;
-import org.raml.parser.rule.ValidationResult;
-import org.raml.parser.rule.ValidationResult.Level;
-import org.raml.parser.visitor.RamlDocumentBuilder;
-import org.raml.parser.visitor.RamlValidationService;
+import org.raml.interfaces.RamlFactoryHelper;
+import org.raml.interfaces.model.IAction;
+import org.raml.interfaces.model.IMimeType;
+import org.raml.interfaces.model.IRaml;
+import org.raml.interfaces.model.IResource;
+import org.raml.interfaces.parser.rule.IValidationResult;
+import org.raml.interfaces.parser.visitor.IRamlDocumentBuilder;
+import org.raml.interfaces.parser.visitor.IRamlValidationService;
 
 public class RAMLFilesParser
 {
@@ -62,14 +58,17 @@ public class RAMLFilesParser
                 break;
 
             }
-            ResourceLoader resourceLoader = new CompositeResourceLoader(new DefaultResourceLoader(), new FileResourceLoader(ramlFile.getParentFile()));
-
-            if (isValidRaml(ramlFile.getName(), content, resourceLoader))
+            IRamlDocumentBuilder builderNodeHandler = RamlFactoryHelper.createRamlDocumentBuilder();
+            if (ramlFile.getParentFile() != null)
             {
-                RamlDocumentBuilder builderNodeHandler = new RamlDocumentBuilder(resourceLoader);
+                builderNodeHandler.addPathLookupFirst(ramlFile.getParentFile().getPath());
+                //The original configuration was "addPathLookup". Changed to addPathLookupFirst as the change was minimal and reduced the amount of signatures in the interface.
+            }
+            if (isValidRaml(ramlFile.getName(), content, builderNodeHandler))
+            {
                 try
                 {
-                    Raml raml = builderNodeHandler.build(content, ramlFile.getName());
+                    IRaml raml = builderNodeHandler.build(content, ramlFile.getName());
 
                     collectResources(ramlFile, raml.getResources(), API.DEFAULT_BASE_URI);
                     processedFiles.add(ramlFile);
@@ -93,49 +92,46 @@ public class RAMLFilesParser
         }
     }
 
-    private boolean isValidRaml(String fileName, String content, ResourceLoader resourceLoader)
+    private boolean isValidRaml(String fileName, String content, IRamlDocumentBuilder ramlDocumentBuilder)
     {
-        List<ValidationResult> validationResults = RamlValidationService.createDefault(resourceLoader).validate(content, fileName);
-        if (validationResults != null && !validationResults.isEmpty())
+        IRamlValidationService ramlValidationService = RamlFactoryHelper.createRamlValidationService(ramlDocumentBuilder).validate(content, fileName);
+        if (ramlValidationService.getErrors().size() > 0 || ramlValidationService.getWarnings().size() > 0)
         {
             log.info("File '" + fileName + "' is not a valid root RAML file. It contains some errors/warnings. See below: ");
-            int errorsFound = findProblems(fileName, validationResults, Level.ERROR);
-            //log warnings
-            findProblems(fileName, validationResults, Level.WARN);
-            if (errorsFound > 0) {
+            findProblems(fileName, ramlValidationService.getErrors(), "ERROR");
+            findProblems(fileName, ramlValidationService.getWarnings(), "WARNING");
+            if (ramlValidationService.getErrors().size() > 0)
+            {
                 return false;
             }
         }
         return true;
     }
 
-    private int findProblems(String fileName, List<ValidationResult> validationResults, Level problemLevel)
+    private int findProblems(String fileName, List<IValidationResult> validationResults, String problemLevelName)
     {
         int problemCount = 0;
-        for (ValidationResult validationResult : validationResults)
+        for (IValidationResult validationResult : validationResults)
         {
-            if (validationResult.getLevel() == problemLevel)
-            {
-                log.info(problemLevel.name() + " " + (++problemCount) + ": " + validationResult.toString());
-            }
+            log.info(problemLevelName + " " + (++problemCount) + ": " + validationResult.toString());
         }
         return problemCount;
     }
 
-    void collectResources(File filename, Map<String, Resource> resourceMap, String baseUri)
+    void collectResources(File filename, Map<String, IResource> resourceMap, String baseUri)
     {
-        for (Resource resource : resourceMap.values())
+        for (IResource resource : resourceMap.values())
         {
-            for (Action action : resource.getActions().values())
+            for (IAction action : resource.getActions().values())
             {
 
                 API api = apiFactory.createAPIBinding(filename,null, baseUri, APIKitTools.getPathFromUri(baseUri,false), null, null, APIKitTools.defaultIsInboundEndpoint(muleVersion));
 
-                Map<String, MimeType> mimeTypes = action.getBody();
+                Map<String, IMimeType> mimeTypes = action.getBody();
                 boolean addGenericAction = false;
                 if (mimeTypes != null)
                 {
-                    for (MimeType mimeType : mimeTypes.values())
+                    for (IMimeType mimeType : mimeTypes.values())
                     {
                         if (mimeType.getSchema() != null || mimeType.getFormParameters() != null)
                         {
@@ -155,7 +151,7 @@ public class RAMLFilesParser
         }
     }
 
-    void addResource(API api, Resource resource, Action action, String mimeType) {
+    void addResource(API api, IResource resource, IAction action, String mimeType) {
         String completePath;
         if (!api.useInboundEndpoint() && api.getHttpListenerConfig() != null)
         {

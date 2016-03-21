@@ -36,9 +36,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import org.raml.model.Raml;
-import org.raml.model.Resource;
-import org.raml.model.parameter.UriParameter;
+import org.raml.interfaces.model.IRaml;
+import org.raml.interfaces.model.IResource;
+import org.raml.interfaces.model.parameter.IParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +61,7 @@ public abstract class AbstractRouter extends AbstractRequestResponseMessageProce
 
     protected abstract void startConfiguration() throws StartException;
 
-    protected Raml getApi()
+    protected IRaml getApi()
     {
         return config.getApi();
     }
@@ -174,7 +174,7 @@ public abstract class AbstractRouter extends AbstractRequestResponseMessageProce
             throw new DefaultMuleException(e);
         }
 
-        Resource resource = getRoutingTable().get(uriPattern);
+        IResource resource = getRoutingTable().get(uriPattern);
         if (resource.getAction(request.getMethod()) == null)
         {
             throw new MethodNotAllowedException(resource.getUri(), request.getMethod());
@@ -224,7 +224,7 @@ public abstract class AbstractRouter extends AbstractRequestResponseMessageProce
         throw new UnsupportedOperationException();
     }
 
-    private Map<URIPattern, Resource> getRoutingTable()
+    private Map<URIPattern, IResource> getRoutingTable()
     {
         return config.routingTable;
     }
@@ -246,7 +246,7 @@ public abstract class AbstractRouter extends AbstractRequestResponseMessageProce
         return config.getHttpRestRequest(event);
     }
 
-    private void processUriParameters(ResolvedVariables resolvedVariables, Resource resource, MuleEvent event) throws InvalidUriParameterException
+    private void processUriParameters(ResolvedVariables resolvedVariables, IResource resource, MuleEvent event) throws InvalidUriParameterException
     {
         if (logger.isDebugEnabled())
         {
@@ -258,10 +258,10 @@ public abstract class AbstractRouter extends AbstractRequestResponseMessageProce
 
         if (!config.isDisableValidations())
         {
-            for (Map.Entry<String, UriParameter> entry : resource.getResolvedUriParameters().entrySet())
+            for (Map.Entry<String, IParameter> entry : resource.getResolvedUriParameters().entrySet())
             {
                 String value = (String) resolvedVariables.get(entry.getKey());
-                UriParameter uriParameter = entry.getValue();
+                IParameter uriParameter = entry.getValue();
                 if (!uriParameter.validate(value))
                 {
                     String msg = String.format("Invalid value '%s' for uri parameter %s. %s",
@@ -284,7 +284,7 @@ public abstract class AbstractRouter extends AbstractRequestResponseMessageProce
         }
     }
 
-    protected abstract Flow getFlow(Resource resource, HttpRestRequest request);
+    protected abstract Flow getFlow(IResource resource, HttpRestRequest request);
 
     private static class RouterRequest
     {

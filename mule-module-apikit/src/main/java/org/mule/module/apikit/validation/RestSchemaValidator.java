@@ -9,10 +9,10 @@ package org.mule.module.apikit.validation;
 import org.mule.api.MuleEvent;
 
 import org.mule.module.apikit.exception.BadRequestException;
-import org.raml.model.Raml;
+import org.raml.interfaces.model.IRaml;
 
 public interface RestSchemaValidator
 {
 
-    void validate(String configId, String schemaPath, MuleEvent muleEvent, Raml api) throws BadRequestException;
+    void validate(String configId, String schemaPath, MuleEvent muleEvent, IRaml api) throws BadRequestException;
 }

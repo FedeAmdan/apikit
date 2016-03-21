@@ -12,16 +12,10 @@ import org.mule.api.MuleException;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.construct.Flow;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Collections;
 
-import org.raml.parser.loader.ClassPathResourceLoader;
-import org.raml.parser.loader.CompositeResourceLoader;
-import org.raml.parser.loader.ResourceLoader;
+import org.raml.interfaces.RamlFactoryHelper;
+import org.raml.interfaces.parser.visitor.IRamlDocumentBuilder;
 
 public class ProxyConfiguration extends AbstractConfiguration
 {
@@ -45,32 +39,13 @@ public class ProxyConfiguration extends AbstractConfiguration
     }
 
     @Override
-    public ResourceLoader getRamlResourceLoader()
+    public IRamlDocumentBuilder getRamlDocumentBuilder()
     {
-        return new CompositeResourceLoader(new RamlUrlResourceLoader(), new ClassPathResourceLoader());
-    }
-
-    private static class RamlUrlResourceLoader implements ResourceLoader
-    {
-
-        @Override
-        public InputStream fetchResource(String resourceName)
-        {
-            InputStream inputStream = null;
-            try
-            {
-                URL url = new URL(resourceName);
-                URLConnection connection = url.openConnection();
-                connection.setRequestProperty("Accept", APPLICATION_RAML + ", */*");
-                inputStream = new BufferedInputStream(connection.getInputStream());
-            }
-            catch (IOException e)
-            {
-                //ignore on resource not found
-            }
-            return inputStream;
-
-        }
+        IRamlDocumentBuilder ramlDocumentBuilder = RamlFactoryHelper.createRamlDocumentBuilder();
+        return ramlDocumentBuilder;
+        //The previous configuration was:
+        //.setRamlUrlLookup().addClassPathLookup();
+        //it was commented out as the ramlUriLookup now belongs to the default lookups
     }
 
     @Override

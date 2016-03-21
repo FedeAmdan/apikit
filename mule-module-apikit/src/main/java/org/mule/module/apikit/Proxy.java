@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.raml.model.Resource;
+import org.raml.interfaces.model.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,7 +132,7 @@ public class Proxy extends AbstractRouter
     }
 
     @Override
-    protected Flow getFlow(Resource resource, HttpRestRequest request)
+    protected Flow getFlow(IResource resource, HttpRestRequest request)
     {
         FlowResolver flowResolver = config.getRestFlowMap().get(request.getMethod() + ":" + resource.getUri());
         Flow rawFlow = ((ProxyConfiguration.ProxyFlowResolver) flowResolver).getRawFlow();

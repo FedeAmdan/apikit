@@ -19,7 +19,7 @@ import com.jayway.restassured.RestAssured;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.raml.model.Raml;
+import org.raml.interfaces.model.IRaml;
 
 public class BaseUriParametersTestCase extends AbstractMuleContextTestCase
 {
@@ -53,7 +53,7 @@ public class BaseUriParametersTestCase extends AbstractMuleContextTestCase
     @Test
     public void noBaseUriParameters() throws Exception
     {
-        Raml api = config.getApi();
+        IRaml api = config.getApi();
         assertThat(api.getBaseUriParameters().size(), is(0));
         assertThat(api.getResource("/resources").getBaseUriParameters().size(), is(0));
         assertThat(api.getResource("/resources").getAction("get").getBaseUriParameters().size(), is(0));

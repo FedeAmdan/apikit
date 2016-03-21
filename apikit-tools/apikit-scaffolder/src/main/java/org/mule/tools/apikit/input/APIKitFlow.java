@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.raml.model.ActionType;
+import org.raml.interfaces.model.IActionType;
 
 public class APIKitFlow {
 
@@ -85,7 +85,7 @@ public class APIKitFlow {
     }
 
     private static boolean isValidAction(String name) {
-        for(ActionType actionType : ActionType.values()) {
+        for(IActionType actionType : IActionType.values()) {
             if(actionType.toString().toLowerCase().equals(name.toLowerCase())) {
                 return true;
             }
