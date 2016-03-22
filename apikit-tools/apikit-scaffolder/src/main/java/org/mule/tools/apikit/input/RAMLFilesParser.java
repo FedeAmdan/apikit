@@ -61,7 +61,7 @@ public class RAMLFilesParser
             IRamlDocumentBuilder builderNodeHandler = RamlFactoryHelper.createRamlDocumentBuilder();
             if (ramlFile.getParentFile() != null)
             {
-                builderNodeHandler.addPathLookupFirst(ramlFile.getParentFile().getPath());
+                builderNodeHandler.addFilePathLookup(ramlFile.getParentFile().getPath());
                 //The original configuration was "addPathLookup". Changed to addPathLookupFirst as the change was minimal and reduced the amount of signatures in the interface.
             }
             if (isValidRaml(ramlFile.getName(), content, builderNodeHandler))

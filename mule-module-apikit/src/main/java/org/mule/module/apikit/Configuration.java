@@ -88,7 +88,7 @@ public class Configuration extends AbstractConfiguration
         String appHome = muleContext.getRegistry().get(MuleProperties.APP_HOME_DIRECTORY_PROPERTY);
         if (appHome != null)
         {
-            ramlDocumentBuilder.addPathLookupFirst(appHome);
+            ramlDocumentBuilder.addFilePathLookup(appHome);
         }
         return ramlDocumentBuilder;
     }
